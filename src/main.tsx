@@ -118,6 +118,9 @@ const AWARDS = [
 const BLOG_STORAGE_KEY = "shawn-blog-state-v4";
 const PROJECT_STORAGE_KEY = "shawn-project-state-v4";
 const COMMENT_STORAGE_KEY = "shawn-blog-comments-v4";
+const ADMIN_AUTH_STORAGE_KEY = "shawn-admin-auth-v1";
+const ADMIN_USERNAME = "rushan";
+const ADMIN_PASSWORD = "123123";
 
 function uid() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -155,10 +158,6 @@ function splitTags(input: string) {
   return input.split(/[,，\n]/).map((item) => item.trim()).filter(Boolean);
 }
 
-function splitParagraphs(input: string) {
-  return input.split(/\n{2,}/).map((item) => item.trim()).filter(Boolean);
-}
-
 function sectionsFromPost(post: Post): BlogSection[] {
   if (post.sections?.length) return post.sections;
   return post.content.map((body, index) => ({
@@ -174,6 +173,10 @@ function readMinutesFromContent(content: string) {
 
 function initials(name: string) {
   return name.trim().slice(0, 2).toUpperCase() || "S";
+}
+
+function isValidAdmin(username: string, password: string) {
+  return username.trim() === ADMIN_USERNAME && password === ADMIN_PASSWORD;
 }
 
 function useClock() {
@@ -256,22 +259,34 @@ function AboutPage() {
   );
 }
 
-function BlogEditorPage({ setPosts }: { setPosts: React.Dispatch<React.SetStateAction<Post[]>> }) {
+function BlogEditorPage({ setPosts, isAdmin }: { setPosts: React.Dispatch<React.SetStateAction<Post[]>>; isAdmin: boolean }) {
   const navigate = useNavigate();
-  const [draft, setDraft] = useState({ title: "", category: "", tags: "", excerpt: "", content: "", readTime: "3 min" });
+  const [draft, setDraft] = useState({ title: "", category: "", tags: "", excerpt: "", readTime: "3 min" });
+  const [sectionsDraft, setSectionsDraft] = useState<BlogSection[]>([{ title: "章节 01", label: "笔记", body: "" }]);
+
+  if (!isAdmin) return <Navigate to="/blog" replace />;
 
   function createPost(event: React.FormEvent) {
     event.preventDefault();
-    if (!draft.title.trim() || !draft.category.trim() || !draft.excerpt.trim() || !draft.content.trim()) return;
+    const nextSections = sectionsDraft
+      .map((section, index) => ({
+        title: section.title.trim() || `章节 ${String(index + 1).padStart(2, "0")}`,
+        label: section.label.trim() || draft.category.trim(),
+        body: section.body.trim(),
+      }))
+      .filter((section) => section.body);
+    if (!draft.title.trim() || !draft.category.trim() || !draft.excerpt.trim() || nextSections.length === 0) return;
+    const contentText = nextSections.map((section) => section.body).join("\n\n");
     const nextPost: Post = {
       id: uid(),
       title: draft.title.trim(),
       category: draft.category.trim(),
       tags: splitTags(draft.tags),
       date: new Date().toISOString(),
-      readTime: draft.readTime.trim() || readMinutesFromContent(draft.content),
+      readTime: draft.readTime.trim() || readMinutesFromContent(contentText),
       excerpt: draft.excerpt.trim(),
-      content: splitParagraphs(draft.content),
+      content: nextSections.map((section) => section.body),
+      sections: nextSections,
     };
     setPosts((current) => {
       const nextPosts = [nextPost, ...current];
@@ -279,6 +294,10 @@ function BlogEditorPage({ setPosts }: { setPosts: React.Dispatch<React.SetStateA
       return nextPosts;
     });
     navigate(`/blog/${nextPost.id}`);
+  }
+
+  function updateSection(index: number, field: keyof BlogSection, value: string) {
+    setSectionsDraft((current) => current.map((section, sectionIndex) => sectionIndex === index ? { ...section, [field]: value } : section));
   }
 
   return (
@@ -291,7 +310,17 @@ function BlogEditorPage({ setPosts }: { setPosts: React.Dispatch<React.SetStateA
           <label className="field"><span>标签</span><input value={draft.tags} onChange={(event) => setDraft((current) => ({ ...current, tags: event.target.value }))} placeholder="用逗号分隔" /></label>
           <label className="field"><span>预计阅读</span><input value={draft.readTime} onChange={(event) => setDraft((current) => ({ ...current, readTime: event.target.value }))} /></label>
           <label className="field editor-grid__full"><span>摘要</span><textarea value={draft.excerpt} onChange={(event) => setDraft((current) => ({ ...current, excerpt: event.target.value }))} /></label>
-          <label className="field editor-grid__full"><span>正文</span><textarea value={draft.content} onChange={(event) => setDraft((current) => ({ ...current, content: event.target.value }))} placeholder="每段之间空一行" /></label>
+          <div className="section-editor editor-grid__full">
+            <div className="section-editor__head"><span>小章节</span><button className="button button--ghost button--small" type="button" onClick={() => setSectionsDraft((current) => [...current, { title: `章节 ${String(current.length + 1).padStart(2, "0")}`, label: draft.category || "笔记", body: "" }])}>新增章节</button></div>
+            {sectionsDraft.map((section, index) => (
+              <article className="section-edit-card" key={index}>
+                <label className="field"><span>章节标题</span><input value={section.title} onChange={(event) => updateSection(index, "title", event.target.value)} placeholder={`章节 ${String(index + 1).padStart(2, "0")}`} /></label>
+                <label className="field"><span>章节标签</span><input value={section.label} onChange={(event) => updateSection(index, "label", event.target.value)} placeholder="例如：背景 / 方法 / 复盘" /></label>
+                <label className="field section-edit-card__body"><span>章节正文</span><textarea value={section.body} onChange={(event) => updateSection(index, "body", event.target.value)} /></label>
+                <button className="danger-button" type="button" onClick={() => setSectionsDraft((current) => current.length > 1 ? current.filter((_, sectionIndex) => sectionIndex !== index) : current)}>删除章节</button>
+              </article>
+            ))}
+          </div>
           <div className="editor-actions editor-grid__full"><button className="button button--solid" type="submit">发布文章</button><button className="button button--ghost" type="button" onClick={() => navigate("/blog")}>取消</button></div>
         </form>
       </section>
@@ -299,7 +328,7 @@ function BlogEditorPage({ setPosts }: { setPosts: React.Dispatch<React.SetStateA
   );
 }
 
-function BlogEditPage({ posts, setPosts }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>> }) {
+function BlogEditPage({ posts, setPosts, isAdmin }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>>; isAdmin: boolean }) {
   const { postId } = useParams();
   const navigate = useNavigate();
   const post = posts.find((item) => item.id === postId);
@@ -325,7 +354,7 @@ function BlogEditPage({ posts, setPosts }: { posts: Post[]; setPosts: React.Disp
     setSectionsDraft(sectionsFromPost(post));
   }, [post]);
 
-  if (!post) return <Navigate to="/blog" replace />;
+  if (!isAdmin || !post) return <Navigate to="/blog" replace />;
   const activePostId = post.id;
 
   function updatePost(event: React.FormEvent) {
@@ -388,9 +417,11 @@ function BlogEditPage({ posts, setPosts }: { posts: Post[]; setPosts: React.Disp
   );
 }
 
-function ProjectEditorPage({ setProjects }: { setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>> }) {
+function ProjectEditorPage({ setProjects, isAdmin }: { setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>; isAdmin: boolean }) {
   const navigate = useNavigate();
   const [draft, setDraft] = useState({ title: "", status: "自定义", summary: "", tags: "", goal: "", work: "", method: "", gain: "" });
+
+  if (!isAdmin) return <Navigate to="/projects" replace />;
 
   function createProject(event: React.FormEvent) {
     event.preventDefault();
@@ -436,10 +467,12 @@ function ProjectEditorPage({ setProjects }: { setProjects: React.Dispatch<React.
   );
 }
 
-function BlogPage({ posts }: { posts: Post[] }) {
+function BlogPage({ posts, isAdmin, onAdminLogin, onAdminLogout }: { posts: Post[]; isAdmin: boolean; onAdminLogin: (username: string, password: string) => boolean; onAdminLogout: () => void }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("全部");
   const [tagFilter, setTagFilter] = useState("全部");
+  const [authDraft, setAuthDraft] = useState({ username: "", password: "" });
+  const [authError, setAuthError] = useState("");
   const categories = useMemo(() => ["全部", ...new Set(posts.map((post) => post.category))], [posts]);
   const tags = useMemo(() => ["全部", ...new Set(posts.flatMap((post) => post.tags))], [posts]);
   const visiblePosts = useMemo(() => {
@@ -453,9 +486,16 @@ function BlogPage({ posts }: { posts: Post[] }) {
     });
   }, [categoryFilter, posts, searchQuery, tagFilter]);
 
+  function loginAdmin(event: React.FormEvent) {
+    event.preventDefault();
+    const ok = onAdminLogin(authDraft.username, authDraft.password);
+    setAuthError(ok ? "" : "账号或密码不正确");
+    if (ok) setAuthDraft({ username: "", password: "" });
+  }
+
   return (
     <main className="page page--blogspace">
-      <section className="section"><div className="filter-bar card"><label className="field field--inline"><span>搜索</span><input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="搜索标题、分类、标签、摘要或正文" /></label><div className="filter-bar__actions"><NavLink className="button button--solid" to="/blog/new">新建</NavLink></div><div className="filter-group"><span className="filter-label">分类</span><div className="chip-row">{categories.map((category) => <button key={category} type="button" className={categoryFilter === category ? "chip active" : "chip"} onClick={() => setCategoryFilter(category)}>{category}</button>)}</div></div><div className="filter-group"><span className="filter-label">标签</span><div className="chip-row">{tags.map((tag) => <button key={tag} type="button" className={tagFilter === tag ? "chip active" : "chip"} onClick={() => setTagFilter(tag)}>{tag}</button>)}</div></div></div></section>
+      <section className="section"><div className="filter-bar card"><label className="field field--inline"><span>搜索</span><input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="搜索标题、分类、标签、摘要或正文" /></label><div className="filter-bar__actions">{isAdmin ? <><NavLink className="button button--solid" to="/blog/new">新建</NavLink><button className="button button--ghost" type="button" onClick={onAdminLogout}>退出管理</button></> : <form className="admin-login" onSubmit={loginAdmin}><input aria-label="管理员账号" value={authDraft.username} onChange={(event) => setAuthDraft((current) => ({ ...current, username: event.target.value }))} placeholder="账号" /><input aria-label="管理员密码" type="password" value={authDraft.password} onChange={(event) => setAuthDraft((current) => ({ ...current, password: event.target.value }))} placeholder="密码" /><button className="button button--solid button--small" type="submit">登录</button>{authError ? <span className="admin-login__error">{authError}</span> : null}</form>}</div><div className="filter-group"><span className="filter-label">分类</span><div className="chip-row">{categories.map((category) => <button key={category} type="button" className={categoryFilter === category ? "chip active" : "chip"} onClick={() => setCategoryFilter(category)}>{category}</button>)}</div></div><div className="filter-group"><span className="filter-label">标签</span><div className="chip-row">{tags.map((tag) => <button key={tag} type="button" className={tagFilter === tag ? "chip active" : "chip"} onClick={() => setTagFilter(tag)}>{tag}</button>)}</div></div></div></section>
       <section className="blog-index-layout">
         <div className="blog-list blog-list--index">
           {visiblePosts.map((post) => (
@@ -474,7 +514,7 @@ function BlogPage({ posts }: { posts: Post[] }) {
   );
 }
 
-function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>>; commentsByPost: CommentState; setCommentsByPost: React.Dispatch<React.SetStateAction<CommentState>> }) {
+function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost, isAdmin }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>>; commentsByPost: CommentState; setCommentsByPost: React.Dispatch<React.SetStateAction<CommentState>>; isAdmin: boolean }) {
   const { postId } = useParams();
   const navigate = useNavigate();
   const [draftName, setDraftName] = useState("Shawn");
@@ -506,6 +546,7 @@ function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost }: { 
   }
 
   function deletePost() {
+    if (!isAdmin) return;
     setPosts((current) => {
       const nextPosts = current.filter((item) => item.id !== activePostId);
       saveJson(`${BLOG_STORAGE_KEY}:posts`, nextPosts);
@@ -524,7 +565,7 @@ function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost }: { 
     <main className="page page--blogspace">
       <section className="blog-article-layout">
         <article className="blog-detail card">
-          <div className="blog-detail__top"><div><p className="blog-detail__meta">{post.category} / {formatDate(post.date)} / {post.readTime}</p><h2>{post.title}</h2></div><div className="article-actions"><NavLink className="button button--ghost button--small" to={`/blog/${activePostId}/edit`}>编辑文章</NavLink><button className="danger-button" type="button" onClick={deletePost}>删除文章</button></div></div>
+          <div className="blog-detail__top"><div><p className="blog-detail__meta">{post.category} / {formatDate(post.date)} / {post.readTime}</p><h2>{post.title}</h2></div>{isAdmin ? <div className="article-actions"><NavLink className="button button--ghost button--small" to={`/blog/${activePostId}/edit`}>编辑文章</NavLink><button className="danger-button" type="button" onClick={deletePost}>删除文章</button></div> : null}</div>
           <p className="blog-detail__excerpt">{post.excerpt}</p>
           <div className="blog-detail__body blog-section-list">{postSections.map((section, index) => <section className="blog-section-card" id={`p-${index}`} key={`${section.title}-${index}`}><div className="blog-section-card__top"><span>{section.label}</span><strong>{String(index + 1).padStart(2, "0")}</strong></div><h3>{section.title}</h3><p>{section.body}</p></section>)}</div>
           <div className="tag-row">{post.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
@@ -540,7 +581,7 @@ function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost }: { 
   );
 }
 
-function ProjectPage({ projects }: { projects: ProjectItem[] }) {
+function ProjectPage({ projects, isAdmin }: { projects: ProjectItem[]; isAdmin: boolean }) {
   const [searchQuery, setSearchQuery] = useState("");
   const visibleProjects = useMemo(() => {
     const query = normalizeText(searchQuery);
@@ -550,7 +591,7 @@ function ProjectPage({ projects }: { projects: ProjectItem[] }) {
 
   return (
     <main className="page page--blogspace">
-      <section className="section"><div className="filter-bar card"><label className="field field--inline"><span>搜索</span><input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="搜索项目标题、状态、标签或详细内容" /></label><div className="filter-bar__actions"><NavLink className="button button--solid" to="/projects/new">新建</NavLink></div></div></section>
+      <section className="section"><div className="filter-bar card"><label className="field field--inline"><span>搜索</span><input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="搜索项目标题、状态、标签或详细内容" /></label>{isAdmin ? <div className="filter-bar__actions"><NavLink className="button button--solid" to="/projects/new">新建</NavLink></div> : null}</div></section>
       <section className="blog-index-layout">
         <div className="project-grid project-grid--index">
           {visibleProjects.map((project) => <NavLink className={project.sections.length > 0 ? "project-panel card" : "project-panel card project-panel--empty"} key={project.id} to={`/projects/${project.id}`}><div className="project-panel__head"><div><p className="eyebrow">{project.status}</p><h2>{project.title}</h2></div></div><p className="project-panel__summary">{project.summary}</p><div className="tag-row">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div></NavLink>)}
@@ -562,7 +603,7 @@ function ProjectPage({ projects }: { projects: ProjectItem[] }) {
   );
 }
 
-function ProjectDetailPage({ projects, setProjects }: { projects: ProjectItem[]; setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>> }) {
+function ProjectDetailPage({ projects, setProjects, isAdmin }: { projects: ProjectItem[]; setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>; isAdmin: boolean }) {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const project = projects.find((item) => item.id === projectId);
@@ -570,6 +611,7 @@ function ProjectDetailPage({ projects, setProjects }: { projects: ProjectItem[];
   const activeProjectId = project.id;
 
   function deleteProject() {
+    if (!isAdmin) return;
     setProjects((current) => {
       const nextProjects = current.filter((item) => item.id !== activeProjectId);
       saveJson(`${PROJECT_STORAGE_KEY}:projects`, nextProjects);
@@ -582,7 +624,7 @@ function ProjectDetailPage({ projects, setProjects }: { projects: ProjectItem[];
     <main className="page page--blogspace">
       <section className="blog-article-layout">
         <article className="project-panel project-panel--detail card" id="top">
-          <div className="project-panel__head"><div><p className="eyebrow">{project.status}</p><h2>{project.title}</h2></div><button className="danger-button" type="button" onClick={deleteProject}>删除项目</button></div>
+          <div className="project-panel__head"><div><p className="eyebrow">{project.status}</p><h2>{project.title}</h2></div>{isAdmin ? <button className="danger-button" type="button" onClick={deleteProject}>删除项目</button> : null}</div>
           <p className="project-panel__summary">{project.summary}</p>
           <div className="tag-row">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
           {project.sections.length > 0 ? <div className="project-detail-grid project-detail-grid--article">{project.sections.map((section, index) => <div className="project-detail" id={`section-${index}`} key={section.title}><h3>{section.title}</h3><p>{section.body}</p></div>)}</div> : <div className="empty-project"><p>第二个项目内容先预留在这里。</p><p className="muted">后面补充标题、背景、做法和结果后，可以继续扩展成完整项目页。</p></div>}
@@ -604,7 +646,7 @@ function BlogProfile({ text = "分享技术与科技生活" }: { text?: string }
   );
 }
 
-function AppShell({ posts, setPosts, commentsByPost, setCommentsByPost, projects, setProjects }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>>; commentsByPost: CommentState; setCommentsByPost: React.Dispatch<React.SetStateAction<CommentState>>; projects: ProjectItem[]; setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>> }) {
+function AppShell({ posts, setPosts, commentsByPost, setCommentsByPost, projects, setProjects, isAdmin, onAdminLogin, onAdminLogout }: { posts: Post[]; setPosts: React.Dispatch<React.SetStateAction<Post[]>>; commentsByPost: CommentState; setCommentsByPost: React.Dispatch<React.SetStateAction<CommentState>>; projects: ProjectItem[]; setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>; isAdmin: boolean; onAdminLogin: (username: string, password: string) => boolean; onAdminLogout: () => void }) {
   const location = useLocation();
   const isHome = location.pathname === "/";
 
@@ -617,13 +659,13 @@ function AppShell({ posts, setPosts, commentsByPost, setCommentsByPost, projects
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/blog" element={<BlogPage posts={posts} />} />
-        <Route path="/blog/:postId" element={<BlogPostPage posts={posts} setPosts={setPosts} commentsByPost={commentsByPost} setCommentsByPost={setCommentsByPost} />} />
-        <Route path="/blog/new" element={<BlogEditorPage setPosts={setPosts} />} />
-        <Route path="/blog/:postId/edit" element={<BlogEditPage posts={posts} setPosts={setPosts} />} />
-        <Route path="/projects" element={<ProjectPage projects={projects} />} />
-        <Route path="/projects/:projectId" element={<ProjectDetailPage projects={projects} setProjects={setProjects} />} />
-        <Route path="/projects/new" element={<ProjectEditorPage setProjects={setProjects} />} />
+        <Route path="/blog" element={<BlogPage posts={posts} isAdmin={isAdmin} onAdminLogin={onAdminLogin} onAdminLogout={onAdminLogout} />} />
+        <Route path="/blog/:postId" element={<BlogPostPage posts={posts} setPosts={setPosts} commentsByPost={commentsByPost} setCommentsByPost={setCommentsByPost} isAdmin={isAdmin} />} />
+        <Route path="/blog/new" element={<BlogEditorPage setPosts={setPosts} isAdmin={isAdmin} />} />
+        <Route path="/blog/:postId/edit" element={<BlogEditPage posts={posts} setPosts={setPosts} isAdmin={isAdmin} />} />
+        <Route path="/projects" element={<ProjectPage projects={projects} isAdmin={isAdmin} />} />
+        <Route path="/projects/:projectId" element={<ProjectDetailPage projects={projects} setProjects={setProjects} isAdmin={isAdmin} />} />
+        <Route path="/projects/new" element={<ProjectEditorPage setProjects={setProjects} isAdmin={isAdmin} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
@@ -634,12 +676,24 @@ function App() {
   const [posts, setPosts] = useState<Post[]>(() => loadJson(`${BLOG_STORAGE_KEY}:posts`, POSTS_SEED));
   const [commentsByPost, setCommentsByPost] = useState<CommentState>(() => loadJson(COMMENT_STORAGE_KEY, {}));
   const [projects, setProjects] = useState<ProjectItem[]>(() => loadJson(`${PROJECT_STORAGE_KEY}:projects`, PROJECTS_SEED));
+  const [isAdmin, setIsAdmin] = useState<boolean>(() => loadJson(ADMIN_AUTH_STORAGE_KEY, false));
 
   useEffect(() => saveJson(`${BLOG_STORAGE_KEY}:posts`, posts), [posts]);
   useEffect(() => saveJson(COMMENT_STORAGE_KEY, commentsByPost), [commentsByPost]);
   useEffect(() => saveJson(`${PROJECT_STORAGE_KEY}:projects`, projects), [projects]);
+  useEffect(() => saveJson(ADMIN_AUTH_STORAGE_KEY, isAdmin), [isAdmin]);
 
-  return <HashRouter><AppShell posts={posts} setPosts={setPosts} commentsByPost={commentsByPost} setCommentsByPost={setCommentsByPost} projects={projects} setProjects={setProjects} /></HashRouter>;
+  function loginAdmin(username: string, password: string) {
+    const ok = isValidAdmin(username, password);
+    if (ok) setIsAdmin(true);
+    return ok;
+  }
+
+  function logoutAdmin() {
+    setIsAdmin(false);
+  }
+
+  return <HashRouter><AppShell posts={posts} setPosts={setPosts} commentsByPost={commentsByPost} setCommentsByPost={setCommentsByPost} projects={projects} setProjects={setProjects} isAdmin={isAdmin} onAdminLogin={loginAdmin} onAdminLogout={logoutAdmin} /></HashRouter>;
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode><App /></React.StrictMode>);

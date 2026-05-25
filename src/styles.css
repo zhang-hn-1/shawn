@@ -835,7 +835,37 @@ button {
 
 .filter-bar__actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
+  gap: 10px;
+}
+
+.admin-login {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admin-login input {
+  width: 118px;
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8ecd7;
+  padding: 0 12px;
+}
+
+.admin-login input::placeholder {
+  color: rgba(248, 236, 215, 0.52);
+}
+
+.admin-login__error {
+  flex-basis: 100%;
+  color: #ff9d8a;
+  font-size: 0.78rem;
+  text-align: right;
 }
 
 .field--inline {
