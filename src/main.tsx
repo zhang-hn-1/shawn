@@ -135,7 +135,11 @@ function loadJson<T>(key: string, fallback: T): T {
 
 function saveJson<T>(key: string, value: T) {
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error(`Failed to persist ${key}`, error);
+    }
   }
 }
 
@@ -269,7 +273,11 @@ function BlogEditorPage({ setPosts }: { setPosts: React.Dispatch<React.SetStateA
       excerpt: draft.excerpt.trim(),
       content: splitParagraphs(draft.content),
     };
-    setPosts((current) => [nextPost, ...current]);
+    setPosts((current) => {
+      const nextPosts = [nextPost, ...current];
+      saveJson(`${BLOG_STORAGE_KEY}:posts`, nextPosts);
+      return nextPosts;
+    });
     navigate(`/blog/${nextPost.id}`);
   }
 
@@ -331,16 +339,20 @@ function BlogEditPage({ posts, setPosts }: { posts: Post[]; setPosts: React.Disp
       .filter((section) => section.body);
     if (!draft.title.trim() || !draft.category.trim() || !draft.excerpt.trim() || nextSections.length === 0) return;
     const contentText = nextSections.map((section) => section.body).join("\n\n");
-    setPosts((current) => current.map((item) => item.id === activePostId ? {
-      ...item,
-      title: draft.title.trim(),
-      category: draft.category.trim(),
-      tags: splitTags(draft.tags),
-      readTime: draft.readTime.trim() || readMinutesFromContent(contentText),
-      excerpt: draft.excerpt.trim(),
-      content: nextSections.map((section) => section.body),
-      sections: nextSections,
-    } : item));
+    setPosts((current) => {
+      const nextPosts = current.map((item) => item.id === activePostId ? {
+        ...item,
+        title: draft.title.trim(),
+        category: draft.category.trim(),
+        tags: splitTags(draft.tags),
+        readTime: draft.readTime.trim() || readMinutesFromContent(contentText),
+        excerpt: draft.excerpt.trim(),
+        content: nextSections.map((section) => section.body),
+        sections: nextSections,
+      } : item);
+      saveJson(`${BLOG_STORAGE_KEY}:posts`, nextPosts);
+      return nextPosts;
+    });
     navigate(`/blog/${activePostId}`);
   }
 
@@ -396,7 +408,11 @@ function ProjectEditorPage({ setProjects }: { setProjects: React.Dispatch<React.
         draft.gain.trim() ? { title: "项目收获", body: draft.gain.trim() } : null,
       ].filter(Boolean) as ProjectSection[],
     };
-    setProjects((current) => [nextProject, ...current]);
+    setProjects((current) => {
+      const nextProjects = [nextProject, ...current];
+      saveJson(`${PROJECT_STORAGE_KEY}:projects`, nextProjects);
+      return nextProjects;
+    });
     navigate(`/projects/${nextProject.id}`);
   }
 
@@ -473,19 +489,32 @@ function BlogPostPage({ posts, setPosts, commentsByPost, setCommentsByPost }: { 
     event.preventDefault();
     if (!draftContent.trim()) return;
     const nextComment = { id: uid(), name: draftName.trim() || "匿名", content: draftContent.trim(), createdAt: new Date().toISOString() };
-    setCommentsByPost((current) => ({ ...current, [activePostId]: [nextComment, ...(current[activePostId] ?? [])] }));
+    setCommentsByPost((current) => {
+      const nextComments = { ...current, [activePostId]: [nextComment, ...(current[activePostId] ?? [])] };
+      saveJson(COMMENT_STORAGE_KEY, nextComments);
+      return nextComments;
+    });
     setDraftContent("");
   }
 
   function removeComment(commentId: string) {
-    setCommentsByPost((current) => ({ ...current, [activePostId]: (current[activePostId] ?? []).filter((comment) => comment.id !== commentId) }));
+    setCommentsByPost((current) => {
+      const nextComments = { ...current, [activePostId]: (current[activePostId] ?? []).filter((comment) => comment.id !== commentId) };
+      saveJson(COMMENT_STORAGE_KEY, nextComments);
+      return nextComments;
+    });
   }
 
   function deletePost() {
-    setPosts((current) => current.filter((item) => item.id !== activePostId));
+    setPosts((current) => {
+      const nextPosts = current.filter((item) => item.id !== activePostId);
+      saveJson(`${BLOG_STORAGE_KEY}:posts`, nextPosts);
+      return nextPosts;
+    });
     setCommentsByPost((current) => {
       const next = { ...current };
       delete next[activePostId];
+      saveJson(COMMENT_STORAGE_KEY, next);
       return next;
     });
     navigate("/blog");
@@ -541,7 +570,11 @@ function ProjectDetailPage({ projects, setProjects }: { projects: ProjectItem[];
   const activeProjectId = project.id;
 
   function deleteProject() {
-    setProjects((current) => current.filter((item) => item.id !== activeProjectId));
+    setProjects((current) => {
+      const nextProjects = current.filter((item) => item.id !== activeProjectId);
+      saveJson(`${PROJECT_STORAGE_KEY}:projects`, nextProjects);
+      return nextProjects;
+    });
     navigate("/projects");
   }
 
