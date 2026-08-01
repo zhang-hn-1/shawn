@@ -1,0 +1,28 @@
+{
+  "name": "shawn-project-workspace",
+  "version": "2.2.0",
+  "private": true,
+  "type": "module",
+  "description": "由 Markdown 数据目录驱动的个人主页、项目管理、日报与进度可视化",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "project:new": "node scripts/new-project.mjs",
+    "log:new": "node scripts/new-project-log.mjs",
+    "blog:new": "node scripts/new-blog.mjs",
+    "showcase:new": "node scripts/new-showcase.mjs"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  }
+}
