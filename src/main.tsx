@@ -1,9 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
+<<<<<<< HEAD
 import { HashRouter, Navigate, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { DailyLogPage, TimelinePage, WorkspacePage } from "./project-management";
 import { aboutProfile, blogPosts, showcaseProjects, type BlogPost } from "./markdown-data";
 import { MemoryPage } from "./secret-memories";
+=======
+import { HashRouter, Navigate, NavLink, Route, Routes, useParams } from "react-router-dom";
+import { DailyLogPage, TimelinePage, WorkspacePage } from "./project-management";
+import { aboutProfile, blogPosts, showcaseProjects, type BlogPost } from "./markdown-data";
+>>>>>>> 4fc4578db3dd69fe9b2c941eee0a45b4a0005ed1
 import "./styles.css";
 
 type CommentItem = {
@@ -355,6 +361,7 @@ function StudyPage() {
   );
 }
 
+<<<<<<< HEAD
 function AppContent({ comments, setComments }: {
   comments: Record<string, CommentItem[]>;
   setComments: React.Dispatch<React.SetStateAction<Record<string, CommentItem[]>>>;
@@ -363,6 +370,13 @@ function AppContent({ comments, setComments }: {
   if (location.pathname === "/our-film") return <MemoryPage />;
 
   return (
+=======
+function App() {
+  const [comments, setComments] = usePersistentState<Record<string, CommentItem[]>>(COMMENT_STORAGE_KEY, {});
+
+  return (
+    <HashRouter>
+>>>>>>> 4fc4578db3dd69fe9b2c941eee0a45b4a0005ed1
       <div className="shell">
         <header className="topbar">
           <NavLink className="brand" to="/"><span>Shawn</span><small>个人主页</small></NavLink>
@@ -392,6 +406,7 @@ function AppContent({ comments, setComments }: {
         </Routes>
         <footer className="footer"><span>Shawn Project Workspace</span><span>Markdown 数据目录 + Git 记录</span></footer>
       </div>
+<<<<<<< HEAD
   );
 }
 
@@ -400,4 +415,10 @@ function App() {
   return <HashRouter><AppContent comments={comments} setComments={setComments} /></HashRouter>;
 }
 
+=======
+    </HashRouter>
+  );
+}
+
+>>>>>>> 4fc4578db3dd69fe9b2c941eee0a45b4a0005ed1
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode><App /></React.StrictMode>);
