@@ -4,7 +4,6 @@
 
 网站的主要内容统一保存在 `src/data` 目录中。后续维护项目、日报、博客、公开项目展示和个人信息时，不需要修改 TypeScript、CSS 或 JSON，只需要新增或修改对应的 Markdown 文件，然后提交到 GitHub。
 
-<<<<<<< HEAD
 ## 私人电影回忆页
 
 当前项目还包含一个不出现在主导航中的情侣回忆页面：
@@ -63,8 +62,6 @@ VITE_MEMORY_PASSWORD_TWO=0627
 
 网站沿用当前项目的 Vite + React 架构，可直接部署到 GitHub Pages、Vercel、Netlify 或静态文件服务器。部署前运行 `npm run build`，将 `dist/` 作为发布目录。
 
-=======
->>>>>>> 4fc4578db3dd69fe9b2c941eee0a45b4a0005ed1
 ---
 
 ## 一、主要功能
@@ -1043,8 +1040,5 @@ docs/templates/PROJECT_CONFIG_TEMPLATE.md
 docs/templates/DAILY_LOG_TEMPLATE.md
 ```
 
-<<<<<<< HEAD
 也可以使用 `npm run project:new`、`npm run log:new`、`npm run blog:new` 和 `npm run showcase:new` 自动创建。
-=======
 也可以使用 `npm run project:new`、`npm run log:new`、`npm run blog:new` 和 `npm run showcase:new` 自动创建。
->>>>>>> 4fc4578db3dd69fe9b2c941eee0a45b4a0005ed1
