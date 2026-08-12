@@ -53,14 +53,14 @@ export const scenes: StoryScene[] = [
   { id: "first-meeting-01", type: "chapter", chapterId: "first-meeting", title: "从一件小事开始靠近", subtitle: "CHAPTER 01 · FIRST MEETING", text: "最开始，我们只是一起把事情做好。后来才发现，有些事情一旦一起经历，就会留下比结果更久的东西。", alignment: "center", theme: "warm" },
   shared(2, "first-meeting"),
   shared(3, "first-meeting"),
-  { id: "cute-you-01-chapter", type: "chapter", chapterId: "cute-you", title: "可爱的你", subtitle: "CHAPTER 02 · CUTE YOU", text: "这一章没有复杂的故事，只想把你可爱的每一个瞬间，好好放在这里。", alignment: "center", theme: "warm" },
-  ...photoScenes("cute-you", "cute-you", "可爱的你"),
-  { id: "conversations-01", type: "chapter", chapterId: "conversations", title: "有些话，只对你说", subtitle: "CHAPTER 03 · CONVERSATIONS", text: "聊天不是证据，是两个人如何把一天交给彼此的声音。我们只留下那些让故事往前走的句子。", alignment: "center", theme: "dark" },
+  { id: "conversations-01", type: "chapter", chapterId: "conversations", title: "有些话，只对你说", subtitle: "CHAPTER 02 · CONVERSATIONS", text: "聊天不是证据，是两个人如何把一天交给彼此的声音。我们只留下那些让故事往前走的句子。", alignment: "center", theme: "dark" },
   { id: "chat-01", type: "chat", chapterId: "conversations", speaker: "你", time: "23:47", text: "这个材料怎么改？", title: "SELECTED DIALOGUE 01", alignment: "center", theme: "dark" },
   shared(4, "conversations"),
   { id: "chat-02", type: "chat", chapterId: "conversations", speaker: "我", time: "23:48", text: "我把草稿拿给你看，我们一起商量。", title: "SELECTED DIALOGUE 02", alignment: "center", theme: "dark" },
   shared(5, "conversations"),
   { id: "conversation-quote", type: "quote", chapterId: "conversations", title: "有些话，我只对你说", text: "从“这个材料怎么改”，到“宝宝晚安”。称呼变了，生活也逐渐有了一个可以回去说话的地方。", alignment: "center", theme: "warm" },
+  { id: "cute-you-01-chapter", type: "chapter", chapterId: "cute-you", title: "可爱的你", subtitle: "CHAPTER 03 · CUTE YOU", text: "这一章没有复杂的故事，只想把你可爱的每一个瞬间，好好放在这里。", alignment: "center", theme: "warm" },
+  ...photoScenes("cute-you", "cute-you", "可爱的你"),
   { id: "places-01", type: "chapter", chapterId: "places", title: "我们去过的地方", subtitle: "CHAPTER 04 · PLACES", text: "城市不是地图上的一个点。它是那天的天气、走过的路，以及你站在我身边的样子。", alignment: "center", theme: "dark" },
   { id: "places-location", type: "location", chapterId: "places", title: "SOMEWHERE TOGETHER", location: "与你同行", subtitle: "TRAVEL", text: "只要和你一起，一段路也值得记住。", alignment: "center", theme: "dark" },
   ...photoScenes("travel", "places", "旅行"),
@@ -81,7 +81,7 @@ export const scenes: StoryScene[] = [
   { id: "ending-01", type: "ending", chapterId: "ending", title: "TO BE CONTINUED", subtitle: "下一幕仍在拍摄中", text: "A PRIVATE FILM · MADE FOR TWO", alignment: "center", theme: "dark" },
 ];
 
-export const chapterOrder = ["opening", "prologue", "first-meeting", "cute-you", "conversations", "places", "ordinary-days", "letter", "now", "ending"];
+export const chapterOrder = ["opening", "prologue", "first-meeting", "conversations", "cute-you", "places", "ordinary-days", "letter", "now", "ending"];
 
 export const chapterLabels: Record<string, string> = {
   opening: "片头",

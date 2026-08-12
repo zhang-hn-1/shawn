@@ -1,3 +1,6 @@
+import sharedUs01 from "../../1.png";
+import sharedUs02 from "../../2.png";
+
 export type MemoryImage = {
   id: string;
   src: string;
@@ -23,7 +26,7 @@ const collectionFiles = {
 
 export const memories: MemoryImage[] = Object.entries(collectionFiles).flatMap(([collection, files]) => files.map((file, index) => ({
   id: `${collection}-${String(index + 1).padStart(2, "0")}`,
-  src: `/images/recollections/${collection}/${file}?v=20260803`,
+  src: collection === "shared-us" && index === 0 ? sharedUs01 : collection === "shared-us" && index === 1 ? sharedUs02 : `/images/recollections/${collection}/${file}?v=20260803`,
   alt: `${collection === "cute-you" ? "可爱的你" : collection === "shared-us" ? "我与淑淑" : collection === "travel" ? "旅行" : "普通日子"} · ${String(index + 1).padStart(2, "0")}`,
   date: "",
   location: "",
