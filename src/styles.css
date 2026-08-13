@@ -1554,3 +1554,707 @@ body.story-mode {
     width: 90vw;
   }
 }
+
+/* Reference-inspired landing treatment: a quiet full-screen cover with centered type. */
+.shell--landing {
+  width: 100%;
+  padding: 0;
+}
+
+.shell--landing .topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: min(var(--max-width), calc(100% - 40px));
+  margin: 0 auto;
+  padding-top: 24px;
+  color: #ede8df;
+}
+
+.shell--landing .brand small,
+.shell--landing .nav-link {
+  color: rgba(237, 232, 223, 0.68);
+}
+
+.shell--landing .brand span {
+  color: #ede8df;
+}
+
+.shell--landing .nav {
+  border-color: rgba(237, 232, 223, 0.2);
+  background: rgba(14, 13, 12, 0.42);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+.shell--landing .nav-link:hover,
+.shell--landing .nav-link.active {
+  color: #ede8df;
+  background: rgba(177, 139, 98, 0.25);
+}
+
+.shell--landing .page--home {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(177, 139, 98, 0.18), transparent 28%),
+    radial-gradient(circle at 20% 86%, rgba(82, 95, 102, 0.28), transparent 35%),
+    linear-gradient(135deg, #11110f 0%, #1b1816 52%, #0c0d0d 100%);
+}
+
+.shell--landing .page--home::before,
+.shell--landing .page--home::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.shell--landing .page--home::before {
+  inset: 0;
+  opacity: 0.4;
+  background-image: linear-gradient(115deg, transparent 10%, rgba(255, 255, 255, 0.06) 50%, transparent 90%);
+}
+
+.shell--landing .page--home::after {
+  inset: 8% 4%;
+  border: 1px solid rgba(237, 232, 223, 0.1);
+}
+
+.shell--landing .landing {
+  position: relative;
+  z-index: 1;
+  width: min(760px, calc(100% - 40px));
+  padding: 168px 28px 120px;
+  border: 0;
+  border-radius: 0;
+  color: #ede8df;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.shell--landing .landing__rule {
+  width: 58px;
+  height: 1px;
+  margin: 0 auto 28px;
+  background: #b18b62;
+}
+
+.shell--landing .landing .eyebrow {
+  color: #b18b62;
+  font-family: var(--font-title-en);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+}
+
+.shell--landing .landing h1 {
+  margin-bottom: 16px;
+  color: #ede8df;
+  font-family: var(--font-art-cn);
+  font-size: clamp(3.4rem, 8vw, 6.8rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.08;
+}
+
+.shell--landing .landing__subtitle {
+  margin-bottom: 22px;
+  color: rgba(237, 232, 223, 0.72);
+  font-family: var(--font-title-en);
+  font-size: 0.92rem;
+  letter-spacing: 0.2em;
+}
+
+.shell--landing .landing__lead {
+  max-width: 560px;
+  margin: 0 auto;
+  color: rgba(237, 232, 223, 0.7);
+}
+
+.shell--landing .landing__actions {
+  justify-content: center;
+  margin-top: 34px;
+}
+
+.shell--landing .button--ghost {
+  border-color: rgba(237, 232, 223, 0.25);
+  color: #ede8df;
+  background: rgba(237, 232, 223, 0.04);
+}
+
+.shell--landing .button--ghost:hover {
+  border-color: #b18b62;
+  background: rgba(177, 139, 98, 0.16);
+}
+
+.shell--landing .landing__stats {
+  border-color: rgba(237, 232, 223, 0.14);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.shell--landing .landing__stats article span {
+  color: rgba(237, 232, 223, 0.48);
+}
+
+.shell--landing .landing__stats article strong {
+  color: #b18b62;
+}
+
+.resume-page {
+  width: min(1280px, calc(100% - 40px));
+  max-width: none;
+  margin: 0 auto;
+}
+
+.resume-hero {
+  align-items: end;
+}
+
+.resume-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 18px;
+}
+
+.resume-switcher {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.resume-switcher button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.resume-switcher button.is-active {
+  color: #fffaf4;
+  background: var(--accent-strong);
+}
+
+.resume-toolbar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  color: var(--subtle);
+  font-size: 0.82rem;
+}
+
+.resume-toolbar__meta .button {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.78rem;
+}
+
+.resume-viewer {
+  display: grid;
+  place-items: start center;
+  min-height: calc(100vh - 150px);
+  padding: clamp(12px, 2vw, 28px);
+  overflow: hidden;
+  background: #252729;
+}
+
+.resume-preview-link {
+  display: block;
+  width: min(100%, 980px);
+  border-radius: 12px;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.28);
+  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+
+.resume-preview-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.34);
+}
+
+.resume-preview-link img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+@media (max-width: 760px) {
+  .shell--landing .topbar {
+    width: calc(100% - 28px);
+    padding-top: 14px;
+  }
+
+  .shell--landing .nav {
+    max-width: 70vw;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .shell--landing .nav-link {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.76rem;
+  }
+
+  .shell--landing .landing {
+    width: calc(100% - 28px);
+    padding: 142px 12px 90px;
+  }
+
+  .shell--landing .landing h1 {
+    font-size: clamp(3rem, 15vw, 4.8rem);
+  }
+
+  .shell--landing .landing__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .resume-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .resume-toolbar__meta {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .resume-page {
+    width: calc(100% - 28px);
+  }
+
+  .resume-viewer {
+    min-height: calc(100vh - 180px);
+    padding: 8px;
+  }
+}
+
+/* Landing palette: deep ocean blue, cool mint highlights, and warm white type. */
+.shell--landing .page--home {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(34, 211, 238, 0.15), transparent 30%),
+    radial-gradient(circle at 88% 72%, rgba(99, 102, 241, 0.2), transparent 34%),
+    linear-gradient(135deg, #06111e 0%, #0a1728 48%, #080d19 100%);
+}
+
+.shell--landing .page--home::before {
+  opacity: 0.34;
+  background-image:
+    linear-gradient(115deg, transparent 10%, rgba(255, 255, 255, 0.06) 50%, transparent 90%),
+    linear-gradient(to right, rgba(125, 211, 252, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(125, 211, 252, 0.06) 1px, transparent 1px);
+  background-size: auto, 80px 80px, 80px 80px;
+}
+
+.shell--landing .page--home::after {
+  border-color: rgba(125, 211, 252, 0.16);
+}
+
+.shell--landing .brand span,
+.shell--landing .landing h1 {
+  color: #f5f9ff;
+}
+
+.shell--landing .brand small,
+.shell--landing .nav-link {
+  color: rgba(214, 228, 245, 0.72);
+}
+
+.shell--landing .nav {
+  border-color: rgba(125, 211, 252, 0.2);
+  background: rgba(5, 16, 30, 0.64);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+}
+
+.shell--landing .nav-link:hover,
+.shell--landing .nav-link.active {
+  color: #f5f9ff;
+  background: rgba(34, 211, 238, 0.14);
+}
+
+.shell--landing .landing .eyebrow,
+.shell--landing .landing__rule {
+  color: #67e8f9;
+  background: #67e8f9;
+}
+
+.shell--landing .landing__subtitle {
+  color: #b9cce1;
+}
+
+.shell--landing .landing__lead {
+  color: rgba(226, 236, 248, 0.76);
+}
+
+.shell--landing .button--solid {
+  border-color: #22d3ee;
+  color: #04111e;
+  background: linear-gradient(135deg, #67e8f9, #22d3ee 48%, #818cf8);
+  box-shadow: 0 12px 30px rgba(34, 211, 238, 0.22);
+}
+
+.shell--landing .button--ghost {
+  border-color: rgba(167, 243, 208, 0.38);
+  color: #d8fdf1;
+  background: rgba(167, 243, 208, 0.035);
+}
+
+.shell--landing .button--ghost:hover {
+  border-color: #67e8f9;
+  color: #f5f9ff;
+  background: rgba(34, 211, 238, 0.12);
+}
+
+.shell--landing .landing__stats {
+  gap: 14px;
+  border-color: rgba(125, 211, 252, 0.18);
+  background: transparent;
+}
+
+.shell--landing .landing__stats article {
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  background: linear-gradient(145deg, rgba(18, 48, 78, 0.76), rgba(11, 28, 48, 0.74));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 35px rgba(0, 0, 0, 0.18);
+}
+
+.shell--landing .landing__stats article span {
+  color: #91abc4;
+}
+
+.shell--landing .landing__stats article strong {
+  color: #a7f3d0;
+}
+
+/* Dmego-inspired editorial shell for every public page. The /our-film route
+   intentionally stays outside .shell, so its cinematic treatment is untouched. */
+body:has(.shell) {
+  color: #ede8df;
+  background: #11110f;
+}
+
+body:has(.shell)::before {
+  background-image:
+    linear-gradient(to right, rgba(237, 232, 223, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(237, 232, 223, 0.045) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.3;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 48px));
+  color: #ede8df;
+}
+
+.shell:not(.shell--landing) {
+  background:
+    radial-gradient(circle at 88% 4%, rgba(177, 139, 98, 0.1), transparent 28%),
+    linear-gradient(180deg, #171614 0%, #11110f 70%);
+}
+
+.shell .topbar {
+  border-bottom: 1px solid rgba(237, 232, 223, 0.11);
+}
+
+.shell .brand span,
+.shell .hero h1,
+.shell .article h1,
+.shell .editor h1,
+.shell .section__head h2,
+.shell .content-card h2,
+.shell .feature-card h3,
+.shell .blog-card h2,
+.shell .project-card h2,
+.shell .article-section h2,
+.shell .study-question h2 {
+  color: #ede8df;
+}
+
+.shell .brand small,
+.shell .muted,
+.shell .field span,
+.shell .local-note,
+.shell .footer,
+.shell .landing__stats span,
+.shell .study-summary span,
+.shell .comment-card span {
+  color: #817a72;
+}
+
+.shell .brand span,
+.shell .landing h1,
+.shell .hero h1,
+.shell .article h1,
+.shell .editor h1,
+.shell .section__head h2,
+.shell .content-card h2,
+.shell .feature-card h3,
+.shell .blog-card h2,
+.shell .project-card h2,
+.shell .article-section h2,
+.shell .study-question h2 {
+  font-family: var(--font-art-cn);
+  font-weight: 400;
+}
+
+.shell .nav {
+  border-color: rgba(237, 232, 223, 0.17);
+  background: rgba(20, 19, 17, 0.92);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+}
+
+.shell .nav-link {
+  color: #958e86;
+}
+
+.shell .nav-link:hover,
+.shell .nav-link.active {
+  color: #ede8df;
+  background: rgba(177, 139, 98, 0.2);
+}
+
+.shell .card,
+.shell .blog-card,
+.shell .project-card,
+.shell .filter-bar,
+.shell .comment-panel {
+  border-color: rgba(237, 232, 223, 0.12);
+  background: linear-gradient(145deg, rgba(34, 32, 29, 0.92), rgba(21, 20, 18, 0.9));
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+}
+
+.shell .eyebrow,
+.shell .feature-card > span,
+.shell .blog-card__meta,
+.shell .project-card__status,
+.shell .article-section > span {
+  color: #b18b62;
+}
+
+.shell .lead,
+.shell .landing__lead,
+.shell .pm-lead,
+.shell .content-card p,
+.shell .feature-card p,
+.shell .blog-card p,
+.shell .project-card p,
+.shell .article-section p,
+.shell .comment-card p {
+  color: #aaa39a;
+}
+
+.shell .button--solid {
+  border-color: #b18b62;
+  color: #16130f;
+  background: linear-gradient(135deg, #d2ad78, #a87845);
+  box-shadow: 0 12px 28px rgba(177, 139, 98, 0.2);
+}
+
+.shell .button--ghost {
+  border-color: rgba(237, 232, 223, 0.25);
+  color: #d4cdc3;
+  background: rgba(237, 232, 223, 0.035);
+}
+
+.shell .button--ghost:hover,
+.shell .button--solid:hover {
+  border-color: #d2ad78;
+  color: #fffaf3;
+  background: rgba(177, 139, 98, 0.24);
+}
+
+.shell .hero__badge,
+.shell .resume-switcher button.is-active {
+  border-color: #b18b62;
+  color: #e8c38e;
+  background: rgba(177, 139, 98, 0.16);
+}
+
+.shell .field input,
+.shell .field textarea {
+  border-color: rgba(237, 232, 223, 0.18);
+  color: #ede8df;
+  background: rgba(13, 13, 12, 0.64);
+}
+
+.shell .field input:focus,
+.shell .field textarea:focus {
+  border-color: rgba(177, 139, 98, 0.7);
+  box-shadow: 0 0 0 4px rgba(177, 139, 98, 0.12);
+}
+
+.shell .tag,
+.shell .study-question__meta span,
+.shell .option,
+.shell .question-index button,
+.shell .article-section,
+.shell .comment-card {
+  border-color: rgba(237, 232, 223, 0.12);
+  color: #aaa39a;
+  background: rgba(237, 232, 223, 0.045);
+}
+
+.shell .tag:hover,
+.shell .blog-card:hover,
+.shell .project-card:hover {
+  border-color: rgba(177, 139, 98, 0.62);
+}
+
+.shell .option strong {
+  color: #d2ad78;
+  background: rgba(177, 139, 98, 0.14);
+}
+
+.shell .option.is-selected {
+  border-color: rgba(177, 139, 98, 0.62);
+  background: rgba(177, 139, 98, 0.12);
+}
+
+.shell .question-index button.is-active {
+  border-color: #b18b62;
+  color: #e8c38e;
+}
+
+.shell .question-index button.is-done,
+.shell .comment-card__avatar {
+  color: #17130e;
+  background: #b18b62;
+}
+
+.shell .footer {
+  border-color: rgba(237, 232, 223, 0.11);
+}
+
+/* Landing cover in the same restrained black-and-warm-metal palette. */
+.shell--landing .page--home {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(177, 139, 98, 0.16), transparent 30%),
+    radial-gradient(circle at 16% 86%, rgba(82, 78, 72, 0.2), transparent 35%),
+    linear-gradient(135deg, #11110f 0%, #1c1916 52%, #0d0d0c 100%);
+}
+
+.shell--landing .page--home::before {
+  background-image:
+    linear-gradient(115deg, transparent 10%, rgba(255, 255, 255, 0.055) 50%, transparent 90%),
+    linear-gradient(to right, rgba(237, 232, 223, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(237, 232, 223, 0.04) 1px, transparent 1px);
+  background-size: auto, 80px 80px, 80px 80px;
+}
+
+.shell--landing .page--home::after {
+  border-color: rgba(237, 232, 223, 0.13);
+}
+
+.shell--landing .brand span,
+.shell--landing .landing h1 {
+  color: #ede8df;
+}
+
+.shell--landing .brand small,
+.shell--landing .nav-link {
+  color: rgba(237, 232, 223, 0.64);
+}
+
+.shell--landing .nav {
+  border-color: rgba(237, 232, 223, 0.18);
+  background: rgba(16, 15, 14, 0.62);
+}
+
+.shell--landing .nav-link:hover,
+.shell--landing .nav-link.active {
+  color: #ede8df;
+  background: rgba(177, 139, 98, 0.22);
+}
+
+.shell--landing .landing .eyebrow {
+  color: #b18b62;
+  background: transparent;
+}
+
+.shell--landing .landing__rule {
+  background: #b18b62;
+}
+
+.shell--landing .landing__subtitle {
+  color: #aaa39a;
+}
+
+.shell--landing .landing__lead {
+  color: rgba(237, 232, 223, 0.7);
+}
+
+.shell--landing .landing__stats {
+  border-color: rgba(237, 232, 223, 0.14);
+}
+
+.shell--landing .landing__stats article {
+  border-color: rgba(237, 232, 223, 0.17);
+  background: linear-gradient(145deg, rgba(49, 45, 40, 0.82), rgba(26, 24, 21, 0.82));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 35px rgba(0, 0, 0, 0.24);
+}
+
+.shell--landing .landing__stats article span {
+  color: #918a82;
+}
+
+.shell--landing .landing__stats article strong {
+  color: #d2ad78;
+}
+
+.shell .resume-viewer {
+  background: #1a1917;
+}
+
+/* Neutral grey information blocks: dark text on soft grey, matching the
+   compact control tiles used in the reference visual language. */
+.shell .landing__stats article,
+.shell .study-summary,
+.shell .about-focus-list span,
+.shell .about-honor-grid span,
+.shell .hero__badge,
+.shell .tag,
+.shell .study-question__meta span,
+.shell .question-index button {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #252321;
+  background: #858585;
+  box-shadow: none;
+  font-family: var(--font-body-cn);
+  font-weight: 800;
+}
+
+.shell .landing__stats article span,
+.shell .landing__stats article strong,
+.shell .study-summary span,
+.shell .study-summary strong {
+  color: #252321;
+}
+
+.shell .landing__stats article strong,
+.shell .study-summary strong {
+  font-family: var(--font-body-cn);
+  font-weight: 800;
+}
+
+.shell .landing__stats article:hover,
+.shell .about-focus-list span:hover,
+.shell .about-honor-grid span:hover,
+.shell .tag:hover,
+.shell .question-index button:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: #929292;
+}

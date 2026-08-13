@@ -148,12 +148,42 @@ function HomePage() {
         <div className="landing__actions">
           <NavLink className="button button--solid" to="/workspace">进入工作台</NavLink>
           <NavLink className="button button--ghost" to="/daily">查看每日记录</NavLink>
+          <NavLink className="button button--ghost" to="/resume">查看简历</NavLink>
         </div>
         <div className="landing__stats">
           <article><span>当前时间</span><strong>{now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}</strong></article>
           <article><span>当前日期</span><strong>{now.toLocaleDateString("zh-CN", { month: "long", day: "numeric" })}</strong></article>
           <article><span>年度进度</span><strong>{progress.toFixed(1)}%</strong></article>
         </div>
+      </section>
+    </main>
+  );
+}
+
+function ResumePage() {
+  const [language, setLanguage] = useState<"cn" | "en">("cn");
+  const documentPath = language === "cn" ? "/resumes/zhang-hangning-cn.pdf" : "/resumes/zhang-hangning-en.pdf";
+  const previewPath = language === "cn" ? "/resumes/zhang-hangning-cn.png" : "/resumes/zhang-hangning-en.png";
+  const documentLabel = language === "cn" ? "中文简历" : "English Resume";
+
+  return (
+    <main className="page page--content resume-page">
+      <section className="resume-toolbar card">
+        <div className="resume-switcher" role="tablist" aria-label="简历语言">
+          <button className={language === "cn" ? "is-active" : ""} type="button" role="tab" aria-selected={language === "cn"} onClick={() => setLanguage("cn")}>中文</button>
+          <button className={language === "en" ? "is-active" : ""} type="button" role="tab" aria-selected={language === "en"} onClick={() => setLanguage("en")}>English</button>
+        </div>
+        <div className="resume-toolbar__meta">
+          <span>{documentLabel}</span>
+          <a className="button button--ghost" href={documentPath} target="_blank" rel="noreferrer">新窗口打开</a>
+          <a className="button button--solid" href={documentPath} download>下载 PDF</a>
+        </div>
+      </section>
+
+      <section className="resume-viewer card" aria-label={documentLabel}>
+        <a className="resume-preview-link" href={documentPath} target="_blank" rel="noreferrer">
+          <img src={previewPath} alt={documentLabel} />
+        </a>
       </section>
     </main>
   );
@@ -363,12 +393,13 @@ function AppContent({ comments, setComments }: {
   if (location.pathname === "/our-film") return <MemoryPage />;
 
   return (
-      <div className="shell">
+      <div className={`shell ${location.pathname === "/" ? "shell--landing" : ""}`}>
         <header className="topbar">
           <NavLink className="brand" to="/"><span>Shawn</span><small>个人主页</small></NavLink>
           <nav className="nav">
             <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/" end>首页</NavLink>
             <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/about">关于</NavLink>
+            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/resume">简历</NavLink>
             <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/blog">博客</NavLink>
             <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/projects">项目</NavLink>
             <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/study">学习</NavLink>
@@ -380,6 +411,7 @@ function AppContent({ comments, setComments }: {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/resume" element={<ResumePage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:postId" element={<BlogDetailPage comments={comments} setComments={setComments} />} />
           <Route path="/projects" element={<ProjectPage />} />

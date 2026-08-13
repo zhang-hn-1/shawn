@@ -642,7 +642,7 @@ function TomorrowPromptBox({ entry, projectName }: { entry: ProjectDailyLog; pro
 }
 
 export function DailyLogPage() {
-  const dates = [...new Set(dailyLogs.map((log) => log.date))];
+  const dates = [...new Set(dailyLogs.map((log) => log.date))].sort((left, right) => right.localeCompare(left));
   const [selectedDate, setSelectedDate] = useState(dates[0] ?? "");
   const selectedLogs = dailyLogs.filter((log) => log.date === selectedDate);
   const projectMap = useMemo(() => new Map(projects.map((project) => [project.id, project])), []);
@@ -653,7 +653,7 @@ export function DailyLogPage() {
   }
 
   return (
-    <main className="page page--blogspace pm-page">
+    <main className="page page--blogspace pm-page daily-log-page">
       <section className="pm-hero card">
         <div><p className="eyebrow">Daily Project Report</p><h1>每日项目日报</h1><p className="pm-lead">同一天的不同项目分别保存在独立 Markdown 文件中，页面按日期自动汇总。</p></div>
         <div className="pm-hero__focus"><span>当前日期</span><strong>{formatDate(selectedDate)}</strong><small>{selectedLogs.length} 个项目 · {totalHours} 小时</small></div>

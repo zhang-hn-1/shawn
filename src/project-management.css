@@ -784,6 +784,351 @@
   }
 }
 
+/* Public workspace panels use the same neutral grey tile treatment as the
+   reference cards: warm dark text, strong Chinese sans-serif labels, and no
+   decorative accent fills inside the panels. */
+.shell .pm-hero__focus,
+.shell .pm-metric,
+.shell .pm-category-card,
+.shell .pm-project-card,
+.shell .pm-log-card,
+.shell .pm-info-block,
+.shell .pm-chart-card,
+.shell .pm-stage-item,
+.shell .pm-log-section,
+.shell .pm-next-focus,
+.shell .pm-log-notes,
+.shell .pm-log-index,
+.shell .pm-log-index__list button:hover,
+.shell .pm-log-index__list button.is-active,
+.shell .pm-timeline,
+.shell .pm-breadcrumb {
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #252321;
+  background: #858585;
+  box-shadow: none;
+}
+
+.shell .pm-hero__focus span,
+.shell .pm-hero__focus strong,
+.shell .pm-hero__focus small,
+.shell .pm-metric span,
+.shell .pm-metric strong,
+.shell .pm-metric p,
+.shell .pm-category-card,
+.shell .pm-category-card h3,
+.shell .pm-category-card p,
+.shell .pm-project-card,
+.shell .pm-project-card h3,
+.shell .pm-project-card p,
+.shell .pm-project-card small,
+.shell .pm-log-card,
+.shell .pm-log-card h3,
+.shell .pm-log-card p,
+.shell .pm-log-card strong,
+.shell .pm-log-card span,
+.shell .pm-log-card code,
+.shell .pm-info-block span,
+.shell .pm-info-block strong,
+.shell .pm-chart-card,
+.shell .pm-chart-card h3,
+.shell .pm-chart-card__head > span,
+.shell .pm-stage-item,
+.shell .pm-stage-item span:not(.pm-status),
+.shell .pm-log-section,
+.shell .pm-log-section h4,
+.shell .pm-next-focus,
+.shell .pm-next-focus span,
+.shell .pm-next-focus strong,
+.shell .pm-log-notes,
+.shell .pm-log-notes > strong,
+.shell .pm-log-index,
+.shell .pm-log-index h3,
+.shell .pm-log-index__list button,
+.shell .pm-log-index__list button strong,
+.shell .pm-log-index__list button span,
+.shell .pm-timeline,
+.shell .pm-timeline__date strong,
+.shell .pm-timeline__date span,
+.shell .pm-timeline__content h3,
+.shell .pm-timeline__content > p:last-child,
+.shell .pm-breadcrumb,
+.shell .pm-breadcrumb button,
+.shell .pm-breadcrumb strong {
+  color: #252321;
+  font-family: var(--font-body-cn);
+}
+
+.shell .pm-hero__focus span,
+.shell .pm-metric span,
+.shell .pm-info-block span,
+.shell .pm-next-focus span,
+.shell .pm-detail__footer > span:first-child,
+.shell .pm-log-index__list button span,
+.shell .pm-timeline__date span {
+  color: #625c55;
+  font-weight: 800;
+}
+
+.shell .pm-hero__focus strong,
+.shell .pm-metric strong,
+.shell .pm-info-block strong,
+.shell .pm-next-focus strong,
+.shell .pm-timeline__date strong,
+.shell .pm-category-card__top strong,
+.shell .pm-project-card__top strong {
+  font-weight: 800;
+}
+
+.shell .pm-hero__focus small,
+.shell .pm-metric p,
+.shell .pm-project-card p,
+.shell .pm-project-card small,
+.shell .pm-log-card p,
+.shell .pm-log-card span,
+.shell .pm-stage-item,
+.shell .pm-log-section,
+.shell .pm-log-notes,
+.shell .pm-timeline__content > p:last-child {
+  color: #514b45;
+}
+
+.shell .pm-category-card:hover,
+.shell .pm-project-card:hover,
+.shell .pm-log-card:hover,
+.shell .pm-metric:hover,
+.shell .pm-info-block:hover,
+.shell .pm-log-section:hover,
+.shell .pm-next-focus:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: #929292;
+}
+
+.shell .pm-status,
+.shell .pm-repo,
+.shell .pm-detail__meta .pm-repo,
+.shell .pm-log-card__actions .pm-repo {
+  border-color: rgba(37, 35, 33, 0.18);
+  color: #252321;
+  background: #a7a7a7;
+  font-family: var(--font-body-cn);
+}
+
+.shell .pm-progress__track {
+  background: rgba(37, 35, 33, 0.18);
+}
+
+.shell .pm-progress__track i {
+  background: #4c4946;
+}
+
+.shell .pm-sparkline polyline,
+.shell .pm-progress-chart__line {
+  stroke: #4c4946;
+}
+
+.shell .pm-sparkline circle,
+.shell .pm-progress-chart__point {
+  fill: #858585;
+  stroke: #4c4946;
+}
+
+.shell .pm-progress-chart text,
+.shell .pm-progress-chart__value {
+  fill: #252321 !important;
+}
+
+/* Daily log: restore visual hierarchy and protect long report content from
+   squeezing the grid or escaping its grey panels. */
+.daily-log-page .pm-log-layout,
+.daily-log-page .pm-log-content,
+.daily-log-page .pm-log-card,
+.daily-log-page .pm-log-card__head,
+.daily-log-page .pm-log-card__grid {
+  min-width: 0;
+}
+
+.daily-log-page .pm-log-layout {
+  align-items: start;
+  gap: 24px;
+}
+
+.daily-log-page .pm-log-index {
+  top: 86px;
+  border-radius: 22px;
+}
+
+.daily-log-page .pm-log-index__list button {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.daily-log-page .pm-log-index__list button.is-active {
+  border-color: rgba(37, 35, 33, 0.35);
+  background: #9b9b9b;
+}
+
+.daily-log-page .pm-log-content {
+  gap: 24px;
+}
+
+.daily-log-page .pm-log-card {
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.daily-log-page .pm-log-card__head {
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px 22px 0 0;
+  color: #252321;
+  background: #858585;
+}
+
+.daily-log-page .pm-log-card__head > div:first-child {
+  min-width: 0;
+}
+
+.daily-log-page .pm-log-card__head h3,
+.daily-log-page .pm-log-card__head p:last-child,
+.daily-log-page .pm-log-card__head .eyebrow {
+  color: #252321;
+  overflow-wrap: anywhere;
+}
+
+.daily-log-page .pm-log-card__head h3 {
+  margin: 8px 0 10px;
+  font-family: var(--font-body-cn);
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.daily-log-page .pm-log-card__head p:last-child {
+  line-height: 1.65;
+}
+
+.daily-log-page .pm-log-card__actions {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.daily-log-page .pm-log-meta {
+  margin: 0;
+  padding: 13px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 0;
+  color: #514b45;
+  background: #777;
+  font-family: var(--font-body-cn);
+  font-weight: 700;
+}
+
+.daily-log-page .pm-log-meta span,
+.daily-log-page .pm-log-meta code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.daily-log-page .pm-log-meta code {
+  color: #393531;
+  background: rgba(37, 35, 33, 0.1);
+}
+
+.daily-log-page .pm-log-card__grid {
+  margin-top: 14px;
+  gap: 14px;
+}
+
+.daily-log-page .pm-log-section,
+.daily-log-page .pm-next-focus,
+.daily-log-page .pm-log-notes,
+.daily-log-page .pm-tomorrow-prompt {
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #252321;
+  background: #858585;
+  box-shadow: none;
+}
+
+.daily-log-page .pm-log-section h4,
+.daily-log-page .pm-log-section p,
+.daily-log-page .pm-log-section li,
+.daily-log-page .pm-next-focus span,
+.daily-log-page .pm-next-focus strong,
+.daily-log-page .pm-log-notes > strong,
+.daily-log-page .pm-log-notes li,
+.daily-log-page .pm-tomorrow-prompt__head span,
+.daily-log-page .pm-tomorrow-prompt__head strong {
+  color: #252321;
+  font-family: var(--font-body-cn);
+}
+
+.daily-log-page .pm-log-section h4,
+.daily-log-page .pm-log-notes > strong {
+  font-weight: 800;
+}
+
+.daily-log-page .pm-log-section p,
+.daily-log-page .pm-log-section li,
+.daily-log-page .pm-log-notes li,
+.daily-log-page .pm-next-focus strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.75;
+}
+
+.daily-log-page .pm-log-section ol,
+.daily-log-page .pm-log-notes ol {
+  margin-top: 0;
+}
+
+.daily-log-page .pm-tomorrow-prompt {
+  margin-top: 14px;
+  padding: 18px;
+}
+
+.daily-log-page .pm-tomorrow-prompt__head span {
+  color: #625c55;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.daily-log-page .pm-tomorrow-prompt__head button {
+  border-color: rgba(37, 35, 33, 0.24);
+  color: #252321;
+  background: #a7a7a7;
+}
+
+.daily-log-page .pm-tomorrow-prompt textarea {
+  min-height: 170px;
+  border-color: rgba(37, 35, 33, 0.18);
+  color: #252321;
+  background: #a7a7a7;
+  font-family: var(--font-body-cn);
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .daily-log-page .pm-log-card__head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .daily-log-page .pm-log-card__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .daily-log-page .pm-log-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 /* Category-first workspace navigation */
 .pm-category-grid {
   display: grid;
