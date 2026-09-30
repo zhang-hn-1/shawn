@@ -17,25 +17,27 @@ fs.mkdirSync(path.dirname(file), { recursive: true });
 fs.writeFileSync(file, `---
 id: ${id}
 title: 项目名称
-status: 进行中
+category: 竞赛
+status: 已完成
+highlight: 全国一等奖
+role: 你在项目中的角色
+advisor: 指导老师
+period: 2025.03 — 2025.08
+order: 10
 tags: 自动化, 工程实践
 summary: 用一两句话概括项目。
 ---
 
-## Project | 项目目标
+## 项目背景
 
-填写项目目标。
+要解决什么问题。
 
-## Project | 我的工作
+## 我的工作
 
-填写个人负责内容。
+- 你具体负责的内容
 
-## Project | 实现方式
+## 项目结果
 
-填写系统方案和实现过程。
-
-## Project | 项目结果
-
-填写可验证的结果和成果。
+- 可验证的结果：奖项、指标、论文
 `, "utf8");
 console.log(`已创建: ${path.relative(root, file)}`);

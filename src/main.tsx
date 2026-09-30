@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Navigate, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
+import { HashRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import { DailyLogPage, TimelinePage, WorkspacePage } from "./project-management";
 import { aboutProfile, blogPosts, showcaseProjects, type BlogPost } from "./markdown-data";
 import { MemoryPage } from "./secret-memories";
@@ -123,38 +123,41 @@ function sameAnswer(left: string[], right: string[]) {
 }
 
 function Paragraphs({ text }: { text: string }) {
-  return <>{text.split("\n").filter(Boolean).map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}</>;
+  const blocks: (string | string[])[] = [];
+  text.split("\n").filter(Boolean).forEach((line) => {
+    if (!line.startsWith("• ")) return blocks.push(line);
+    const last = blocks.at(-1);
+    if (Array.isArray(last)) last.push(line.slice(2));
+    else blocks.push([line.slice(2)]);
+  });
+  return <>{blocks.map((block, index) => Array.isArray(block)
+    ? <ul className="section-list" key={index}>{block.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul>
+    : <p key={index}>{block}</p>)}</>;
 }
 
+const WORK_PATHS = ["/workspace", "/daily", "/timeline", "/study"];
+const WORK_MODE_STORAGE_KEY = "shawn-work-mode";
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
 function HomePage() {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const start = new Date(now.getFullYear(), 0, 1).getTime();
-  const end = new Date(now.getFullYear() + 1, 0, 1).getTime();
-  const progress = ((now.getTime() - start) / (end - start)) * 100;
-
   return (
     <main className="page page--home">
       <section className="landing card">
         <div className="landing__rule" />
         <p className="eyebrow">Automation · Research · Engineering</p>
         <h1>{aboutProfile.name}</h1>
-        <p className="landing__subtitle">个人主页与项目管理工作台</p>
+        <p className="landing__subtitle">{aboutProfile.school} · {aboutProfile.major}</p>
         <p className="landing__lead">{aboutProfile.lead}</p>
         <div className="landing__actions">
-          <NavLink className="button button--solid" to="/workspace">进入工作台</NavLink>
-          <NavLink className="button button--ghost" to="/daily">查看每日记录</NavLink>
+          <NavLink className="button button--solid" to="/projects">查看项目</NavLink>
           <NavLink className="button button--ghost" to="/resume">查看简历</NavLink>
+          <NavLink className="button button--ghost" to="/about">关于我</NavLink>
         </div>
-        <div className="landing__stats">
-          <article><span>当前时间</span><strong>{now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}</strong></article>
-          <article><span>当前日期</span><strong>{now.toLocaleDateString("zh-CN", { month: "long", day: "numeric" })}</strong></article>
-          <article><span>年度进度</span><strong>{progress.toFixed(1)}%</strong></article>
-        </div>
+        {aboutProfile.highlights.length > 0 ? (
+          <div className="landing__stats">
+            {aboutProfile.highlights.map((item) => <article key={item.value}><strong>{item.value}</strong><span>{item.label}</span></article>)}
+          </div>
+        ) : null}
       </section>
     </main>
   );
@@ -162,8 +165,8 @@ function HomePage() {
 
 function ResumePage() {
   const [language, setLanguage] = useState<"cn" | "en">("cn");
-  const documentPath = language === "cn" ? "/resumes/zhang-hangning-cn.pdf" : "/resumes/zhang-hangning-en.pdf";
-  const previewPath = language === "cn" ? "/resumes/zhang-hangning-cn.png" : "/resumes/zhang-hangning-en.png";
+  const documentPath = asset(`resumes/zhang-hangning-${language}.pdf`);
+  const previewPath = asset(`resumes/zhang-hangning-${language}.png`);
   const documentLabel = language === "cn" ? "中文简历" : "English Resume";
 
   return (
@@ -191,40 +194,31 @@ function ResumePage() {
 
 function AboutPage() {
   return (
-    <main className="page page--content">
-      <section className="hero card about-hero">
-        <div>
-          <p className="eyebrow">About</p>
-          <h1>{aboutProfile.name}</h1>
-          <p className="lead">{aboutProfile.school}{aboutProfile.college ? ` ${aboutProfile.college}` : ""} · {aboutProfile.major}</p>
-        </div>
-        <div className="hero__badge">{aboutProfile.period}</div>
+    <main className="page page--content about-page">
+      <section className="about-intro">
+        <p className="eyebrow">About</p>
+        <h1>{aboutProfile.name}</h1>
+        <p className="about-intro__meta">{[aboutProfile.school, aboutProfile.college, aboutProfile.major].filter(Boolean).join(" · ")}</p>
+        <p className="about-intro__lead">{aboutProfile.lead}</p>
+        <div className="about-tags">{aboutProfile.focusAreas.map((item) => <span key={item}>{item}</span>)}</div>
       </section>
 
-      <section className="about-profile-grid">
-        <article className="card about-profile-card about-profile-card--wide">
-          <p className="eyebrow">Research Interests</p>
-          <h2>研究方向</h2>
-          <div className="about-focus-list">{aboutProfile.focusAreas.map((item) => <span key={item}>{item}</span>)}</div>
-        </article>
-
-        <article className="card about-profile-card">
-          <p className="eyebrow">Education</p>
-          <h2>教育经历</h2>
-          <ul className="about-clean-list">{aboutProfile.education.map((item) => <li key={item}>{item}</li>)}</ul>
-        </article>
-
-        <article className="card about-profile-card">
-          <p className="eyebrow">Research & Projects</p>
-          <h2>科研与项目</h2>
-          <ul className="about-clean-list">{aboutProfile.research.map((item) => <li key={item}>{item}</li>)}</ul>
-        </article>
-
-        <article className="card about-profile-card about-profile-card--wide">
-          <p className="eyebrow">Honors</p>
-          <h2>竞赛与荣誉</h2>
-          <div className="about-honor-grid">{aboutProfile.honors.map((item) => <span key={item}>{item}</span>)}</div>
-        </article>
+      <section className="about-sheet card">
+        <div className="about-row">
+          <h2>教育经历<small>Education</small></h2>
+          <ul className="about-list">{aboutProfile.education.map((item) => <li key={item}>{item}</li>)}</ul>
+        </div>
+        <div className="about-row">
+          <h2>科研与项目<small>Research</small></h2>
+          <div>
+            <ul className="about-list">{aboutProfile.research.map((item) => <li key={item}>{item}</li>)}</ul>
+            <NavLink className="about-link" to="/projects">查看项目详情 →</NavLink>
+          </div>
+        </div>
+        <div className="about-row">
+          <h2>竞赛与荣誉<small>Honors</small></h2>
+          <ul className="about-list about-list--columns">{aboutProfile.honors.map((item) => <li key={item}>{item}</li>)}</ul>
+        </div>
       </section>
     </main>
   );
@@ -240,7 +234,7 @@ function BlogPage() {
 
   return (
     <main className="page page--content">
-      <section className="hero card"><div><p className="eyebrow">Writing Archive</p><h1>博客</h1><p className="lead">内容由 src/data/blogs 中的 Markdown 文件生成。</p></div></section>
+      <section className="hero card"><div><p className="eyebrow">Writing Archive</p><h1>博客</h1><p className="lead">项目记录、技术笔记与思考。</p></div></section>
       <section className="filter-bar card">
         <label className="field field--inline"><span>搜索</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索标题、分类或标签" /></label>
       </section>
@@ -253,7 +247,7 @@ function BlogPage() {
             <div className="tag-row">{post.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
           </NavLink>
         ))}
-        {visible.length === 0 ? <div className="empty-state card"><h2>暂无公开文章</h2><p>在 src/data/blogs 放入 Markdown 后自动显示。</p></div> : null}
+        {visible.length === 0 ? <div className="empty-state card"><h2>暂无公开文章</h2></div> : null}
       </section>
     </main>
   );
@@ -287,7 +281,6 @@ function BlogDetailPage({ comments, setComments }: {
           {post.sections.map((section, index) => <section className="article-section" key={`${section.title}-${index}`}><span>{section.label}</span><h2>{section.title}</h2><Paragraphs text={section.body} /></section>)}
         </div>
         <div className="tag-row">{post.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
-        <p className="content-source">内容文件：<code>{post.sourcePath}</code></p>
       </article>
       <section className="comment-panel card">
         <div><p className="eyebrow">Local Comments</p><h2>评论区</h2><p className="muted">评论只保存在当前浏览器。</p></div>
@@ -305,16 +298,30 @@ function BlogDetailPage({ comments, setComments }: {
   );
 }
 
+function ProjectMeta({ project }: { project: (typeof showcaseProjects)[number] }) {
+  const items = [["角色", project.role], ["时间", project.period], ["指导", project.advisor]].filter(([, value]) => value);
+  if (items.length === 0) return null;
+  return <dl className="project-meta">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>;
+}
+
 function ProjectPage() {
-  const [query, setQuery] = useState("");
-  const visible = showcaseProjects.filter((project) => [project.title, project.status, project.summary, project.tags.join(" ")].join(" ").toLowerCase().includes(query.toLowerCase().trim()));
   return (
     <main className="page page--content">
-      <section className="hero card"><div><p className="eyebrow">Portfolio</p><h1>项目展示</h1><p className="lead">内容由 src/data/showcases 中的 Markdown 文件生成。</p></div></section>
-      <section className="filter-bar card"><label className="field field--inline"><span>搜索</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索项目" /></label></section>
-      <section className="project-grid">
-        {visible.map((project) => <NavLink className="project-panel card" key={project.id} to={`/projects/${project.id}`}><p className="eyebrow">{project.status}</p><h2>{project.title}</h2><p>{project.summary}</p><div className="tag-row">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div></NavLink>)}
-        {visible.length === 0 ? <div className="empty-state card"><h2>暂无公开项目</h2><p>在 src/data/showcases 放入 Markdown 后自动显示。</p></div> : null}
+      <section className="hero card"><div><p className="eyebrow">Projects</p><h1>项目经历</h1><p className="lead">竞赛、科研与工程实践中的代表性项目。</p></div></section>
+      <section className="showcase-list">
+        {showcaseProjects.map((project) => (
+          <NavLink className="showcase-card card" key={project.id} to={`/projects/${project.id}`}>
+            <div className="showcase-card__head">
+              <p className="eyebrow">{[project.category, project.status].filter(Boolean).join(" · ")}</p>
+              {project.highlight ? <span className="showcase-card__highlight">{project.highlight}</span> : null}
+            </div>
+            <h2>{project.title}</h2>
+            <p>{project.summary}</p>
+            <ProjectMeta project={project} />
+            <div className="tag-row">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
+          </NavLink>
+        ))}
+        {showcaseProjects.length === 0 ? <div className="empty-state card"><h2>项目整理中</h2></div> : null}
       </section>
     </main>
   );
@@ -327,10 +334,16 @@ function ProjectDetailPage() {
   return (
     <main className="page page--content">
       <article className="article card">
-        <div className="article__head"><div><p className="eyebrow">{project.status}</p><h1>{project.title}</h1><p className="lead">{project.summary}</p></div></div>
-        <div className="article__sections">{project.sections.map((section) => <section className="article-section" key={section.title}><span>{section.label}</span><h2>{section.title}</h2><Paragraphs text={section.body} /></section>)}</div>
+        <div className="article__head"><div>
+          <p className="eyebrow">{[project.category, project.status].filter(Boolean).join(" · ")}</p>
+          <h1>{project.title}</h1>
+          <p className="lead">{project.summary}</p>
+          {project.highlight ? <span className="showcase-card__highlight">{project.highlight}</span> : null}
+          <ProjectMeta project={project} />
+        </div></div>
+        <div className="article__sections">{project.sections.map((section) => <section className="article-section" key={section.title}><h2>{section.title}</h2><Paragraphs text={section.body} /></section>)}</div>
         <div className="tag-row">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
-        <p className="content-source">内容文件：<code>{project.sourcePath}</code></p>
+        <p className="content-source"><NavLink to="/projects">← 返回项目列表</NavLink></p>
       </article>
     </main>
   );
@@ -390,22 +403,39 @@ function AppContent({ comments, setComments }: {
   setComments: React.Dispatch<React.SetStateAction<Record<string, CommentItem[]>>>;
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [workMode, setWorkMode] = usePersistentState(WORK_MODE_STORAGE_KEY, false);
   if (location.pathname === "/our-film") return <MemoryPage />;
+
+  const inWork = workMode || WORK_PATHS.includes(location.pathname);
+  const navClass = ({ isActive }: { isActive: boolean }) => isActive ? "nav-link active" : "nav-link";
+  function toggleWork() {
+    setWorkMode(!inWork);
+    navigate(inWork ? "/" : "/workspace");
+  }
 
   return (
       <div className={`shell ${location.pathname === "/" ? "shell--landing" : ""}`}>
         <header className="topbar">
-          <NavLink className="brand" to="/"><span>Shawn</span><small>个人主页</small></NavLink>
+          <NavLink className="brand" to="/"><span>Shawn</span><small>{inWork ? "Work" : "个人主页"}</small></NavLink>
           <nav className="nav">
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/" end>首页</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/about">关于</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/resume">简历</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/blog">博客</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/projects">项目</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/study">学习</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/workspace">工作台</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/daily">每日记录</NavLink>
-            <NavLink className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} to="/timeline">时间线</NavLink>
+            {inWork ? (
+              <>
+                <NavLink className={navClass} to="/workspace">工作台</NavLink>
+                <NavLink className={navClass} to="/daily">每日记录</NavLink>
+                <NavLink className={navClass} to="/timeline">时间线</NavLink>
+                <NavLink className={navClass} to="/study">学习</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink className={navClass} to="/" end>首页</NavLink>
+                <NavLink className={navClass} to="/projects">项目</NavLink>
+                <NavLink className={navClass} to="/about">关于</NavLink>
+                <NavLink className={navClass} to="/resume">简历</NavLink>
+                {blogPosts.length > 0 ? <NavLink className={navClass} to="/blog">博客</NavLink> : null}
+              </>
+            )}
+            <button className={`nav-link nav-mode ${inWork ? "active" : ""}`} type="button" onClick={toggleWork}>{inWork ? "退出 Work" : "Work"}</button>
           </nav>
         </header>
         <Routes>
@@ -422,7 +452,7 @@ function AppContent({ comments, setComments }: {
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <footer className="footer"><span>Shawn Project Workspace</span><span>Markdown 数据目录 + Git 记录</span></footer>
+        <footer className="footer"><span>© {new Date().getFullYear()} {aboutProfile.name}</span><span>{aboutProfile.school} · {aboutProfile.college}</span></footer>
       </div>
   );
 }

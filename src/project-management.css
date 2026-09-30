@@ -784,160 +784,6 @@
   }
 }
 
-/* Public workspace panels use the same neutral grey tile treatment as the
-   reference cards: warm dark text, strong Chinese sans-serif labels, and no
-   decorative accent fills inside the panels. */
-.shell .pm-hero__focus,
-.shell .pm-metric,
-.shell .pm-category-card,
-.shell .pm-project-card,
-.shell .pm-log-card,
-.shell .pm-info-block,
-.shell .pm-chart-card,
-.shell .pm-stage-item,
-.shell .pm-log-section,
-.shell .pm-next-focus,
-.shell .pm-log-notes,
-.shell .pm-log-index,
-.shell .pm-log-index__list button:hover,
-.shell .pm-log-index__list button.is-active,
-.shell .pm-timeline,
-.shell .pm-breadcrumb {
-  border-color: rgba(255, 255, 255, 0.14);
-  color: #252321;
-  background: #858585;
-  box-shadow: none;
-}
-
-.shell .pm-hero__focus span,
-.shell .pm-hero__focus strong,
-.shell .pm-hero__focus small,
-.shell .pm-metric span,
-.shell .pm-metric strong,
-.shell .pm-metric p,
-.shell .pm-category-card,
-.shell .pm-category-card h3,
-.shell .pm-category-card p,
-.shell .pm-project-card,
-.shell .pm-project-card h3,
-.shell .pm-project-card p,
-.shell .pm-project-card small,
-.shell .pm-log-card,
-.shell .pm-log-card h3,
-.shell .pm-log-card p,
-.shell .pm-log-card strong,
-.shell .pm-log-card span,
-.shell .pm-log-card code,
-.shell .pm-info-block span,
-.shell .pm-info-block strong,
-.shell .pm-chart-card,
-.shell .pm-chart-card h3,
-.shell .pm-chart-card__head > span,
-.shell .pm-stage-item,
-.shell .pm-stage-item span:not(.pm-status),
-.shell .pm-log-section,
-.shell .pm-log-section h4,
-.shell .pm-next-focus,
-.shell .pm-next-focus span,
-.shell .pm-next-focus strong,
-.shell .pm-log-notes,
-.shell .pm-log-notes > strong,
-.shell .pm-log-index,
-.shell .pm-log-index h3,
-.shell .pm-log-index__list button,
-.shell .pm-log-index__list button strong,
-.shell .pm-log-index__list button span,
-.shell .pm-timeline,
-.shell .pm-timeline__date strong,
-.shell .pm-timeline__date span,
-.shell .pm-timeline__content h3,
-.shell .pm-timeline__content > p:last-child,
-.shell .pm-breadcrumb,
-.shell .pm-breadcrumb button,
-.shell .pm-breadcrumb strong {
-  color: #252321;
-  font-family: var(--font-body-cn);
-}
-
-.shell .pm-hero__focus span,
-.shell .pm-metric span,
-.shell .pm-info-block span,
-.shell .pm-next-focus span,
-.shell .pm-detail__footer > span:first-child,
-.shell .pm-log-index__list button span,
-.shell .pm-timeline__date span {
-  color: #625c55;
-  font-weight: 800;
-}
-
-.shell .pm-hero__focus strong,
-.shell .pm-metric strong,
-.shell .pm-info-block strong,
-.shell .pm-next-focus strong,
-.shell .pm-timeline__date strong,
-.shell .pm-category-card__top strong,
-.shell .pm-project-card__top strong {
-  font-weight: 800;
-}
-
-.shell .pm-hero__focus small,
-.shell .pm-metric p,
-.shell .pm-project-card p,
-.shell .pm-project-card small,
-.shell .pm-log-card p,
-.shell .pm-log-card span,
-.shell .pm-stage-item,
-.shell .pm-log-section,
-.shell .pm-log-notes,
-.shell .pm-timeline__content > p:last-child {
-  color: #514b45;
-}
-
-.shell .pm-category-card:hover,
-.shell .pm-project-card:hover,
-.shell .pm-log-card:hover,
-.shell .pm-metric:hover,
-.shell .pm-info-block:hover,
-.shell .pm-log-section:hover,
-.shell .pm-next-focus:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-  background: #929292;
-}
-
-.shell .pm-status,
-.shell .pm-repo,
-.shell .pm-detail__meta .pm-repo,
-.shell .pm-log-card__actions .pm-repo {
-  border-color: rgba(37, 35, 33, 0.18);
-  color: #252321;
-  background: #a7a7a7;
-  font-family: var(--font-body-cn);
-}
-
-.shell .pm-progress__track {
-  background: rgba(37, 35, 33, 0.18);
-}
-
-.shell .pm-progress__track i {
-  background: #4c4946;
-}
-
-.shell .pm-sparkline polyline,
-.shell .pm-progress-chart__line {
-  stroke: #4c4946;
-}
-
-.shell .pm-sparkline circle,
-.shell .pm-progress-chart__point {
-  fill: #858585;
-  stroke: #4c4946;
-}
-
-.shell .pm-progress-chart text,
-.shell .pm-progress-chart__value {
-  fill: #252321 !important;
-}
-
 /* Daily log: restore visual hierarchy and protect long report content from
    squeezing the grid or escaping its grey panels. */
 .daily-log-page .pm-log-layout,
@@ -964,8 +810,8 @@
 }
 
 .daily-log-page .pm-log-index__list button.is-active {
-  border-color: rgba(37, 35, 33, 0.35);
-  background: #9b9b9b;
+  border-color: rgba(237, 232, 223, 0.18);
+  background: rgba(177, 139, 98, 0.16);
 }
 
 .daily-log-page .pm-log-content {
@@ -982,10 +828,10 @@
 
 .daily-log-page .pm-log-card__head {
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(237, 232, 223, 0.12);
   border-radius: 22px 22px 0 0;
-  color: #252321;
-  background: #858585;
+  color: #d4cdc3;
+  background: linear-gradient(145deg, rgba(34, 32, 29, 0.92), rgba(21, 20, 18, 0.9));
 }
 
 .daily-log-page .pm-log-card__head > div:first-child {
@@ -995,7 +841,7 @@
 .daily-log-page .pm-log-card__head h3,
 .daily-log-page .pm-log-card__head p:last-child,
 .daily-log-page .pm-log-card__head .eyebrow {
-  color: #252321;
+  color: #d4cdc3;
   overflow-wrap: anywhere;
 }
 
@@ -1019,10 +865,10 @@
 .daily-log-page .pm-log-meta {
   margin: 0;
   padding: 13px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(237, 232, 223, 0.12);
   border-top: 0;
-  color: #514b45;
-  background: #777;
+  color: #aaa39a;
+  background: rgba(13, 13, 12, 0.5);
   font-family: var(--font-body-cn);
   font-weight: 700;
 }
@@ -1034,8 +880,8 @@
 }
 
 .daily-log-page .pm-log-meta code {
-  color: #393531;
-  background: rgba(37, 35, 33, 0.1);
+  color: #d2ad78;
+  background: rgba(177, 139, 98, 0.12);
 }
 
 .daily-log-page .pm-log-card__grid {
@@ -1047,9 +893,9 @@
 .daily-log-page .pm-next-focus,
 .daily-log-page .pm-log-notes,
 .daily-log-page .pm-tomorrow-prompt {
-  border-color: rgba(255, 255, 255, 0.14);
-  color: #252321;
-  background: #858585;
+  border-color: rgba(237, 232, 223, 0.12);
+  color: #d4cdc3;
+  background: linear-gradient(145deg, rgba(34, 32, 29, 0.92), rgba(21, 20, 18, 0.9));
   box-shadow: none;
 }
 
@@ -1062,7 +908,7 @@
 .daily-log-page .pm-log-notes li,
 .daily-log-page .pm-tomorrow-prompt__head span,
 .daily-log-page .pm-tomorrow-prompt__head strong {
-  color: #252321;
+  color: #d4cdc3;
   font-family: var(--font-body-cn);
 }
 
@@ -1091,22 +937,22 @@
 }
 
 .daily-log-page .pm-tomorrow-prompt__head span {
-  color: #625c55;
+  color: #b18b62;
   font-size: 0.78rem;
   font-weight: 800;
 }
 
 .daily-log-page .pm-tomorrow-prompt__head button {
-  border-color: rgba(37, 35, 33, 0.24);
-  color: #252321;
-  background: #a7a7a7;
+  border-color: rgba(237, 232, 223, 0.18);
+  color: #d4cdc3;
+  background: rgba(13, 13, 12, 0.64);
 }
 
 .daily-log-page .pm-tomorrow-prompt textarea {
   min-height: 170px;
-  border-color: rgba(37, 35, 33, 0.18);
-  color: #252321;
-  background: #a7a7a7;
+  border-color: rgba(237, 232, 223, 0.18);
+  color: #d4cdc3;
+  background: rgba(13, 13, 12, 0.64);
   font-family: var(--font-body-cn);
   font-size: 0.88rem;
   overflow-wrap: anywhere;
@@ -1287,4 +1133,294 @@
     align-items: flex-start;
     flex-wrap: wrap;
   }
+}
+
+/* Work mode: dark/gold theme shared with the public portfolio pages.
+   Re-scoping the palette variables turns most base rules dark; the rest
+   override the hard-coded light fills. */
+.shell .pm-page {
+  --panel: rgba(237, 232, 223, 0.04);
+  --panel-strong: #1c1a17;
+  --line: rgba(237, 232, 223, 0.12);
+  --line-strong: rgba(177, 139, 98, 0.38);
+  --text: #ede8df;
+  --muted: #aaa39a;
+  --subtle: #817a72;
+  --accent: #d2ad78;
+  --accent-strong: #e8c38e;
+  color: #d4cdc3;
+}
+
+.shell .pm-hero h1,
+.shell .pm-detail h2,
+.shell .pm-log-card h3,
+.shell .pm-category-card h3,
+.shell .pm-project-card h3,
+.shell .pm-log-index h3,
+.shell .pm-chart-card h3,
+.shell .pm-subhead h3,
+.shell .pm-timeline__content h3,
+.shell .pm-empty h1 {
+  color: #ede8df;
+  font-family: var(--font-art-cn);
+  font-weight: 400;
+}
+
+.shell .pm-hero__focus,
+.shell .pm-metric,
+.shell .pm-info-block,
+.shell .pm-chart-card,
+.shell .pm-stage-item,
+.shell .pm-log-section,
+.shell .pm-next-focus,
+.shell .pm-log-notes {
+  border-color: rgba(237, 232, 223, 0.12);
+  color: #d4cdc3;
+  background: rgba(237, 232, 223, 0.04);
+  box-shadow: none;
+}
+
+.shell .pm-hero__focus {
+  border-color: rgba(177, 139, 98, 0.3);
+  background: linear-gradient(145deg, rgba(177, 139, 98, 0.14), rgba(177, 139, 98, 0.03));
+}
+
+.shell .pm-hero__focus span,
+.shell .pm-metric span,
+.shell .pm-info-block span,
+.shell .pm-next-focus span,
+.shell .pm-chart-card__head > span,
+.shell .pm-detail__footer > span:first-child {
+  color: #b18b62;
+}
+
+.shell .pm-hero__focus strong,
+.shell .pm-metric strong,
+.shell .pm-category-card__top strong,
+.shell .pm-project-card__top strong {
+  color: #e8c38e;
+  font-family: var(--font-title-en);
+}
+
+.shell .pm-hero__focus strong {
+  color: #ede8df;
+  font-family: var(--font-art-cn);
+  font-weight: 400;
+}
+
+.shell .pm-info-block strong,
+.shell .pm-next-focus strong,
+.shell .pm-timeline__date strong,
+.shell .pm-breadcrumb strong {
+  color: #ede8df;
+}
+
+.shell .pm-category-card,
+.shell .pm-project-card,
+.shell .pm-metric,
+.shell .pm-info-block,
+.shell .pm-log-section {
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.shell .pm-category-card:hover,
+.shell .pm-project-card:hover {
+  border-color: rgba(177, 139, 98, 0.45);
+}
+
+.shell .pm-metric:hover,
+.shell .pm-info-block:hover,
+.shell .pm-log-section:hover {
+  border-color: rgba(177, 139, 98, 0.32);
+  background: rgba(237, 232, 223, 0.06);
+}
+
+.shell .pm-status,
+.shell .pm-repo {
+  border-color: rgba(237, 232, 223, 0.18);
+  color: #aaa39a;
+  background: transparent;
+}
+
+.shell .pm-repo {
+  color: #d2ad78;
+  border-color: rgba(177, 139, 98, 0.4);
+}
+
+.shell .pm-repo:hover {
+  background: rgba(177, 139, 98, 0.12);
+}
+
+.shell .pm-repo--empty {
+  color: #817a72;
+  border-color: rgba(237, 232, 223, 0.12);
+}
+
+.shell .pm-status.is-active,
+.shell .pm-roadmap__dot.is-active {
+  color: #e8c38e;
+  border-color: rgba(177, 139, 98, 0.5);
+  background: rgba(177, 139, 98, 0.14);
+}
+
+.shell .pm-status.is-done,
+.shell .pm-roadmap__dot.is-done {
+  color: #9fc08f;
+  border-color: rgba(159, 192, 143, 0.35);
+  background: rgba(159, 192, 143, 0.08);
+}
+
+.shell .pm-status.is-risk,
+.shell .pm-roadmap__dot.is-risk {
+  color: #e39a84;
+  border-color: rgba(227, 154, 132, 0.35);
+  background: rgba(227, 154, 132, 0.08);
+}
+
+.shell .pm-progress__track {
+  background: rgba(237, 232, 223, 0.1);
+}
+
+.shell .pm-progress__track i {
+  background: linear-gradient(90deg, #b18b62, #e8c38e);
+}
+
+.shell .pm-sparkline polyline,
+.shell .pm-progress-chart__line {
+  stroke: #d2ad78;
+}
+
+.shell .pm-sparkline circle,
+.shell .pm-progress-chart__point {
+  fill: #1c1a17;
+  stroke: #e8c38e;
+}
+
+.shell .pm-progress-chart line {
+  stroke: rgba(237, 232, 223, 0.08);
+}
+
+.shell .pm-progress-chart text {
+  fill: #817a72;
+}
+
+.shell .pm-progress-chart__value {
+  fill: #ede8df !important;
+}
+
+.shell .pm-detail__footer code,
+.shell .pm-log-meta code {
+  color: #d2ad78;
+  background: rgba(177, 139, 98, 0.12);
+}
+
+.shell .pm-log-index__list button {
+  color: #aaa39a;
+}
+
+.shell .pm-log-index__list button strong {
+  color: #d4cdc3;
+}
+
+.shell .pm-log-index__list button span {
+  color: #817a72;
+}
+
+.shell .pm-log-index__list button:hover {
+  border-color: rgba(237, 232, 223, 0.12);
+  background: rgba(237, 232, 223, 0.05);
+}
+
+.shell .pm-log-index__list button.is-active {
+  border-color: rgba(177, 139, 98, 0.45);
+  background: rgba(177, 139, 98, 0.14);
+}
+
+.shell .pm-log-index__list button.is-active strong {
+  color: #e8c38e;
+}
+
+.shell .pm-log-index__list button.is-active span {
+  color: #b18b62;
+}
+
+.shell .daily-log-page .pm-log-card__head h3 {
+  color: #ede8df;
+  font-family: var(--font-art-cn);
+  font-weight: 400;
+}
+
+.shell .daily-log-page .pm-log-card__head .eyebrow,
+.shell .daily-log-page .pm-tomorrow-prompt__head span {
+  color: #b18b62;
+}
+
+.shell .daily-log-page .pm-log-section,
+.shell .daily-log-page .pm-next-focus,
+.shell .daily-log-page .pm-log-notes,
+.shell .daily-log-page .pm-tomorrow-prompt {
+  background: rgba(237, 232, 223, 0.04);
+}
+
+.shell .daily-log-page .pm-log-section h4,
+.shell .daily-log-page .pm-log-notes > strong,
+.shell .daily-log-page .pm-tomorrow-prompt__head strong {
+  color: #ede8df;
+}
+
+.shell .daily-log-page .pm-log-section p,
+.shell .daily-log-page .pm-log-section li,
+.shell .daily-log-page .pm-log-notes li {
+  color: #aaa39a;
+}
+
+.shell .daily-log-page .pm-next-focus {
+  border-color: rgba(177, 139, 98, 0.3);
+  background: rgba(177, 139, 98, 0.08);
+}
+
+.shell .daily-log-page .pm-next-focus span {
+  color: #b18b62;
+}
+
+.shell .daily-log-page .pm-next-focus strong {
+  color: #ede8df;
+}
+
+.shell .daily-log-page .pm-tomorrow-prompt__head button {
+  border-color: rgba(177, 139, 98, 0.4);
+  color: #d2ad78;
+  background: transparent;
+}
+
+.shell .daily-log-page .pm-tomorrow-prompt__head button:hover {
+  background: rgba(177, 139, 98, 0.12);
+}
+
+.shell .daily-log-page .pm-tomorrow-prompt textarea {
+  color: #d4cdc3;
+}
+
+.shell .daily-log-page .pm-tomorrow-prompt textarea:focus {
+  border-color: rgba(177, 139, 98, 0.6);
+}
+
+.shell .pm-breadcrumb button {
+  color: #d2ad78;
+}
+
+.shell .pm-timeline__dot {
+  border-color: #d2ad78;
+  background: #1c1a17;
+  box-shadow: 0 0 0 4px rgba(177, 139, 98, 0.12);
+}
+
+.shell .pm-timeline__dot::after,
+.shell .pm-roadmap__item:not(:last-child)::before {
+  background: rgba(237, 232, 223, 0.14);
+}
+
+.shell .pm-timeline__date strong {
+  font-family: var(--font-title-en);
+  font-size: 1.1rem;
 }

@@ -13,6 +13,7 @@ export type AboutProfile = {
   major: string;
   period: string;
   lead: string;
+  highlights: { value: string; label: string }[];
   focusAreas: string[];
   education: string[];
   research: string[];
@@ -40,6 +41,12 @@ export type ShowcaseProject = {
   id: string;
   title: string;
   status: string;
+  category: string;
+  highlight: string;
+  role: string;
+  advisor: string;
+  period: string;
+  order: number;
   summary: string;
   tags: string[];
   sections: ContentSection[];
@@ -181,6 +188,7 @@ function loadAboutProfile(): AboutProfile {
       major: "自动化",
       period: "2024.09 — 至今",
       lead: "主要关注控制、强化学习、机器人、雷达信号处理与工程实践。",
+      highlights: [],
       focusAreas: [],
       education: [],
       research: [],
@@ -195,6 +203,10 @@ function loadAboutProfile(): AboutProfile {
     major: String(doc.metadata.major ?? "自动化"),
     period: String(doc.metadata.period ?? "2024.09 — 至今"),
     lead: String(doc.metadata.lead ?? "主要关注控制、强化学习、机器人、雷达信号处理与工程实践。"),
+    highlights: listFromSection(doc.body, "亮点").map((item) => {
+      const [value, ...label] = item.split("|").map((part) => part.trim());
+      return { value, label: label.join(" | ") };
+    }),
     focusAreas: listFromSection(doc.body, "研究方向"),
     education: listFromSection(doc.body, "教育经历"),
     research: listFromSection(doc.body, "科研与项目"),
@@ -235,6 +247,12 @@ function loadShowcaseProjects(): ShowcaseProject[] {
         id,
         title: String(doc.metadata.title),
         status,
+        category: String(doc.metadata.category ?? ""),
+        highlight: String(doc.metadata.highlight ?? ""),
+        role: String(doc.metadata.role ?? ""),
+        advisor: String(doc.metadata.advisor ?? ""),
+        period: String(doc.metadata.period ?? ""),
+        order: Number(doc.metadata.order ?? 999),
         summary: String(doc.metadata.summary ?? textFromSection(doc.body, "项目摘要") ?? ""),
         tags: parseTags(doc.metadata.tags),
         sections: contentSections(doc.body, "Project").filter((section) => section.title !== "项目摘要"),
@@ -242,5 +260,5 @@ function loadShowcaseProjects(): ShowcaseProject[] {
       } satisfies ShowcaseProject;
     })
     .filter((item): item is ShowcaseProject => Boolean(item))
-    .sort((left, right) => left.title.localeCompare(right.title, "zh-CN"));
+    .sort((left, right) => left.order - right.order || left.title.localeCompare(right.title, "zh-CN"));
 }
