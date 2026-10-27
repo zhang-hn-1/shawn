@@ -5,11 +5,12 @@ import { DailyLogPage, TimelinePage, WorkspacePage } from "./project-management"
 import { aboutProfile, blogPosts, showcaseProjects, type BlogPost } from "./markdown-data";
 import { MemoryPage } from "./secret-memories";
 import { SkinProvider, SkinSwitch, useSkin } from "./redesign/skin";
-import { RedesignFooter, RedesignHeader, type NavItem } from "./redesign/chrome";
+import { RedesignFooter, RedesignHeader, CyberFrame, type NavItem } from "./redesign/chrome";
 import { RedesignHome } from "./redesign/home";
 import { DevDock, DevStatusBar } from "./redesign/devtools";
 import "./styles.css";
 import "./redesign/redesign.css";
+import "./redesign/cyber.css";
 
 type CommentItem = {
   id: string;
@@ -487,6 +488,7 @@ function AppContent({ comments, setComments }: {
         )}
         {skin === "dev" ? <DevDock /> : null}
         {skin === "dev" ? <DevStatusBar /> : null}
+        {skin === "payathon" ? <CyberFrame /> : null}
       </div>
   );
 }

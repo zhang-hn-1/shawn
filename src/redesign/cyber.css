@@ -1,0 +1,1786 @@
+/* =========================================================================
+   CYBER 2026 — extra layer for the Payathon skin only.
+   Everything here is scoped to html[data-skin="payathon"]; classic and dev
+   keep their previous behaviour.
+   ========================================================================= */
+
+:root[data-skin="payathon"] {
+  --p-neon: #ff2d95;
+  --p-neon-2: #c6ff3d;
+  --p-black: #050607;
+  --p-cut: 16px;
+}
+
+/* -------------------------------------------------------------------------
+   Canvas: neon haze, scanlines, vignette
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] body:has(.shell) {
+  background-color: var(--p-black);
+  background-image:
+    radial-gradient(circle at 11% 16%, color-mix(in srgb, var(--p-neon) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 84% -4%, color-mix(in srgb, var(--p-accent) 20%, transparent), transparent 42%),
+    radial-gradient(circle at 52% 108%, color-mix(in srgb, var(--p-neon-2) 7%, transparent), transparent 46%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: auto, auto, auto, 96px 96px, 96px 96px;
+}
+
+:root[data-skin="payathon"] body:has(.shell)::before {
+  display: block;
+  position: fixed;
+  z-index: 73;
+  inset: 0;
+  background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.26) 0 1px, transparent 1px 3px);
+  background-size: auto;
+  content: "";
+  opacity: 0.2;
+  pointer-events: none;
+  mask-image: none;
+}
+
+:root[data-skin="payathon"] body:has(.shell)::after {
+  position: fixed;
+  z-index: 72;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 44%, transparent 46%, rgba(0, 0, 0, 0.62) 100%);
+  content: "";
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------
+   HUD frame
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-cyber {
+  position: fixed;
+  z-index: 74;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+:root[data-skin="payathon"] .px-cyber__grid {
+  position: absolute;
+  inset: -22%;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--p-accent) 24%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--p-accent) 18%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.16;
+  transform: perspective(900px) rotateX(0.001deg);
+  animation: px-cyber-drift 22s linear infinite;
+  mask-image: radial-gradient(ellipse at 50% 36%, #000 0%, rgba(0, 0, 0, 0.5) 48%, transparent 78%);
+}
+
+:root[data-skin="payathon"] .px-cyber__noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.055;
+}
+
+:root[data-skin="payathon"] .px-cyber__cursor {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    320px circle at var(--px-mx, -480px) var(--px-my, -480px),
+    color-mix(in srgb, var(--p-accent) 10%, transparent),
+    color-mix(in srgb, var(--p-neon) 3%, transparent) 38%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  transition: opacity 240ms ease;
+}
+
+:root[data-skin="payathon"] .px-cyber__scan {
+  position: absolute;
+  top: -34vh;
+  right: 0;
+  left: 0;
+  height: 34vh;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--p-accent) 8%, transparent) 58%,
+    color-mix(in srgb, var(--p-accent) 18%, transparent) 92%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  animation: px-cyber-sweep 9s linear infinite;
+}
+
+:root[data-skin="payathon"] .px-cyber__corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  opacity: 0.75;
+}
+
+:root[data-skin="payathon"] .px-cyber__corner--tl {
+  top: 14px;
+  left: 14px;
+  border-top: 1px solid var(--p-accent);
+  border-left: 1px solid var(--p-accent);
+  box-shadow: -2px -2px 12px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-cyber__corner--tr {
+  top: 14px;
+  right: 14px;
+  border-top: 1px solid var(--p-neon);
+  border-right: 1px solid var(--p-neon);
+  box-shadow: 2px -2px 12px color-mix(in srgb, var(--p-neon) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-cyber__corner--bl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom: 1px solid var(--p-neon);
+  border-left: 1px solid var(--p-neon);
+  box-shadow: -2px 2px 12px color-mix(in srgb, var(--p-neon) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-cyber__corner--br {
+  right: 14px;
+  bottom: 14px;
+  border-right: 1px solid var(--p-accent);
+  border-bottom: 1px solid var(--p-accent);
+  box-shadow: 2px 2px 12px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-cyber__rail {
+  position: absolute;
+  top: 50%;
+  color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+:root[data-skin="payathon"] .px-cyber__rail--left {
+  left: 20px;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+:root[data-skin="payathon"] .px-cyber__rail--right {
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+:root[data-skin="payathon"] .px-cyber__rail::before {
+  display: inline-block;
+  width: 3px;
+  height: 22px;
+  margin-bottom: 12px;
+  background: var(--p-neon);
+  box-shadow: 0 0 9px var(--p-neon);
+  content: "";
+}
+
+/* -------------------------------------------------------------------------
+   Header / nav / controls
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-header {
+  border-bottom: 0;
+  background: linear-gradient(180deg, rgba(5, 6, 7, 0.94), rgba(5, 6, 7, 0.76));
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.42);
+}
+
+:root[data-skin="payathon"] .px-header::before {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-accent), var(--p-neon), var(--p-accent), transparent);
+  background-size: 200% 100%;
+  content: "";
+  animation: px-line-shift 9s linear infinite;
+  opacity: 0.8;
+}
+
+:root[data-skin="payathon"] .px-brand__mark {
+  position: relative;
+  border-color: color-mix(in srgb, var(--p-accent) 65%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--p-accent) 14%, transparent), transparent 70%);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--p-accent) 28%, transparent),
+    inset 0 0 14px color-mix(in srgb, var(--p-accent) 10%, transparent);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+:root[data-skin="payathon"] .px-brand__mark::after {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 4px;
+  height: 4px;
+  background: var(--p-neon);
+  box-shadow: 0 0 8px var(--p-neon);
+  content: "";
+  animation: px-blink-fast 2.4s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-brand__copy strong {
+  text-shadow: 0 0 16px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-brand__copy small {
+  color: color-mix(in srgb, var(--p-accent) 60%, var(--p-faint));
+}
+
+:root[data-skin="payathon"] .px-nav__link {
+  position: relative;
+}
+
+:root[data-skin="payathon"] .px-nav__link.is-active {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--p-accent) 55%, transparent);
+}
+
+:root[data-skin="payathon"] .px-nav__link.is-active::before,
+:root[data-skin="payathon"] .px-nav__link.is-active::after {
+  color: var(--p-neon);
+  font: 8px/1 var(--p-mono);
+  text-shadow: 0 0 8px var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-nav__link.is-active::before {
+  content: "[";
+}
+
+:root[data-skin="payathon"] .px-nav__link.is-active::after {
+  content: "]";
+}
+
+:root[data-skin="payathon"] .px-nav__link:hover {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--p-accent) 9%, transparent), transparent);
+}
+
+:root[data-skin="payathon"] .px-tools .skin-switch,
+:root[data-skin="payathon"] .accent-picker__trigger,
+:root[data-skin="payathon"] .px-work {
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+}
+
+:root[data-skin="payathon"] .px-tools .skin-switch button.is-active {
+  background: linear-gradient(120deg, var(--p-accent), color-mix(in srgb, var(--p-accent) 55%, var(--p-neon)));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--p-accent) 40%, transparent);
+  text-shadow: none;
+}
+
+:root[data-skin="payathon"] .accent-picker__trigger:hover,
+:root[data-skin="payathon"] .px-work:hover {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--p-accent) 25%, transparent);
+}
+
+:root[data-skin="payathon"] .accent-picker__panel {
+  border-color: color-mix(in srgb, var(--p-accent) 45%, transparent);
+  background: #07090b;
+  box-shadow:
+    0 0 0 1px rgba(255, 45, 149, 0.18),
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 0 42px color-mix(in srgb, var(--p-accent) 12%, transparent);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-hero {
+  padding-top: clamp(20px, 3.4vw, 40px);
+}
+
+:root[data-skin="payathon"] .px-hero::before {
+  inset: -10% -8% auto;
+  height: 95%;
+  background:
+    radial-gradient(ellipse at 32% 16%, color-mix(in srgb, var(--p-accent) 17%, transparent), transparent 54%),
+    radial-gradient(ellipse at 72% 28%, color-mix(in srgb, var(--p-neon) 10%, transparent), transparent 50%),
+    radial-gradient(ellipse at 50% 120%, color-mix(in srgb, var(--p-neon-2) 5%, transparent), transparent 55%);
+  filter: blur(6px);
+}
+
+:root[data-skin="payathon"] .px-hero::after {
+  position: absolute;
+  z-index: -1;
+  right: -12%;
+  bottom: -8%;
+  left: -12%;
+  height: 52%;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--p-accent) 26%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--p-neon) 16%, transparent) 1px, transparent 1px);
+  background-size: 58px 58px;
+  content: "";
+  opacity: 0.4;
+  transform: perspective(460px) rotateX(66deg);
+  transform-origin: center bottom;
+  mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+}
+
+:root[data-skin="payathon"] .px-hero__meta {
+  border-bottom: 1px solid transparent;
+  background: linear-gradient(90deg, var(--p-accent), transparent 32%, transparent 68%, var(--p-neon)) bottom / 100% 1px no-repeat;
+}
+
+:root[data-skin="payathon"] .px-hero__status {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--p-accent) 55%, transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: color-mix(in srgb, var(--p-neon) 76%, var(--p-muted));
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.18em;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-neon) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__hud::before,
+:root[data-skin="payathon"] .px-hero__hud::after {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: var(--p-neon);
+  content: "";
+  box-shadow: 0 0 8px var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-hero__kicker b {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 6px;
+  border: 1px solid color-mix(in srgb, var(--p-neon) 55%, transparent);
+  color: var(--p-neon);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.16em;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--p-neon) 18%, transparent);
+  animation: px-flicker 7s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-hero__reticle {
+  display: block;
+  position: absolute;
+  z-index: 0;
+  top: clamp(150px, 17vh, 220px);
+  left: 50%;
+  width: min(84vw, 1120px);
+  height: clamp(300px, 38vh, 470px);
+  border: 1px solid color-mix(in srgb, var(--p-accent) 15%, transparent);
+  background:
+    linear-gradient(var(--p-accent), var(--p-accent)) left top / 22px 1px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) left top / 1px 22px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) right top / 22px 1px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) right top / 1px 22px no-repeat,
+    linear-gradient(var(--p-neon), var(--p-neon)) left bottom / 22px 1px no-repeat,
+    linear-gradient(var(--p-neon), var(--p-neon)) left bottom / 1px 22px no-repeat,
+    linear-gradient(var(--p-neon), var(--p-neon)) right bottom / 22px 1px no-repeat,
+    linear-gradient(var(--p-neon), var(--p-neon)) right bottom / 1px 22px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) center top / 1px 18px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) center bottom / 1px 18px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) left center / 18px 1px no-repeat,
+    linear-gradient(var(--p-accent), var(--p-accent)) right center / 18px 1px no-repeat;
+  opacity: 0.7;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+:root[data-skin="payathon"] .px-hero__reticle::before,
+:root[data-skin="payathon"] .px-hero__reticle::after {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--p-accent) 60%, transparent), transparent);
+  content: "";
+  opacity: 0.35;
+}
+
+:root[data-skin="payathon"] .px-hero__reticle::before {
+  top: 50%;
+  right: -48px;
+  left: -48px;
+  height: 1px;
+}
+
+:root[data-skin="payathon"] .px-hero__reticle::after {
+  top: -34px;
+  bottom: -34px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--p-neon) 60%, transparent), transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__title {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(4.6rem, 16vw, 14rem);
+  letter-spacing: -0.085em;
+}
+
+:root[data-skin="payathon"] .px-hero__line {
+  position: relative;
+  text-shadow:
+    0 0 26px color-mix(in srgb, var(--p-accent) 22%, transparent),
+    0 0 80px color-mix(in srgb, var(--p-neon) 12%, transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__line--glitch {
+  isolation: isolate;
+}
+
+:root[data-skin="payathon"] .px-hero__line--glitch::before,
+:root[data-skin="payathon"] .px-hero__line--glitch::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: attr(data-text);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+:root[data-skin="payathon"] .px-hero__line--glitch::before {
+  color: var(--p-neon);
+  clip-path: inset(0 0 54% 0);
+  opacity: 0.62;
+  transform: translate(-5px, -2px);
+  animation: px-glitch-top 7s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-hero__line--glitch::after {
+  color: var(--p-accent);
+  clip-path: inset(46% 0 0 0);
+  opacity: 0.55;
+  transform: translate(5px, 2px);
+  animation: px-glitch-bottom 6s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-hero__line--outline {
+  -webkit-text-stroke-color: color-mix(in srgb, var(--p-accent) 48%, transparent);
+  text-shadow:
+    4px 0 0 color-mix(in srgb, var(--p-neon) 22%, transparent),
+    -4px 0 0 color-mix(in srgb, var(--p-accent) 22%, transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__line--outline i {
+  text-shadow: 0 0 28px var(--p-accent);
+}
+
+:root[data-skin="payathon"] .px-hero__sub::before,
+:root[data-skin="payathon"] .px-hero__sub::after {
+  color: var(--p-neon);
+  font: 10px/1 var(--p-mono);
+}
+
+:root[data-skin="payathon"] .px-hero__sub::before {
+  content: "<";
+}
+
+:root[data-skin="payathon"] .px-hero__sub::after {
+  content: ">";
+}
+
+:root[data-skin="payathon"] .px-hero__statement h2 {
+  text-shadow:
+    0 0 28px color-mix(in srgb, var(--p-accent) 18%, transparent),
+    2px 0 0 color-mix(in srgb, var(--p-neon) 24%, transparent);
+}
+
+:root[data-skin="payathon"] .px-hero__statement h2 em {
+  text-shadow: 0 0 28px color-mix(in srgb, var(--p-accent) 55%, transparent);
+}
+
+:root[data-skin="payathon"] .px-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:root[data-skin="payathon"] .px-eyebrow::before {
+  width: 6px;
+  height: 6px;
+  background: var(--p-neon);
+  content: "";
+  box-shadow: 0 0 9px var(--p-neon);
+  animation: px-blink-fast 3.4s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-hero__note {
+  border-top-color: color-mix(in srgb, var(--p-accent) 25%, transparent);
+}
+
+/* Buttons */
+
+:root[data-skin="payathon"] .px-button {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--p-accent) 40%, transparent);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent 60%);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-button::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  content: "";
+  transform: skewX(-18deg);
+  transition: left 420ms ease;
+}
+
+:root[data-skin="payathon"] .px-button:hover::before {
+  left: 125%;
+}
+
+:root[data-skin="payathon"] .px-button--solid {
+  border-color: transparent;
+  color: var(--p-black);
+  background: linear-gradient(110deg, var(--p-accent), color-mix(in srgb, var(--p-accent) 48%, var(--p-neon)));
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--p-accent) 32%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+:root[data-skin="payathon"] .px-button--solid:hover {
+  color: var(--p-black);
+  box-shadow:
+    0 0 42px color-mix(in srgb, var(--p-accent) 48%, transparent),
+    0 0 80px color-mix(in srgb, var(--p-neon) 18%, transparent);
+}
+
+:root[data-skin="payathon"] .px-button:hover {
+  border-color: color-mix(in srgb, var(--p-accent) 80%, transparent);
+  background-color: color-mix(in srgb, var(--p-accent) 9%, transparent);
+}
+
+/* Orb */
+
+:root[data-skin="payathon"] .px-orb {
+  border-color: color-mix(in srgb, var(--p-accent) 72%, transparent);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--p-accent) 18%, transparent), transparent 68%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--p-accent) 18%, transparent),
+    0 0 46px color-mix(in srgb, var(--p-accent) 18%, transparent),
+    inset 0 0 44px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .px-orb::before {
+  position: absolute;
+  z-index: 0;
+  inset: -24px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--p-accent) 75%, transparent) 0deg 0.8deg,
+    transparent 0.8deg 12deg
+  );
+  content: "";
+  opacity: 0.55;
+  mask-image: radial-gradient(circle, transparent 0 68%, #000 69% 71%, transparent 72%);
+  animation: px-spin 34s linear infinite;
+}
+
+:root[data-skin="payathon"] .px-orb__copy,
+:root[data-skin="payathon"] .px-orb__arrow {
+  position: relative;
+  z-index: 2;
+}
+
+:root[data-skin="payathon"] .px-orb__hud {
+  display: block;
+  position: absolute;
+  z-index: 3;
+  top: 23px;
+  left: 50%;
+  color: var(--p-neon);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.16em;
+  text-shadow: 0 0 10px var(--p-neon);
+  transform: translateX(-50%);
+}
+
+:root[data-skin="payathon"] .px-orb__scan {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  right: 12%;
+  left: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-accent), var(--p-neon), transparent);
+  box-shadow: 0 0 14px var(--p-accent);
+  animation: px-orb-scan 4.6s ease-in-out infinite;
+}
+
+:root[data-skin="payathon"] .px-orb:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--p-accent) 38%, transparent),
+    0 0 70px color-mix(in srgb, var(--p-accent) 36%, transparent),
+    0 0 120px color-mix(in srgb, var(--p-neon) 18%, transparent),
+    inset 0 0 60px color-mix(in srgb, var(--p-accent) 16%, transparent);
+}
+
+:root[data-skin="payathon"] .px-orb__rings i {
+  border-color: color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .px-orb__rings i:last-child {
+  border-color: color-mix(in srgb, var(--p-neon) 45%, transparent);
+}
+
+/* Terminal */
+
+:root[data-skin="payathon"] .px-terminal {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(9, 12, 15, 0.98), rgba(5, 7, 9, 0.98)) padding-box,
+    linear-gradient(135deg, var(--p-accent), rgba(255, 255, 255, 0.08) 38%, var(--p-neon)) border-box;
+  box-shadow:
+    0 0 38px color-mix(in srgb, var(--p-accent) 13%, transparent),
+    0 0 90px color-mix(in srgb, var(--p-neon) 7%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+:root[data-skin="payathon"] .px-terminal::before {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px),
+    linear-gradient(120deg, transparent 0%, color-mix(in srgb, var(--p-accent) 5%, transparent) 50%, transparent 100%);
+  background-size: auto, 220% 100%;
+  opacity: 1;
+  animation: px-terminal-shine 8s linear infinite;
+}
+
+:root[data-skin="payathon"] .px-terminal__bar {
+  border-bottom-color: color-mix(in srgb, var(--p-accent) 24%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--p-accent) 8%, transparent), transparent 45%);
+}
+
+:root[data-skin="payathon"] .px-terminal__bar b {
+  margin-left: 0;
+  color: var(--p-faint);
+}
+
+:root[data-skin="payathon"] .px-terminal__secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  color: var(--p-neon);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-neon) 55%, transparent);
+}
+
+:root[data-skin="payathon"] .px-terminal__secure i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--p-neon);
+  box-shadow: 0 0 8px var(--p-neon);
+  animation: px-blink-fast 1.8s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-terminal__line.is-system {
+  color: var(--p-neon-2);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-neon-2) 32%, transparent);
+}
+
+:root[data-skin="payathon"] .px-terminal__line.is-accent {
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .px-terminal__foot {
+  border-top-color: color-mix(in srgb, var(--p-accent) 22%, transparent);
+}
+
+:root[data-skin="payathon"] .px-terminal__live {
+  text-shadow: 0 0 10px var(--p-accent);
+}
+
+/* Foot */
+
+:root[data-skin="payathon"] .px-hero__foot {
+  border-top-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-countdown__part strong {
+  color: color-mix(in srgb, var(--p-accent) 68%, #ffffff);
+  text-shadow:
+    0 0 20px color-mix(in srgb, var(--p-accent) 36%, transparent),
+    0 0 52px color-mix(in srgb, var(--p-neon) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .px-countdown__colon {
+  text-shadow: 0 0 12px var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-highlights {
+  border-left-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-highlights article {
+  position: relative;
+  border-right-color: color-mix(in srgb, var(--p-accent) 22%, transparent);
+  transition: background-color 200ms ease;
+}
+
+:root[data-skin="payathon"] .px-highlights article::before {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 1px;
+  height: 0;
+  background: var(--p-neon);
+  content: "";
+  transition: height 260ms ease;
+}
+
+:root[data-skin="payathon"] .px-highlights article:hover {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--p-accent) 7%, transparent), transparent);
+}
+
+:root[data-skin="payathon"] .px-highlights article:hover::before {
+  height: 100%;
+}
+
+/* -------------------------------------------------------------------------
+   Marquee
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-marquee {
+  position: relative;
+  padding: 19px 0;
+  border-top: 0;
+  border-bottom: 0;
+  background: rgba(5, 6, 7, 0.6);
+}
+
+:root[data-skin="payathon"] .px-marquee::before,
+:root[data-skin="payathon"] .px-marquee::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--p-accent) 65%, transparent) 0 7px,
+    transparent 7px 14px,
+    color-mix(in srgb, var(--p-neon) 55%, transparent) 14px 21px,
+    transparent 21px 28px
+  );
+  content: "";
+  opacity: 0.55;
+}
+
+:root[data-skin="payathon"] .px-marquee::before {
+  top: 0;
+}
+
+:root[data-skin="payathon"] .px-marquee::after {
+  bottom: 0;
+}
+
+:root[data-skin="payathon"] .px-marquee__track {
+  animation-duration: 32s;
+}
+
+:root[data-skin="payathon"] .px-marquee__group span {
+  color: color-mix(in srgb, var(--p-accent) 68%, var(--p-muted));
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 22%, transparent);
+}
+
+:root[data-skin="payathon"] .px-marquee__group span:nth-child(even) {
+  color: color-mix(in srgb, var(--p-neon) 55%, var(--p-muted));
+}
+
+:root[data-skin="payathon"] .px-marquee__group i {
+  color: var(--p-neon-2);
+  text-shadow: 0 0 10px var(--p-neon-2);
+}
+
+/* -------------------------------------------------------------------------
+   Sections
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-section {
+  position: relative;
+  border-bottom-color: color-mix(in srgb, var(--p-accent) 16%, transparent);
+}
+
+:root[data-skin="payathon"] .px-section::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-accent));
+  content: "";
+  opacity: 0.5;
+}
+
+:root[data-skin="payathon"] .px-section__head {
+  position: relative;
+}
+
+:root[data-skin="payathon"] .px-section__head::before {
+  position: absolute;
+  z-index: 0;
+  top: -0.56em;
+  right: -0.03em;
+  color: transparent;
+  font: 800 clamp(7rem, 17vw, 16rem) / 0.8 var(--p-display);
+  letter-spacing: -0.09em;
+  content: attr(data-sector);
+  opacity: 0.9;
+  pointer-events: none;
+  text-shadow:
+    8px 0 0 color-mix(in srgb, var(--p-neon) 8%, transparent),
+    -8px 0 0 color-mix(in srgb, var(--p-accent) 8%, transparent);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .px-section__head > * {
+  position: relative;
+  z-index: 1;
+}
+
+:root[data-skin="payathon"] .px-section__num {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--p-neon) 50%, transparent);
+  color: var(--p-neon);
+  background: color-mix(in srgb, var(--p-neon) 7%, transparent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.16em;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--p-neon) 13%, transparent);
+}
+
+:root[data-skin="payathon"] .px-section__num::before {
+  width: 4px;
+  height: 4px;
+  background: var(--p-neon);
+  content: "";
+  box-shadow: 0 0 7px var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-section__head h2 {
+  text-shadow:
+    0 0 30px color-mix(in srgb, var(--p-accent) 16%, transparent),
+    3px 0 0 color-mix(in srgb, var(--p-neon) 17%, transparent),
+    -3px 0 0 color-mix(in srgb, var(--p-accent) 13%, transparent);
+}
+
+:root[data-skin="payathon"] .px-section__desc {
+  border-left: 1px solid color-mix(in srgb, var(--p-neon) 45%, transparent);
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* Index */
+
+:root[data-skin="payathon"] .px-index {
+  border-top-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-index__row {
+  position: relative;
+  border-bottom-color: color-mix(in srgb, var(--p-accent) 15%, transparent);
+}
+
+:root[data-skin="payathon"] .px-index__row::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--p-accent), var(--p-neon), transparent);
+  content: "";
+  opacity: 0;
+  box-shadow: 0 0 14px var(--p-accent);
+  transition: opacity 180ms ease;
+}
+
+:root[data-skin="payathon"] .px-index__row:hover {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--p-accent) 9%, transparent), transparent 48%);
+}
+
+:root[data-skin="payathon"] .px-index__row:hover::before {
+  opacity: 1;
+}
+
+:root[data-skin="payathon"] .px-index__num {
+  color: var(--p-neon);
+  text-shadow: 0 0 9px color-mix(in srgb, var(--p-neon) 55%, transparent);
+}
+
+:root[data-skin="payathon"] .px-index__title {
+  text-shadow: 0 0 22px color-mix(in srgb, var(--p-accent) 12%, transparent);
+}
+
+:root[data-skin="payathon"] .px-index__title em {
+  color: color-mix(in srgb, var(--p-accent) 45%, var(--p-faint));
+}
+
+:root[data-skin="payathon"] .px-index__arrow {
+  color: var(--p-accent);
+  text-shadow: 0 0 12px var(--p-accent);
+}
+
+:root[data-skin="payathon"] .px-index__row:hover .px-index__arrow {
+  transform: translateX(8px);
+}
+
+/* Projects */
+
+:root[data-skin="payathon"] .px-projects {
+  perspective: 1200px;
+}
+
+:root[data-skin="payathon"] .px-project {
+  position: relative;
+  padding: 15px 15px 21px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(11, 14, 17, 0.98), rgba(6, 8, 10, 0.98)) padding-box,
+    linear-gradient(135deg, color-mix(in srgb, var(--p-accent) 52%, transparent), rgba(255, 255, 255, 0.06) 34%, color-mix(in srgb, var(--p-neon) 42%, transparent)) border-box;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  transition:
+    filter 220ms ease,
+    transform 220ms ease,
+    background-color 220ms ease;
+}
+
+:root[data-skin="payathon"] .px-project::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border-top: 1px solid var(--p-accent);
+  border-left: 1px solid var(--p-accent);
+  content: "";
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+:root[data-skin="payathon"] .px-project::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22px;
+  height: 22px;
+  border-right: 1px solid var(--p-neon);
+  border-bottom: 1px solid var(--p-neon);
+  content: "";
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+:root[data-skin="payathon"] .px-project:hover {
+  filter:
+    drop-shadow(0 0 18px color-mix(in srgb, var(--p-accent) 22%, transparent))
+    drop-shadow(0 0 42px color-mix(in srgb, var(--p-neon) 12%, transparent));
+  transform: translateY(-5px);
+  border-color: transparent;
+  background:
+    linear-gradient(180deg, rgba(13, 17, 21, 0.99), rgba(7, 9, 11, 0.99)) padding-box,
+    linear-gradient(135deg, var(--p-accent), color-mix(in srgb, var(--p-neon) 60%, transparent) 55%, var(--p-accent)) border-box;
+}
+
+:root[data-skin="payathon"] .px-project__visual {
+  border-color: color-mix(in srgb, var(--p-accent) 28%, transparent);
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--p-accent) 27%, transparent), transparent 58%),
+    radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--p-neon) 16%, transparent), transparent 44%),
+    #06080a;
+}
+
+:root[data-skin="payathon"] .px-project__visual-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--p-accent) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--p-accent) 12%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+:root[data-skin="payathon"] .px-project__scan {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: -30%;
+  right: -20%;
+  left: -20%;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--p-accent) 24%, transparent), transparent);
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  animation: px-card-scan 5.4s linear infinite;
+}
+
+:root[data-skin="payathon"] .px-project__visual::before {
+  border-color: color-mix(in srgb, var(--p-accent) 75%, transparent);
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--p-accent) 26%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__visual::after {
+  border-color: color-mix(in srgb, var(--p-neon) 38%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__cross {
+  background: color-mix(in srgb, var(--p-accent) 25%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__cross::after {
+  background: color-mix(in srgb, var(--p-neon) 24%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__visual strong {
+  color: var(--p-accent);
+  text-shadow: 0 0 12px var(--p-accent);
+}
+
+:root[data-skin="payathon"] .px-project__visual em {
+  color: color-mix(in srgb, var(--p-accent) 50%, var(--p-muted));
+}
+
+:root[data-skin="payathon"] .px-project__meta {
+  border-bottom-color: color-mix(in srgb, var(--p-accent) 18%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__meta span:first-child {
+  color: var(--p-neon);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-neon) 40%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__tags span {
+  border-color: color-mix(in srgb, var(--p-accent) 22%, transparent);
+  background: color-mix(in srgb, var(--p-accent) 4%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project__link {
+  border-top-color: color-mix(in srgb, var(--p-neon) 22%, transparent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-project h3 {
+  text-shadow: 0 0 24px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+/* Honors */
+
+:root[data-skin="payathon"] .px-honors__lead h3 {
+  color: var(--p-accent);
+  text-shadow:
+    0 0 28px color-mix(in srgb, var(--p-accent) 40%, transparent),
+    4px 0 0 color-mix(in srgb, var(--p-neon) 33%, transparent),
+    -4px 0 0 color-mix(in srgb, var(--p-accent) 28%, transparent);
+}
+
+:root[data-skin="payathon"] .px-honors__lead h3 span {
+  color: var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-honors__lead::after {
+  display: block;
+  width: 180px;
+  height: 12px;
+  margin-top: 22px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--p-accent) 70%, transparent) 0 2px,
+    transparent 2px 5px,
+    color-mix(in srgb, var(--p-neon) 55%, transparent) 5px 7px,
+    transparent 7px 11px
+  );
+  content: "";
+  opacity: 0.65;
+}
+
+:root[data-skin="payathon"] .px-honors__list {
+  border-top-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-honors__list li {
+  border-bottom-color: color-mix(in srgb, var(--p-accent) 12%, transparent);
+  transition: background-color 180ms ease, padding-left 180ms ease;
+}
+
+:root[data-skin="payathon"] .px-honors__list li:hover {
+  padding-left: 10px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--p-neon) 7%, transparent), transparent 62%);
+}
+
+:root[data-skin="payathon"] .px-honors__list li > span {
+  color: var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-honors__list i {
+  color: color-mix(in srgb, var(--p-accent) 55%, var(--p-faint));
+}
+
+:root[data-skin="payathon"] .px-honors__list li:hover i {
+  color: var(--p-neon-2);
+  text-shadow: 0 0 10px var(--p-neon-2);
+}
+
+/* Profile */
+
+:root[data-skin="payathon"] .px-profile__block,
+:root[data-skin="payathon"] .px-profile__focus {
+  border-top: 0;
+  background: linear-gradient(90deg, var(--p-accent), color-mix(in srgb, var(--p-neon) 50%, transparent), transparent 72%) top / 100% 1px no-repeat;
+}
+
+:root[data-skin="payathon"] .px-profile__tags span {
+  border-color: color-mix(in srgb, var(--p-accent) 25%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--p-accent) 6%, transparent), transparent);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+:root[data-skin="payathon"] .px-profile__tags span:hover {
+  border-color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .px-profile__tags em {
+  color: var(--p-neon);
+}
+
+:root[data-skin="payathon"] .px-profile__block li::before {
+  color: var(--p-neon);
+  text-shadow: 0 0 8px var(--p-neon);
+}
+
+/* End */
+
+:root[data-skin="payathon"] .px-end::before {
+  inset: auto 0 -48%;
+  height: 110%;
+  background:
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p-accent) 18%, transparent), transparent 62%),
+    radial-gradient(ellipse at 32% 100%, color-mix(in srgb, var(--p-neon) 10%, transparent), transparent 55%);
+}
+
+:root[data-skin="payathon"] .px-end::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 36%;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--p-accent) 20%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--p-neon) 12%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  content: "";
+  opacity: 0.25;
+  transform: perspective(500px) rotateX(66deg);
+  transform-origin: center bottom;
+  mask-image: linear-gradient(to top, #000, transparent 90%);
+  pointer-events: none;
+}
+
+:root[data-skin="payathon"] .px-end > h2 {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 34px color-mix(in srgb, var(--p-accent) 14%, transparent);
+}
+
+:root[data-skin="payathon"] .px-end > h2 span {
+  position: relative;
+  isolation: isolate;
+  -webkit-text-stroke-color: color-mix(in srgb, var(--p-accent) 65%, transparent);
+  text-shadow:
+    0 0 34px color-mix(in srgb, var(--p-accent) 20%, transparent),
+    5px 0 0 color-mix(in srgb, var(--p-neon) 30%, transparent),
+    -5px 0 0 color-mix(in srgb, var(--p-accent) 25%, transparent);
+}
+
+:root[data-skin="payathon"] .px-end > h2 span::before,
+:root[data-skin="payathon"] .px-end > h2 span::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  color: var(--p-neon);
+  content: attr(data-text);
+  opacity: 0.5;
+  -webkit-text-stroke: 0;
+  clip-path: inset(0 0 56% 0);
+  transform: translate(-4px, -2px);
+  animation: px-glitch-top 8s steps(1) infinite;
+  mix-blend-mode: screen;
+}
+
+:root[data-skin="payathon"] .px-end > h2 span::after {
+  color: var(--p-accent);
+  clip-path: inset(44% 0 0 0);
+  transform: translate(4px, 2px);
+  animation: px-glitch-bottom 7s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-end > p:not(.px-eyebrow),
+:root[data-skin="payathon"] .px-end .px-actions,
+:root[data-skin="payathon"] .px-end__foot {
+  position: relative;
+  z-index: 1;
+}
+
+:root[data-skin="payathon"] .px-end__foot {
+  border-top-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+:root[data-skin="payathon"] .px-end__foot i {
+  box-shadow: 0 0 8px var(--p-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .px-footer {
+  position: relative;
+  border-top: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 7, 0.2), #040506 60%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 4px);
+}
+
+:root[data-skin="payathon"] .px-footer::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-accent), var(--p-neon), transparent);
+  background-size: 200% 100%;
+  content: "";
+  animation: px-line-shift 10s linear infinite;
+}
+
+:root[data-skin="payathon"] .px-footer__word {
+  margin-top: 48px;
+  color: transparent;
+  text-shadow:
+    6px 0 0 rgba(255, 45, 149, 0.12),
+    -6px 0 0 rgba(134, 234, 255, 0.09);
+  -webkit-text-stroke-color: color-mix(in srgb, var(--p-accent) 30%, transparent);
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--p-accent) 8%, transparent));
+}
+
+:root[data-skin="payathon"] .px-footer__kicker,
+:root[data-skin="payathon"] .px-footer__meta i {
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .px-footer__links a:hover {
+  color: var(--p-accent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+/* -------------------------------------------------------------------------
+   Inner pages
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] .shell .hero {
+  position: relative;
+  border-top: 1px solid color-mix(in srgb, var(--p-accent) 20%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .hero::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--p-accent), var(--p-neon), transparent);
+  content: "";
+  box-shadow: 0 0 16px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .hero h1 {
+  text-shadow:
+    0 0 34px color-mix(in srgb, var(--p-accent) 14%, transparent),
+    3px 0 0 color-mix(in srgb, var(--p-neon) 20%, transparent),
+    -3px 0 0 color-mix(in srgb, var(--p-accent) 15%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .hero .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:root[data-skin="payathon"] .shell .hero .eyebrow::before {
+  width: 6px;
+  height: 6px;
+  background: var(--p-neon);
+  content: "";
+  box-shadow: 0 0 9px var(--p-neon);
+}
+
+:root[data-skin="payathon"] .shell .card,
+:root[data-skin="payathon"] .shell .blog-card,
+:root[data-skin="payathon"] .shell .project-card,
+:root[data-skin="payathon"] .shell .filter-bar,
+:root[data-skin="payathon"] .shell .comment-panel,
+:root[data-skin="payathon"] .shell .showcase-card {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(11, 14, 17, 0.97), rgba(6, 8, 10, 0.97)) padding-box,
+    linear-gradient(135deg, color-mix(in srgb, var(--p-accent) 30%, transparent), rgba(255, 255, 255, 0.055) 36%, color-mix(in srgb, var(--p-neon) 26%, transparent)) border-box;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 18px 46px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-skin="payathon"] .shell .showcase-card:hover,
+:root[data-skin="payathon"] .shell .blog-card:hover,
+:root[data-skin="payathon"] .shell .project-card:hover {
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--p-accent) 16%, transparent));
+  border-color: transparent;
+}
+
+:root[data-skin="payathon"] .shell .article-section {
+  border-top-color: color-mix(in srgb, var(--p-accent) 20%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .article-section > span {
+  text-shadow: 0 0 10px color-mix(in srgb, var(--p-accent) 40%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .article-section h2 {
+  text-shadow: 0 0 22px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .tag {
+  border-color: color-mix(in srgb, var(--p-accent) 24%, transparent);
+  background: color-mix(in srgb, var(--p-accent) 4%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .field input,
+:root[data-skin="payathon"] .shell .field textarea {
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-skin="payathon"] .shell .study-question,
+:root[data-skin="payathon"] .shell .study-sidebar {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+:root[data-skin="payathon"] .shell .study-summary strong {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .option:hover,
+:root[data-skin="payathon"] .shell .option.is-selected {
+  box-shadow: 0 0 22px color-mix(in srgb, var(--p-accent) 12%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .resume-viewer {
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--p-accent) 8%, transparent), transparent 55%),
+    #080a0c;
+}
+
+:root[data-skin="payathon"] .shell .resume-preview-link {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--p-accent) 25%, transparent),
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 60px color-mix(in srgb, var(--p-accent) 8%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-hero,
+:root[data-skin="payathon"] .shell .pm-detail,
+:root[data-skin="payathon"] .shell .pm-metric,
+:root[data-skin="payathon"] .shell .pm-log-card,
+:root[data-skin="payathon"] .shell .pm-log-index,
+:root[data-skin="payathon"] .shell .pm-timeline,
+:root[data-skin="payathon"] .shell .pm-chart-card,
+:root[data-skin="payathon"] .shell .pm-project-card,
+:root[data-skin="payathon"] .shell .pm-category-card {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+:root[data-skin="payathon"] .shell .pm-progress__track i {
+  background: linear-gradient(90deg, var(--p-accent), var(--p-neon));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-page {
+  --accent: var(--p-accent);
+  --accent-strong: var(--p-accent);
+  --line-strong: color-mix(in srgb, var(--p-accent) 32%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-metric strong,
+:root[data-skin="payathon"] .shell .pm-category-card__top strong,
+:root[data-skin="payathon"] .shell .pm-project-card__top strong {
+  color: var(--p-accent);
+  font-family: var(--p-mono);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--p-accent) 38%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-hero__focus {
+  border-color: color-mix(in srgb, var(--p-accent) 28%, transparent);
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--p-neon) 8%, transparent), transparent 55%),
+    linear-gradient(145deg, color-mix(in srgb, var(--p-accent) 8%, transparent), transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-hero__focus span,
+:root[data-skin="payathon"] .shell .pm-metric span,
+:root[data-skin="payathon"] .shell .pm-info-block span,
+:root[data-skin="payathon"] .shell .pm-next-focus span,
+:root[data-skin="payathon"] .shell .pm-chart-card__head > span,
+:root[data-skin="payathon"] .shell .pm-detail__footer > span:first-child {
+  color: color-mix(in srgb, var(--p-accent) 70%, var(--p-faint));
+}
+
+:root[data-skin="payathon"] .shell .pm-sparkline polyline,
+:root[data-skin="payathon"] .shell .pm-progress-chart__line {
+  stroke: var(--p-accent);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--p-accent) 55%, transparent));
+}
+
+:root[data-skin="payathon"] .shell .pm-sparkline circle,
+:root[data-skin="payathon"] .shell .pm-progress-chart__point {
+  fill: #06080a;
+  stroke: var(--p-neon);
+}
+
+:root[data-skin="payathon"] .shell .pm-timeline__dot {
+  border-color: var(--p-accent);
+  background: #06080a;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--p-accent) 14%, transparent),
+    0 0 16px color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-detail__footer code,
+:root[data-skin="payathon"] .shell .pm-log-meta code {
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 8%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .pm-log-index__list button.is-active strong {
+  color: var(--p-accent);
+}
+
+:root[data-skin="payathon"] .shell .pm-log-index__list button.is-active span,
+:root[data-skin="payathon"] .shell .pm-breadcrumb button {
+  color: var(--p-neon);
+}
+
+:root[data-skin="payathon"] .shell .daily-log-page .pm-tomorrow-prompt__head button {
+  border-color: color-mix(in srgb, var(--p-accent) 35%, transparent);
+  color: var(--p-accent);
+}
+
+:root[data-skin="payathon"] .shell .daily-log-page .pm-next-focus {
+  border-color: color-mix(in srgb, var(--p-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--p-accent) 7%, transparent);
+}
+
+:root[data-skin="payathon"] .shell .daily-log-page .pm-next-focus span,
+:root[data-skin="payathon"] .shell .pm-repo {
+  color: var(--p-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Scrollbar
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] ::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+:root[data-skin="payathon"] ::-webkit-scrollbar-track {
+  background: #040506;
+}
+
+:root[data-skin="payathon"] ::-webkit-scrollbar-thumb {
+  border: 2px solid #040506;
+  background: linear-gradient(180deg, var(--p-accent), var(--p-neon));
+}
+
+/* Keep keyboard focus visible inside clipped cyber shapes. */
+:root[data-skin="payathon"] .px-project:focus-visible,
+:root[data-skin="payathon"] .px-button:focus-visible,
+:root[data-skin="payathon"] .px-orb:focus-visible,
+:root[data-skin="payathon"] .px-nav__link:focus-visible,
+:root[data-skin="payathon"] .px-tools button:focus-visible,
+:root[data-skin="payathon"] .shell .blog-card:focus-visible,
+:root[data-skin="payathon"] .shell .showcase-card:focus-visible,
+:root[data-skin="payathon"] .shell .card:focus-within {
+  outline: 2px solid var(--p-accent);
+  outline-offset: -4px;
+}
+
+/* -------------------------------------------------------------------------
+   Animations
+   ------------------------------------------------------------------------- */
+
+@keyframes px-cyber-drift {
+  to {
+    background-position: 64px 64px;
+  }
+}
+
+@keyframes px-cyber-sweep {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(180vh);
+  }
+}
+
+@keyframes px-line-shift {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes px-blink-fast {
+  0%,
+  46% {
+    opacity: 1;
+  }
+  47%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes px-flicker {
+  0%,
+  90%,
+  100% {
+    opacity: 0.85;
+  }
+  91% {
+    opacity: 0.2;
+  }
+  92% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.4;
+  }
+  94% {
+    opacity: 1;
+  }
+}
+
+@keyframes px-glitch-top {
+  0%,
+  86%,
+  100% {
+    transform: translate(-5px, -2px);
+    opacity: 0.62;
+  }
+  87% {
+    transform: translate(-12px, 3px);
+    opacity: 0.9;
+  }
+  88% {
+    transform: translate(7px, -1px);
+    opacity: 0.3;
+  }
+  89% {
+    transform: translate(-5px, -2px);
+    opacity: 0.62;
+  }
+  94% {
+    transform: translate(9px, 2px);
+    opacity: 0.75;
+  }
+  95% {
+    transform: translate(-5px, -2px);
+    opacity: 0.62;
+  }
+}
+
+@keyframes px-glitch-bottom {
+  0%,
+  84%,
+  100% {
+    transform: translate(5px, 2px);
+    opacity: 0.55;
+  }
+  85% {
+    transform: translate(14px, -3px);
+    opacity: 0.85;
+  }
+  86% {
+    transform: translate(-8px, 1px);
+    opacity: 0.25;
+  }
+  87% {
+    transform: translate(5px, 2px);
+    opacity: 0.55;
+  }
+  96% {
+    transform: translate(-11px, -2px);
+    opacity: 0.7;
+  }
+  97% {
+    transform: translate(5px, 2px);
+    opacity: 0.55;
+  }
+}
+
+@keyframes px-orb-scan {
+  0%,
+  100% {
+    top: 18%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 82%;
+  }
+}
+
+@keyframes px-card-scan {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(460%);
+  }
+}
+
+@keyframes px-terminal-shine {
+  to {
+    background-position: 0 0, -220% 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 1060px) {
+  :root[data-skin="payathon"] .px-cyber__rail {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__reticle {
+    width: 92vw;
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 820px) {
+  :root[data-skin="payathon"] .px-cyber__corner {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__hud {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__reticle {
+    top: 170px;
+    height: 330px;
+    opacity: 0.3;
+  }
+
+  :root[data-skin="payathon"] .px-hero::after {
+    height: 38%;
+    opacity: 0.25;
+  }
+
+  :root[data-skin="payathon"] .px-hero__title {
+    font-size: 20vw;
+  }
+
+  :root[data-skin="payathon"] .px-section__head::before {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  :root[data-skin="payathon"] .px-cyber__grid {
+    opacity: 0.1;
+  }
+
+  :root[data-skin="payathon"] .px-terminal__bar b {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-cyber__corner {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__kicker b {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__reticle {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__line--glitch::before {
+    transform: translate(-3px, -1px);
+  }
+
+  :root[data-skin="payathon"] .px-hero__line--glitch::after {
+    transform: translate(3px, 1px);
+  }
+
+  :root[data-skin="payathon"] .px-project {
+    padding: 12px 12px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-skin="payathon"] .px-cyber__grid,
+  :root[data-skin="payathon"] .px-cyber__scan,
+  :root[data-skin="payathon"] .px-brand__mark::after,
+  :root[data-skin="payathon"] .px-hero__kicker b,
+  :root[data-skin="payathon"] .px-hero__line--glitch::before,
+  :root[data-skin="payathon"] .px-hero__line--glitch::after,
+  :root[data-skin="payathon"] .px-orb::before,
+  :root[data-skin="payathon"] .px-orb__scan,
+  :root[data-skin="payathon"] .px-terminal::before,
+  :root[data-skin="payathon"] .px-project__scan,
+  :root[data-skin="payathon"] .px-end > h2 span::before,
+  :root[data-skin="payathon"] .px-end > h2 span::after,
+  :root[data-skin="payathon"] .px-header::before,
+  :root[data-skin="payathon"] .px-footer::before {
+    animation: none;
+  }
+
+  :root[data-skin="payathon"] .px-cyber__scan {
+    display: none;
+  }
+
+  :root[data-skin="payathon"] .px-hero__line--glitch::before,
+  :root[data-skin="payathon"] .px-hero__line--glitch::after,
+  :root[data-skin="payathon"] .px-end > h2 span::before,
+  :root[data-skin="payathon"] .px-end > h2 span::after {
+    opacity: 0.4;
+  }
+}

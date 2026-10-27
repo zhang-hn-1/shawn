@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { aboutProfile, blogPosts } from "../markdown-data";
 import { AccentPicker, SkinSwitch, useSkin } from "./skin";
@@ -62,6 +62,46 @@ export function RedesignHeader({ items, inWork, onToggleWork }: HeaderProps) {
         </button>
       </div>
     </header>
+  );
+}
+
+export function CyberFrame() {
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    let raf = 0;
+    const onPointerMove = (event: PointerEvent) => {
+      window.cancelAnimationFrame(raf);
+      raf = window.requestAnimationFrame(() => {
+        frame.style.setProperty("--px-mx", `${event.clientX}px`);
+        frame.style.setProperty("--px-my", `${event.clientY}px`);
+      });
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div className="px-cyber" aria-hidden="true" ref={frameRef}>
+      <span className="px-cyber__grid" />
+      <span className="px-cyber__cursor" />
+      <span className="px-cyber__noise" />
+      <span className="px-cyber__scan" />
+      <span className="px-cyber__corner px-cyber__corner--tl" />
+      <span className="px-cyber__corner px-cyber__corner--tr" />
+      <span className="px-cyber__corner px-cyber__corner--bl" />
+      <span className="px-cyber__corner px-cyber__corner--br" />
+      <span className="px-cyber__rail px-cyber__rail--left">HDU // AUTOMATION // 2024—2028</span>
+      <span className="px-cyber__rail px-cyber__rail--right">UPLINK STABLE // 30.27°N 120.35°E</span>
+    </div>
   );
 }
 

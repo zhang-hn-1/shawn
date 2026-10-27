@@ -5,9 +5,10 @@ import { aboutProfile, blogPosts, showcaseProjects } from "../markdown-data";
 const GRADUATION = new Date("2028-06-30T00:00:00+08:00");
 const HDU_DAY_ONE = new Date("2024-09-01T00:00:00+08:00");
 
-const TERMINAL_LINES: { text: string; tone?: "accent" | "comment" | "string" | "code" }[] = [
+const TERMINAL_LINES: { text: string; tone?: "accent" | "comment" | "string" | "code" | "system" }[] = [
   { text: "$ whoami", tone: "accent" },
   { text: "zhang-hangning · 张航宁" },
+  { text: "[ OK ] secure shell // token verified", tone: "system" },
   { text: "" },
   { text: "$ cat profile.ts", tone: "accent" },
   { text: "/**", tone: "comment" },
@@ -21,6 +22,7 @@ const TERMINAL_LINES: { text: string; tone?: "accent" | "comment" | "string" | "
   { text: '  status:  "building / learning / shipping",', tone: "string" },
   { text: "};", tone: "code" },
   { text: "" },
+  { text: "[ SYS ] uplink stable · node hdu-01", tone: "system" },
   { text: "$ echo $NEXT", tone: "accent" },
   { text: "// ▶ Read. Build. Ship.", tone: "accent" },
 ];
@@ -96,7 +98,10 @@ function HeroTerminal() {
           <i />
         </span>
         <em>shawn@hdu: ~</em>
-        <b>zsh</b>
+        <span className="px-terminal__secure">
+          <i /> SECURE SHELL
+        </span>
+        <b>zsh // 0x2026</b>
       </div>
       <div className="px-terminal__body" aria-hidden="true">
         {TERMINAL_LINES.map((line, index) => (
@@ -172,16 +177,24 @@ export function RedesignHome() {
           <span className="px-hero__status">
             <i aria-hidden="true" /> STUDENT RESEARCHER · CLASS OF 2028
           </span>
+          <span className="px-hero__hud" aria-hidden="true">
+            SYS.ONLINE // 2026
+          </span>
           <span className="px-hero__coord">
             HANGZHOU, CN · 30.27°N 120.35°E · DAY {String(daysAtHdu).padStart(3, "0")}
           </span>
         </div>
 
-        <p className="px-hero__kicker">ZHANG HANGNING · PERSONAL ARCHIVE / 2026</p>
+        <span className="px-hero__reticle" aria-hidden="true" />
+        <p className="px-hero__kicker">
+          ZHANG HANGNING · PERSONAL ARCHIVE / 2026 <b aria-hidden="true">DECRYPTED</b>
+        </p>
 
         <h1 className="px-hero__title" id="px-hero-title" aria-label="张航宁 · Shawn Zhang">
-          <span className="px-hero__line">SHAWN</span>
-          <span className="px-hero__line px-hero__line--outline">
+          <span className="px-hero__line px-hero__line--glitch" data-text="SHAWN">
+            SHAWN
+          </span>
+          <span className="px-hero__line px-hero__line--outline" data-text="ZHANG">
             ZHANG<i aria-hidden="true">.</i>
           </span>
         </h1>
@@ -230,6 +243,10 @@ export function RedesignHome() {
               <span className="px-orb__arrow" aria-hidden="true">
                 ↗
               </span>
+              <span className="px-orb__hud" aria-hidden="true">
+                LOCK // ON
+              </span>
+              <span className="px-orb__scan" aria-hidden="true" />
             </Link>
             <span className="px-orb__hint">SELECTED WORK / 2024—2026</span>
           </div>
@@ -265,7 +282,7 @@ export function RedesignHome() {
       </div>
 
       <section className="px-section" id="index">
-        <header className="px-section__head">
+        <header className="px-section__head" data-sector="01">
           <div>
             <p className="px-section__num">/ 01</p>
             <h2>INDEX / 索引</h2>
@@ -292,7 +309,7 @@ export function RedesignHome() {
       </section>
 
       <section className="px-section" id="work">
-        <header className="px-section__head">
+        <header className="px-section__head" data-sector="02">
           <div>
             <p className="px-section__num">/ 02</p>
             <h2>SELECTED WORK</h2>
@@ -301,15 +318,21 @@ export function RedesignHome() {
         </header>
         <div className="px-projects">
           {projects.map((project, index) => (
-            <Link className="px-project" to={`/projects/${project.id}`} key={project.id}>
+            <Link
+              className="px-project"
+              to={`/projects/${project.id}`}
+              key={project.id}
+              data-code={`PRJ-${String(index + 1).padStart(2, "0")}`}
+            >
               <div className="px-project__visual" data-index={index} aria-hidden="true">
                 <span className="px-project__visual-grid" />
+                <span className="px-project__scan" />
                 <strong>{String(index + 1).padStart(2, "0")}</strong>
                 <em>{project.category}</em>
                 <i className="px-project__cross" />
               </div>
               <div className="px-project__meta">
-                <span>{project.category}</span>
+                <span>PRJ-{String(index + 1).padStart(2, "0")} // {project.category}</span>
                 <span>{project.status}</span>
               </div>
               <h3>{project.title}</h3>
@@ -333,7 +356,7 @@ export function RedesignHome() {
       </section>
 
       <section className="px-section px-honors" id="honors">
-        <header className="px-section__head">
+        <header className="px-section__head" data-sector="03">
           <div>
             <p className="px-section__num">/ 03</p>
             <h2>HONORS / 荣誉</h2>
@@ -364,7 +387,7 @@ export function RedesignHome() {
       </section>
 
       <section className="px-section px-profile" id="profile">
-        <header className="px-section__head">
+        <header className="px-section__head" data-sector="04">
           <div>
             <p className="px-section__num">/ 04</p>
             <h2>PROFILE / 档案</h2>
@@ -413,10 +436,10 @@ export function RedesignHome() {
 
       <section className="px-end" id="contact">
         <p className="px-eyebrow">/ NEXT</p>
-        <h2>
+        <h2 aria-label="Let's build something.">
           LET&apos;S BUILD
           <br />
-          <span>SOMETHING.</span>
+          <span data-text="SOMETHING.">SOMETHING.</span>
         </h2>
         <p>
           如果对我的项目或方向感兴趣，欢迎从一份简历、一个项目，或者一句「你好」开始。

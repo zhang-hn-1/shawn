@@ -3590,3 +3590,38 @@ html[data-skin="classic"] .skin-switch button.is-active {
 :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-repo {
   border-radius: 0;
 }
+
+/* Elements that only receive full styling in the cyber layer. */
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__reticle,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__hud,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__scan,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__scan {
+  display: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__hud {
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.16em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__kicker b {
+  margin-left: 8px;
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  color: var(--p-faint);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__bar b {
+  margin-left: 0;
+}
