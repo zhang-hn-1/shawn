@@ -1,0 +1,3592 @@
+/* =========================================================================
+   SHAWN / 2026 redesign — isolated skin layer.
+   Every rule is scoped to html[data-skin="payathon"] or html[data-skin="dev"],
+   so the original "classic" site keeps its existing styles untouched.
+   ========================================================================= */
+
+:root[data-skin="payathon"],
+:root[data-skin="dev"] {
+  color-scheme: dark;
+  --p-bg: #08090a;
+  --p-panel: #101113;
+  --p-panel-2: #0c0d0f;
+  --p-ink: #f4f5f7;
+  --p-muted: #a8b1bd;
+  --p-faint: #76808d;
+  --p-line: rgba(244, 245, 247, 0.14);
+  --p-line-soft: rgba(244, 245, 247, 0.08);
+  --p-line-strong: rgba(244, 245, 247, 0.3);
+  --p-accent: #86eaff;
+  --p-accent-ink: #05070a;
+  --p-sans: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --p-mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas,
+    "Liberation Mono", monospace;
+  --p-display: var(--p-sans);
+  --accent: var(--p-accent);
+  --accent-strong: var(--p-accent);
+  --text: var(--p-ink);
+  --muted: var(--p-muted);
+  --subtle: var(--p-faint);
+  --line: var(--p-line);
+  --line-strong: var(--p-line-strong);
+  --bg: var(--p-bg);
+  --radius-xl: 0px;
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --font-art-cn: var(--p-sans);
+  --font-title-cn: var(--p-sans);
+  --font-body-cn: var(--p-sans);
+  --font-title-en: var(--p-sans);
+  --serif: var(--p-sans);
+  --sans: var(--p-sans);
+}
+
+:root[data-skin="dev"] {
+  --p-bg: #060708;
+  --p-panel: #0b0d0e;
+  --p-panel-2: #08090b;
+  --p-display: var(--p-mono);
+}
+
+/* -------------------------------------------------------------------------
+   Global canvas
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="payathon"] body:has(.shell),
+:root[data-skin="dev"] body:has(.shell) {
+  color: var(--p-ink);
+  background-color: var(--p-bg);
+  background-image:
+    radial-gradient(circle at 82% -6%, color-mix(in srgb, var(--p-accent) 12%, transparent), transparent 42%),
+    radial-gradient(circle at 4% 46%, rgba(255, 255, 255, 0.03), transparent 30%),
+    linear-gradient(to right, var(--p-line-soft) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--p-line-soft) 1px, transparent 1px);
+  background-size: auto, auto, 96px 96px, 96px 96px;
+  background-attachment: fixed;
+  font-family: var(--p-sans);
+}
+
+:root[data-skin="payathon"] body:has(.shell)::before,
+:root[data-skin="dev"] body:has(.shell)::before {
+  display: none;
+}
+
+:root[data-skin="payathon"] ::selection,
+:root[data-skin="dev"] ::selection {
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) :focus-visible {
+  outline: 2px solid var(--p-accent);
+  outline-offset: 3px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell {
+  width: min(1320px, calc(100% - 96px));
+  padding: 0;
+  color: var(--p-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell.shell--landing {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell:not(.shell--landing) {
+  background: transparent;
+}
+
+/* -------------------------------------------------------------------------
+   Classic-mode mode switch (the only classic rule in this file)
+   ------------------------------------------------------------------------- */
+
+html[data-skin="classic"] .topbar__right .skin-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid rgba(237, 232, 223, 0.16);
+  border-radius: 999px;
+  background: rgba(13, 12, 11, 0.5);
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1050px) {
+  .topbar__right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+html[data-skin="classic"] .skin-switch__caption,
+html[data-skin="classic"] .skin-switch button > span {
+  display: none;
+}
+
+html[data-skin="classic"] .skin-switch__track {
+  display: inline-flex;
+  gap: 2px;
+}
+
+html[data-skin="classic"] .skin-switch button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #958e86;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+html[data-skin="classic"] .skin-switch button em {
+  font-style: normal;
+}
+
+html[data-skin="classic"] .skin-switch button:hover {
+  color: #ede8df;
+}
+
+html[data-skin="classic"] .skin-switch button.is-active {
+  color: #16130f;
+  background: #d2ad78;
+}
+
+/* -------------------------------------------------------------------------
+   Header
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  padding: 16px clamp(20px, 3.2vw, 48px);
+  border-bottom: 1px solid var(--p-line);
+  background: color-mix(in srgb, var(--p-bg) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(120%);
+}
+
+:root[data-skin="dev"] .px-header {
+  border-bottom-style: dashed;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--p-ink);
+  text-decoration: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--p-accent);
+  color: var(--p-accent);
+  font: 600 16px/1 var(--p-mono);
+  letter-spacing: -0.06em;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand:hover .px-brand__mark {
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__mark i {
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__copy {
+  display: grid;
+  gap: 3px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__copy strong {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: 1;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__copy small {
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-bottom: 1px solid transparent;
+  color: var(--p-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__index {
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.06em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link em {
+  display: none;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link:hover {
+  color: var(--p-ink);
+  background: color-mix(in srgb, var(--p-accent) 6%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link.is-active {
+  color: var(--p-accent);
+  border-bottom-color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid var(--p-line);
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--p-faint);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work:hover {
+  border-color: var(--p-accent);
+  color: var(--p-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work.is-active {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work.is-active i {
+  background: var(--p-accent);
+  box-shadow: 0 0 8px var(--p-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Mode switch + accent picker (redesign skins)
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--p-line);
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch__caption {
+  padding: 0 5px;
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch__track {
+  display: inline-flex;
+  gap: 2px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 8px;
+  border: 0;
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button > span {
+  display: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button em {
+  font: 600 10px/1 var(--p-sans);
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button:hover {
+  color: var(--p-ink);
+  background: color-mix(in srgb, var(--p-accent) 7%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button.is-active {
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .skin-switch button.is-active > span {
+  color: var(--p-accent-ink);
+  opacity: 0.55;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker {
+  position: relative;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--p-line);
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger i {
+  display: block;
+  width: 11px;
+  height: 11px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--p-accent) 14%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger:hover,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger.is-open {
+  border-color: var(--p-accent);
+  color: var(--p-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__panel {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 130;
+  width: 248px;
+  padding: 14px;
+  border: 1px solid var(--p-line-strong);
+  background: #0a0c0d;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  animation: px-drop 160ms ease both;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__panel > p {
+  margin: 0 0 10px;
+  color: var(--p-accent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__panel > small {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--p-line-soft);
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__panel > small em {
+  color: var(--p-accent);
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__grid button {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 3px;
+  place-items: center;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__grid button i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--swatch);
+  opacity: 0.86;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__grid button:hover {
+  border-color: var(--p-line-strong);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__grid button.is-active {
+  border-color: var(--p-ink);
+}
+
+/* -------------------------------------------------------------------------
+   Shared shell / typography / buttons
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .page {
+  gap: 28px;
+  padding: clamp(32px, 4.6vw, 64px) 0 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell--redesign .page {
+  animation: px-rise 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell h1,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell h2,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell h3,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell h4 {
+  font-family: var(--p-display);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .eyebrow {
+  margin: 0 0 12px;
+  color: var(--p-accent);
+  font: 9px/1.4 var(--p-mono);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .lead,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .landing__lead,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-lead,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .content-card p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .feature-card p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-card p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-card p {
+  color: var(--p-muted);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .muted,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .local-note,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field span,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-card span {
+  color: var(--p-faint);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .button {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 0;
+  font: 600 10px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .button--solid {
+  border: 1px solid var(--p-accent);
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+  box-shadow: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .button--solid:hover {
+  color: var(--p-accent);
+  background: transparent;
+  transform: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .button--ghost {
+  border: 1px solid var(--p-line-strong);
+  color: var(--p-ink);
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .button--ghost:hover {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 6%, transparent);
+  transform: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--p-line-strong);
+  color: var(--p-ink);
+  background: transparent;
+  font: 600 10px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button span {
+  color: var(--p-accent);
+  font-size: 13px;
+  transition: transform 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button:hover {
+  border-color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 7%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button:hover span {
+  transform: translate(2px, -2px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button--solid {
+  border-color: var(--p-accent);
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button--solid span {
+  color: var(--p-accent-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button--solid:hover {
+  color: var(--p-accent-ink);
+  background: color-mix(in srgb, var(--p-accent) 84%, #ffffff);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--p-line-strong);
+  color: var(--p-accent);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-text-link:hover {
+  border-color: var(--p-accent);
+  color: var(--p-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-eyebrow {
+  margin: 0 0 14px;
+  color: var(--p-accent);
+  font: 9px/1.4 var(--p-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------
+   Home — hero
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-home {
+  width: 100%;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4.4vw, 72px);
+  overflow-x: clip;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(26px, 4vw, 48px) 0 clamp(48px, 7vw, 88px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero::before {
+  position: absolute;
+  z-index: -1;
+  inset: -8% -8% auto;
+  height: 84%;
+  background: radial-gradient(ellipse at 50% 8%, color-mix(in srgb, var(--p-accent) 9%, transparent), transparent 62%);
+  content: "";
+  pointer-events: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--p-line);
+  color: var(--p-faint);
+  font: 9px/1.5 var(--p-mono);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__status i,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-live {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--p-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-accent) 13%, transparent);
+  animation: px-pulse 2.4s ease-in-out infinite;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__kicker {
+  margin: clamp(36px, 6vw, 72px) 0 24px;
+  color: var(--p-faint);
+  font: 9px/1.5 var(--p-mono);
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__title {
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  font-family: var(--p-display);
+  font-size: clamp(4.2rem, 15vw, 12.5rem);
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  line-height: 0.78;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__line {
+  display: block;
+  padding-right: 0.075em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__line--outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--p-line-strong);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__line--outline i {
+  color: var(--p-accent);
+  font-style: normal;
+  -webkit-text-stroke: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(24px, 3.4vw, 36px);
+  color: var(--p-muted);
+  font: 10px/1.6 var(--p-mono);
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__sub i {
+  color: var(--p-accent);
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) 208px minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(24px, 3.4vw, 56px);
+  margin-top: clamp(44px, 6.4vw, 82px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__statement h2 {
+  margin: 0 0 20px;
+  font-size: clamp(1.9rem, 3.2vw, 3.15rem);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__statement h2 em {
+  color: var(--p-accent);
+  font-style: normal;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__lead {
+  max-width: 38ch;
+  margin: 0 0 26px;
+  color: var(--p-muted);
+  font-size: 0.94rem;
+  line-height: 1.85;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__note {
+  max-width: 42ch;
+  margin: 22px 0 0;
+  padding-top: 15px;
+  border-top: 1px solid var(--p-line-soft);
+  color: var(--p-faint);
+  font: 9px/1.75 var(--p-mono);
+  letter-spacing: 0.03em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__note span {
+  margin-right: 5px;
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__orb-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb {
+  position: relative;
+  display: grid;
+  width: 188px;
+  height: 188px;
+  place-items: center;
+  border: 1px solid var(--p-accent);
+  border-radius: 50%;
+  color: var(--p-ink);
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--p-accent) 13%, transparent), transparent 68%);
+  text-align: center;
+  transition: background-color 280ms ease, box-shadow 280ms ease, transform 280ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb:hover {
+  background-color: color-mix(in srgb, var(--p-accent) 10%, transparent);
+  box-shadow: 0 0 70px color-mix(in srgb, var(--p-accent) 22%, transparent);
+  transform: scale(1.025);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__rings {
+  position: absolute;
+  inset: -11px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__rings i {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed var(--p-line-strong);
+  border-radius: 50%;
+  animation: px-spin 30s linear infinite;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__rings i:last-child {
+  inset: 13px;
+  border-style: dotted;
+  animation-duration: 22s;
+  animation-direction: reverse;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__copy {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__arrow {
+  position: absolute;
+  right: 27px;
+  bottom: 27px;
+  color: var(--p-accent);
+  font-size: 17px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__hint {
+  color: var(--p-faint);
+  font: 8px/1.4 var(--p-mono);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+/* terminal */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--p-line);
+  background: var(--p-panel-2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal::before {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.018) 50%);
+  background-size: 100% 4px;
+  content: "";
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--p-line);
+  color: var(--p-faint);
+  background: rgba(255, 255, 255, 0.02);
+  font: 9px/1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__dots {
+  display: flex;
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--p-line-strong);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__dots i:first-child {
+  background: color-mix(in srgb, var(--p-accent) 75%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__bar em {
+  margin-left: 6px;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__bar b {
+  margin-left: auto;
+  color: var(--p-accent);
+  font-weight: 400;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__body {
+  min-height: 318px;
+  padding: 15px 15px 18px;
+  color: #cdd5df;
+  font: 11px/1.72 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line.is-pending {
+  visibility: hidden;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line.is-accent {
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line.is-comment {
+  color: #6e7987;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line.is-string {
+  color: color-mix(in srgb, var(--p-accent) 72%, #ffffff);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__line.is-code {
+  color: #e6eaf0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__cursor {
+  display: inline-block;
+  width: 7px;
+  height: 12px;
+  margin-left: 4px;
+  background: var(--p-accent);
+  vertical-align: -2px;
+  animation: px-blink 1.1s steps(1) infinite;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__foot {
+  display: flex;
+  gap: 15px;
+  padding: 8px 13px;
+  border-top: 1px solid var(--p-line);
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__live {
+  margin-left: auto;
+  color: var(--p-accent);
+}
+
+/* countdown + highlights */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__foot {
+  display: grid;
+  grid-template-columns: minmax(250px, 330px) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(24px, 4vw, 64px);
+  margin-top: clamp(44px, 6.4vw, 80px);
+  padding-top: 26px;
+  border-top: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 13px;
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.13em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__digits {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__part {
+  display: grid;
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__part strong {
+  color: var(--p-ink);
+  font: 500 clamp(1.9rem, 3.4vw, 3rem) / 1 var(--p-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__part small {
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.16em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__colon {
+  color: var(--p-accent);
+  font: 300 1.7rem/1.1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-left: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article {
+  padding: 2px 18px 2px 20px;
+  border-right: 1px solid var(--p-line);
+  min-width: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights strong {
+  display: block;
+  color: var(--p-ink);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights span {
+  display: block;
+  margin-top: 8px;
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+/* marquee */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee {
+  margin: 0 calc(clamp(20px, 4.4vw, 72px) * -1);
+  padding: 13px 0;
+  overflow: hidden;
+  border-top: 1px solid var(--p-line);
+  border-bottom: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: px-marquee 40s linear infinite;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee:hover .px-marquee__track {
+  animation-play-state: paused;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee__group {
+  display: flex;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee__group span {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 20px;
+  color: var(--p-muted);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee__group i {
+  color: var(--p-accent);
+  font-style: normal;
+}
+
+/* -------------------------------------------------------------------------
+   Home — sections
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section {
+  padding: clamp(68px, 9.6vw, 132px) 0;
+  border-bottom: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  align-items: end;
+  gap: 40px;
+  margin-bottom: clamp(38px, 5.6vw, 68px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__num {
+  margin: 0 0 13px;
+  color: var(--p-accent);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__head h2 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4.8vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__desc {
+  margin: 0;
+  padding-left: 20px;
+  border-left: 1px solid var(--p-line);
+  color: var(--p-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* index */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index {
+  display: grid;
+  border-top: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__row {
+  display: grid;
+  grid-template-columns: 56px minmax(150px, 0.9fr) minmax(0, 1.5fr) 48px;
+  align-items: center;
+  gap: 20px;
+  padding: 25px 14px 25px 0;
+  border-bottom: 1px solid var(--p-line);
+  color: var(--p-ink);
+  transition: background-color 180ms ease, padding-left 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__row:hover {
+  padding-left: 14px;
+  background: color-mix(in srgb, var(--p-accent) 6%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__num {
+  color: var(--p-faint);
+  font: 9px/1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__title {
+  display: flex;
+  align-items: baseline;
+  gap: 13px;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__title em {
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  font-style: normal;
+  letter-spacing: 0.15em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__desc {
+  color: var(--p-muted);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__arrow {
+  justify-self: end;
+  color: var(--p-faint);
+  font-size: 1.1rem;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__row:hover .px-index__arrow {
+  color: var(--p-accent);
+  transform: translateX(6px);
+}
+
+/* projects */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-projects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 14px 14px 20px;
+  border: 1px solid var(--p-line);
+  color: var(--p-ink);
+  background: var(--p-panel-2);
+  transition: border-color 220ms ease, transform 220ms ease, background-color 220ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:hover {
+  border-color: color-mix(in srgb, var(--p-accent) 62%, var(--p-line));
+  background: #0d0f11;
+  transform: translateY(-4px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--p-line-soft);
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--p-accent) 20%, transparent), transparent 56%),
+    #0a0b0d;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 92%);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual strong {
+  position: absolute;
+  top: 10px;
+  right: 13px;
+  color: var(--p-accent);
+  font: 600 10px/1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual em {
+  position: absolute;
+  bottom: 11px;
+  left: 13px;
+  color: var(--p-muted);
+  font: 8px/1 var(--p-mono);
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 118px;
+  height: 118px;
+  border: 1px solid color-mix(in srgb, var(--p-accent) 65%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__visual::after {
+  position: absolute;
+  inset: 22%;
+  border: 1px dashed var(--p-line-strong);
+  border-radius: 50%;
+  content: "";
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - 46px);
+  height: 1px;
+  background: var(--p-line);
+  transform: translate(-50%, -50%);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__cross::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 118px;
+  background: var(--p-line);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:nth-child(2) .px-project__visual::before {
+  width: 82px;
+  height: 82px;
+  border-radius: 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:nth-child(2) .px-project__visual::after {
+  inset: 14% 30%;
+  border-radius: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:nth-child(3) .px-project__visual::before {
+  width: 150px;
+  height: 1px;
+  border: 0;
+  border-radius: 0;
+  background: var(--p-accent);
+  opacity: 0.6;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:nth-child(3) .px-project__visual::after {
+  inset: 30% 16%;
+  border-radius: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--p-line-soft);
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project h3 {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project > p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--p-muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__tags span {
+  padding: 4px 7px;
+  border: 1px solid var(--p-line);
+  color: var(--p-muted);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--p-line-soft);
+  color: var(--p-accent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project__link i {
+  font-style: normal;
+  transition: transform 200ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:hover .px-project__link i {
+  transform: translate(3px, -3px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__more {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+/* honors */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(36px, 6vw, 90px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__lead h3 {
+  margin: 0 0 14px;
+  color: var(--p-accent);
+  font: 500 clamp(3.2rem, 6vw, 5.4rem) / 0.9 var(--p-mono);
+  letter-spacing: -0.07em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__lead h3 span {
+  margin-left: 6px;
+  color: var(--p-faint);
+  font-size: 0.26em;
+  letter-spacing: 0.04em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__lead > p:not(.px-eyebrow) {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--p-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--p-line);
+  list-style: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--p-line-soft);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list li > span {
+  color: var(--p-faint);
+  font: 8px/1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list p {
+  margin: 0;
+  color: var(--p-ink);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list i {
+  color: var(--p-faint);
+  font-size: 9px;
+  font-style: normal;
+  text-align: right;
+  transition: color 180ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__list li:hover i {
+  color: var(--p-accent);
+}
+
+/* profile */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.8fr;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__block,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__focus {
+  padding-top: 22px;
+  border-top: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__block h3 {
+  margin: 0 0 5px;
+  font-size: 1.28rem;
+  font-weight: 600;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__meta {
+  margin: 0 0 18px;
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__block ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__block li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--p-muted);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__block li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--p-accent);
+  font-family: var(--p-mono);
+  font-size: 0.75em;
+  content: "↳";
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__tags span {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 11px;
+  border: 1px solid var(--p-line);
+  color: var(--p-ink);
+  font-size: 0.8rem;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__tags em {
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+  font-style: normal;
+}
+
+/* end */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end {
+  position: relative;
+  padding: clamp(84px, 13vw, 168px) 0 clamp(54px, 8vw, 96px);
+  overflow: hidden;
+  text-align: center;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end::before {
+  position: absolute;
+  z-index: -1;
+  inset: auto 0 -45%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p-accent) 13%, transparent), transparent 66%);
+  content: "";
+  pointer-events: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end > h2 {
+  margin: 16px 0 24px;
+  font-size: clamp(3rem, 8.6vw, 7.6rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end > h2 span {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end > p:not(.px-eyebrow) {
+  max-width: 48ch;
+  margin: 0 auto;
+  color: var(--p-muted);
+  font-size: 0.92rem;
+  line-height: 1.85;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-actions--center {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: clamp(56px, 9vw, 110px);
+  padding-top: 16px;
+  border-top: 1px solid var(--p-line);
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.1em;
+  text-align: left;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end__foot i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--p-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer {
+  width: 100%;
+  margin-top: 0;
+  padding: 62px 0 0;
+  overflow: hidden;
+  border-top: 1px solid var(--p-line);
+  background: #060708;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr 0.9fr;
+  gap: 44px;
+  padding: 0 clamp(20px, 3.2vw, 48px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__kicker {
+  margin: 0 0 12px;
+  color: var(--p-accent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__identity strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__identity small {
+  color: var(--p-faint);
+  font: 8px/1.6 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+  gap: 8px 22px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--p-muted);
+  font-size: 0.82rem;
+  transition: color 160ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links a span {
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links a em {
+  margin-left: auto;
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+  font-style: normal;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links a:hover {
+  color: var(--p-ink);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links a:hover em {
+  opacity: 1;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__meta {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__meta i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__word {
+  margin-top: 52px;
+  color: transparent;
+  font-family: var(--p-display);
+  font-size: clamp(5rem, 20vw, 19rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 0.72;
+  white-space: nowrap;
+  transform: translateY(16%);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+  user-select: none;
+}
+
+/* -------------------------------------------------------------------------
+   Inner pages
+   ------------------------------------------------------------------------- */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero.card {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(28px, 4.6vw, 52px) 0 clamp(28px, 4vw, 44px);
+  border: 0;
+  border-bottom: 1px solid var(--p-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero h1 {
+  margin: 6px 0 14px;
+  font-size: clamp(3rem, 7.4vw, 6.8rem);
+  font-weight: 750;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero .lead {
+  max-width: 62ch;
+  margin: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero .study-summary {
+  flex: 0 0 auto;
+  padding: 18px 20px;
+  border: 1px solid var(--p-line);
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .filter-bar,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-panel {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: linear-gradient(180deg, #101113, #0d0e10);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card {
+  border: 1px solid var(--p-line);
+  background: linear-gradient(180deg, #101113, #0d0e10);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card:hover,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card:hover,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-card:hover {
+  border-color: color-mix(in srgb, var(--p-accent) 62%, var(--p-line));
+  box-shadow: none;
+  transform: translateY(-3px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .filter-bar {
+  display: grid;
+  padding: 16px 0;
+  border-width: 0 0 1px;
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field span {
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field input,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field textarea {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  color: var(--p-ink);
+  background: #0b0c0e;
+  font: 11px/1.6 var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field input:focus,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .field textarea:focus {
+  border-color: var(--p-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card {
+  min-height: 0;
+  padding: 24px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card h2 {
+  margin: 8px 0 10px;
+  font-size: 1.55rem;
+  font-weight: 600;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-card__meta,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-card__status {
+  font: 8px/1.4 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .tag {
+  padding: 5px 8px;
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  color: var(--p-muted);
+  background: transparent;
+  font: 8px/1.3 var(--p-mono);
+  letter-spacing: 0.03em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .tag-row {
+  gap: 5px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article {
+  padding: clamp(24px, 4vw, 48px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article__head {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article h1 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article__sections {
+  gap: 0;
+  margin: 26px 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section {
+  padding: 26px 0 10px;
+  border: 0;
+  border-top: 1px solid var(--p-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section:first-child {
+  border-top: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section > span {
+  color: var(--p-accent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.12em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section h2 {
+  margin: 8px 0 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .article-section p,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .section-list {
+  color: var(--p-muted);
+  font-size: 0.92rem;
+  line-height: 1.85;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .section-list li::marker {
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-panel {
+  padding: clamp(22px, 3vw, 36px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-panel h2 {
+  font-size: 1.5rem;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-card {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: #0b0c0e;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .comment-card__avatar {
+  border-radius: 0;
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 10%, transparent);
+  font-family: var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .content-source {
+  border-top: 1px solid var(--p-line);
+  padding-top: 16px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .content-source a {
+  color: var(--p-accent);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+/* showcase */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card {
+  gap: 12px;
+  padding: 26px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card h2 {
+  color: var(--p-ink);
+  font-family: var(--p-sans);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card p {
+  color: var(--p-muted);
+  font-size: 0.88rem;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card__highlight {
+  padding: 5px 9px;
+  border: 1px solid var(--p-line-strong);
+  border-radius: 0;
+  color: var(--p-accent);
+  background: transparent;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.04em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-card__head .eyebrow {
+  margin: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-meta {
+  gap: 6px 20px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-meta div {
+  gap: 7px;
+  font-size: 0.8rem;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-meta dt {
+  color: var(--p-faint);
+  font: 8px/1.6 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .project-meta dd {
+  color: var(--p-muted);
+}
+
+/* about */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-page {
+  gap: 28px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-intro {
+  padding: clamp(28px, 4.6vw, 54px) 0 clamp(28px, 4vw, 40px);
+  border-bottom: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-intro h1 {
+  margin: 0 0 16px;
+  color: var(--p-ink);
+  font-family: var(--p-display);
+  font-size: clamp(3.6rem, 9vw, 8rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-intro__meta {
+  margin: 0 0 18px;
+  color: var(--p-accent);
+  font: 9px/1.6 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-intro__lead {
+  max-width: 54ch;
+  margin: 0 0 22px;
+  color: var(--p-muted);
+  font-size: 0.96rem;
+  line-height: 1.85;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-tags {
+  gap: 6px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-tags span {
+  padding: 5px 9px;
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  color: var(--p-muted);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.04em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-sheet {
+  padding: clamp(20px, 3.6vw, 44px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-row {
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 28px;
+  padding: 28px 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-row + .about-row {
+  border-top: 1px solid var(--p-line);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-row h2 {
+  gap: 6px;
+  color: var(--p-ink);
+  font-family: var(--p-sans);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-row h2 small {
+  color: var(--p-accent);
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.14em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-list li {
+  padding-left: 17px;
+  color: var(--p-muted);
+  font-size: 0.88rem;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-list li::before {
+  top: 0.75em;
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-link {
+  color: var(--p-accent);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.06em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-link:hover {
+  color: var(--p-ink);
+}
+
+/* resume */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-page {
+  width: 100%;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-toolbar {
+  padding: 12px 14px;
+  border-radius: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-switcher {
+  padding: 3px;
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-switcher button {
+  border-radius: 0;
+  color: var(--p-muted);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.06em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-switcher button.is-active {
+  color: var(--p-accent-ink);
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-toolbar__meta {
+  color: var(--p-faint);
+  font: 8px/1.5 var(--p-mono);
+  letter-spacing: 0.06em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-viewer {
+  min-height: calc(100vh - 170px);
+  padding: clamp(12px, 2vw, 24px);
+  background: #0d0f11;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-preview-link {
+  width: min(100%, 940px);
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-preview-link:hover {
+  border-color: var(--p-accent);
+  transform: none;
+  box-shadow: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-preview-link img {
+  border-radius: 0;
+}
+
+/* study */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-layout {
+  gap: 20px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-question {
+  padding: clamp(22px, 3.4vw, 38px);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-question h2 {
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.55;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-question__meta {
+  gap: 6px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-question__meta span {
+  padding: 5px 8px;
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  color: var(--p-faint);
+  background: transparent;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.06em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: #0b0c0e;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option strong {
+  color: var(--p-accent);
+  font-family: var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option:hover {
+  border-color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option.is-selected {
+  border-color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 8%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option.is-correct {
+  border-color: #74e0a5;
+  background: rgba(116, 224, 165, 0.08);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .option.is-wrong {
+  border-color: #ff8a8a;
+  background: rgba(255, 138, 138, 0.08);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .answer-panel {
+  border-radius: 0;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .answer-panel.is-correct {
+  border-color: #74e0a5;
+  background: rgba(116, 224, 165, 0.06);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .answer-panel.is-wrong {
+  border-color: #ff8a8a;
+  background: rgba(255, 138, 138, 0.06);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .question-index button {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  color: var(--p-muted);
+  font-family: var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .question-index button.is-active {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 8%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .question-index button.is-done {
+  border-color: #74e0a5;
+  color: #74e0a5;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-summary strong {
+  color: var(--p-accent);
+  font-family: var(--p-mono);
+}
+
+/* project management */
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-page {
+  padding-bottom: 40px;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero {
+  padding: clamp(24px, 3.4vw, 38px);
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: linear-gradient(180deg, #101113, #0d0e10);
+  box-shadow: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero h1 {
+  font-family: var(--p-display);
+  font-size: clamp(2.2rem, 4.6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero__focus {
+  border: 1px solid var(--p-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero__focus strong {
+  font-family: var(--p-sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero__focus span,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-info-block span,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-metric span,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-next-focus span,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-detail__footer > span:first-child {
+  color: var(--p-faint);
+  font: 8px/1.4 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-metric {
+  border-radius: 0;
+  background: #0d0f11;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-metric strong {
+  color: var(--p-accent);
+  font-family: var(--p-mono);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-category-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-project-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-detail,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-log-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-log-index,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-timeline,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-breadcrumb,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-chart-card,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-empty {
+  border-radius: 0;
+  background: #0d0f11;
+  border-color: var(--p-line);
+  box-shadow: none;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-category-card:hover,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-project-card:hover {
+  border-color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-breadcrumb {
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-progress__track {
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-progress__track i {
+  border-radius: 0;
+  background: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status {
+  border-radius: 0;
+  font-family: var(--p-mono);
+  letter-spacing: 0.02em;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-timeline__dot {
+  background: var(--p-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-accent) 14%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-detail h2,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-log-card h3 {
+  font-family: var(--p-sans);
+  font-weight: 600;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .section__head h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  font-weight: 650;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .section__index {
+  color: var(--p-accent);
+  font: 10px/1 var(--p-mono);
+}
+
+/* -------------------------------------------------------------------------
+   Developer mode
+   ------------------------------------------------------------------------- */
+
+:root[data-skin="dev"] body:has(.shell) {
+  background-image:
+    radial-gradient(circle at 84% -4%, color-mix(in srgb, var(--p-accent) 9%, transparent), transparent 40%),
+    linear-gradient(to right, rgba(244, 245, 247, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244, 245, 247, 0.045) 1px, transparent 1px);
+  background-size: auto, 64px 64px, 64px 64px;
+}
+
+:root[data-skin="dev"] .shell h1,
+:root[data-skin="dev"] .shell h2,
+:root[data-skin="dev"] .px-section__head h2,
+:root[data-skin="dev"] .px-end > h2,
+:root[data-skin="dev"] .px-hero__title {
+  font-family: var(--p-mono);
+  letter-spacing: -0.05em;
+}
+
+:root[data-skin="dev"] .px-hero__title {
+  font-weight: 700;
+}
+
+:root[data-skin="dev"] .px-hero__title::before {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--p-accent);
+  font: 400 clamp(0.9rem, 1.6vw, 1.3rem) / 1 var(--p-mono);
+  letter-spacing: 0.02em;
+  content: "$ ./shawn --profile";
+}
+
+:root[data-skin="dev"] .shell .card,
+:root[data-skin="dev"] .shell .showcase-card,
+:root[data-skin="dev"] .px-terminal,
+:root[data-skin="dev"] .px-project,
+:root[data-skin="dev"] .dev-dock__panel {
+  border-style: dashed;
+}
+
+:root[data-skin="dev"] .px-project__visual::after,
+:root[data-skin="dev"] .px-orb__rings i {
+  border-style: dashed;
+}
+
+:root[data-skin="dev"] .px-brand__copy::after {
+  margin-top: 2px;
+  color: var(--p-accent);
+  font: 7px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  content: "DEVELOPER MODE";
+}
+
+:root[data-skin="dev"] .px-footer {
+  padding-bottom: 34px;
+}
+
+:root.dev-grid body::after {
+  position: fixed;
+  z-index: 9997;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--p-accent) 20%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--p-accent) 8%, transparent) 1px, transparent 1px);
+  background-size: calc(100vw / 12) 100%, 100% 8px;
+  content: "";
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* devtools dock */
+
+:root[data-skin="dev"] .dev-dock {
+  position: fixed;
+  z-index: 900;
+  top: 92px;
+  right: 18px;
+  display: flex;
+  width: 358px;
+  max-width: calc(100vw - 36px);
+  flex-direction: column;
+  color: var(--p-ink);
+  font-family: var(--p-mono);
+}
+
+:root[data-skin="dev"] .dev-dock__handle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--p-line-strong);
+  color: var(--p-ink);
+  background: #090b0c;
+  cursor: pointer;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+}
+
+:root[data-skin="dev"] .dev-dock__led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--p-accent);
+  box-shadow: 0 0 10px var(--p-accent);
+  animation: px-pulse 2s ease-in-out infinite;
+}
+
+:root[data-skin="dev"] .dev-dock__handle em {
+  margin-left: auto;
+  color: var(--p-faint);
+  font-size: 8px;
+  font-style: normal;
+}
+
+:root[data-skin="dev"] .dev-dock__handle b {
+  color: var(--p-accent);
+  font-weight: 400;
+}
+
+:root[data-skin="dev"] .dev-dock__panel {
+  display: flex;
+  max-height: calc(100vh - 178px);
+  min-height: 0;
+  flex-direction: column;
+  border-top: 0;
+  background: color-mix(in srgb, #090b0c 96%, transparent);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+}
+
+:root[data-skin="dev"] .dev-dock__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--p-line);
+}
+
+:root[data-skin="dev"] .dev-dock__head span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--p-faint);
+  font-size: 7px;
+  letter-spacing: 0.18em;
+}
+
+:root[data-skin="dev"] .dev-dock__head strong {
+  color: var(--p-accent);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+:root[data-skin="dev"] .dev-dock__head button {
+  padding: 5px 7px;
+  border: 1px solid var(--p-line);
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+:root[data-skin="dev"] .dev-dock__head button:hover {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-dock__tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--p-line);
+}
+
+:root[data-skin="dev"] .dev-dock__tabs button {
+  padding: 9px 4px;
+  border: 0;
+  border-right: 1px solid var(--p-line-soft);
+  color: var(--p-faint);
+  background: transparent;
+  cursor: pointer;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+}
+
+:root[data-skin="dev"] .dev-dock__tabs button:last-child {
+  border-right: 0;
+}
+
+:root[data-skin="dev"] .dev-dock__tabs button:hover {
+  color: var(--p-ink);
+}
+
+:root[data-skin="dev"] .dev-dock__tabs button.is-active {
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 7%, transparent);
+  box-shadow: inset 0 -1px var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-dock__body {
+  min-height: 0;
+  padding: 12px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--p-line-strong) transparent;
+}
+
+:root[data-skin="dev"] .dev-dock__section {
+  display: grid;
+  gap: 12px;
+}
+
+:root[data-skin="dev"] .dev-dock__kv {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+:root[data-skin="dev"] .dev-dock__kv div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+:root[data-skin="dev"] .dev-dock__kv dt {
+  color: var(--p-faint);
+}
+
+:root[data-skin="dev"] .dev-dock__kv dd {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--p-ink);
+}
+
+:root[data-skin="dev"] .dev-dock__kv dd i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--p-line-strong);
+}
+
+:root[data-skin="dev"] .dev-dock__routes {
+  display: grid;
+  gap: 2px;
+}
+
+:root[data-skin="dev"] .dev-dock__routes button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 7px;
+  border: 1px solid transparent;
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 10px/1.3 var(--p-mono);
+  text-align: left;
+}
+
+:root[data-skin="dev"] .dev-dock__routes button:hover {
+  border-color: var(--p-line);
+  color: var(--p-ink);
+}
+
+:root[data-skin="dev"] .dev-dock__routes button.is-active {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-dock__routes em {
+  color: var(--p-faint);
+  font-size: 7px;
+  font-style: normal;
+}
+
+:root[data-skin="dev"] .dev-dock__history p {
+  margin: 0 0 6px;
+  color: var(--p-faint);
+  font-size: 7px;
+  letter-spacing: 0.14em;
+}
+
+:root[data-skin="dev"] .dev-dock__history ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:root[data-skin="dev"] .dev-dock__history li {
+  display: flex;
+  gap: 8px;
+  color: var(--p-muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+:root[data-skin="dev"] .dev-dock__history li span {
+  color: var(--p-faint);
+}
+
+:root[data-skin="dev"] .dev-dock__history li.is-current {
+  color: var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-dock__palette {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+
+:root[data-skin="dev"] .dev-dock__palette button {
+  padding: 2px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+:root[data-skin="dev"] .dev-dock__palette button i {
+  display: block;
+  aspect-ratio: 1;
+  background: var(--swatch);
+  opacity: 0.85;
+}
+
+:root[data-skin="dev"] .dev-dock__palette button.is-active {
+  border-color: var(--p-ink);
+}
+
+:root[data-skin="dev"] .dev-dock__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+:root[data-skin="dev"] .dev-dock__metrics div {
+  display: grid;
+  gap: 5px;
+  padding: 9px;
+  border: 1px solid var(--p-line);
+}
+
+:root[data-skin="dev"] .dev-dock__metrics strong {
+  color: var(--p-accent);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+:root[data-skin="dev"] .dev-dock__metrics span {
+  color: var(--p-faint);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+}
+
+:root[data-skin="dev"] .dev-dock__code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--p-line-soft);
+  color: var(--p-faint);
+  font-size: 8px;
+}
+
+:root[data-skin="dev"] .dev-dock__code-head button {
+  border: 0;
+  color: var(--p-accent);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1 var(--p-mono);
+}
+
+:root[data-skin="dev"] .dev-dock__pre {
+  max-height: 320px;
+  margin: 0;
+  padding: 9px;
+  overflow: auto;
+  border: 1px solid var(--p-line-soft);
+  color: var(--p-muted);
+  background: rgba(0, 0, 0, 0.3);
+  font: 8px/1.65 var(--p-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-skin="dev"] .dev-dock__storage {
+  display: grid;
+  gap: 5px;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-head {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border: 1px solid var(--p-line-soft);
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1.3 var(--p-mono);
+  text-align: left;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-head em {
+  color: var(--p-faint);
+  font-style: normal;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-row.is-open .dev-dock__storage-head {
+  border-color: var(--p-line-strong);
+  color: var(--p-ink);
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--p-line-soft);
+  border-top: 0;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value pre {
+  max-height: 140px;
+  margin: 0;
+  overflow: auto;
+  color: var(--p-muted);
+  font: 8px/1.6 var(--p-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value > div {
+  display: flex;
+  gap: 6px;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value button,
+:root[data-skin="dev"] .dev-dock__action {
+  padding: 6px 8px;
+  border: 1px solid var(--p-line);
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value button:hover,
+:root[data-skin="dev"] .dev-dock__action:hover {
+  border-color: var(--p-accent);
+  color: var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-dock__action {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+:root[data-skin="dev"] .dev-dock__action kbd {
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+}
+
+:root[data-skin="dev"] .dev-dock__storage-value button.is-danger,
+:root[data-skin="dev"] .dev-dock__action.is-danger {
+  border-color: rgba(255, 138, 138, 0.35);
+  color: #ff9c9c;
+}
+
+:root[data-skin="dev"] .dev-dock__empty {
+  margin: 0;
+  color: var(--p-faint);
+  font-size: 9px;
+}
+
+:root[data-skin="dev"] .dev-dock__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 11px;
+  border-top: 1px solid var(--p-line);
+  color: var(--p-faint);
+  font: 7px/1 var(--p-mono);
+}
+
+:root[data-skin="dev"] .dev-dock__foot button {
+  border: 0;
+  color: var(--p-muted);
+  background: transparent;
+  cursor: pointer;
+  font: 7px/1 var(--p-mono);
+}
+
+:root[data-skin="dev"] .dev-dock__foot button.is-active {
+  color: var(--p-accent);
+}
+
+/* dev status bar */
+
+:root[data-skin="dev"] .dev-status {
+  position: fixed;
+  z-index: 950;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 30px;
+  padding: 0 14px;
+  overflow: hidden;
+  border-top: 1px solid var(--p-accent);
+  color: var(--p-muted);
+  background: #050607;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.05em;
+}
+
+:root[data-skin="dev"] .dev-status__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--p-accent);
+  white-space: nowrap;
+}
+
+:root[data-skin="dev"] .dev-status__mode i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--p-accent);
+  box-shadow: 0 0 8px var(--p-accent);
+}
+
+:root[data-skin="dev"] .dev-status__item {
+  white-space: nowrap;
+}
+
+:root[data-skin="dev"] .dev-status__item em {
+  margin-right: 4px;
+  color: var(--p-faint);
+  font-style: normal;
+}
+
+:root[data-skin="dev"] .dev-status__hint {
+  margin-left: auto;
+  color: var(--p-faint);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------
+   Motion
+   ------------------------------------------------------------------------- */
+
+@keyframes px-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes px-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes px-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes px-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes px-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes px-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 1320px) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__index,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link em {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-header {
+    gap: 18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link {
+    padding: 10px 9px;
+  }
+}
+
+@media (max-width: 1180px) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools .skin-switch__caption {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools .skin-switch button {
+    min-height: 31px;
+    padding: 0 7px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools .skin-switch button em {
+    font-size: 9px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__grid {
+    grid-template-columns: minmax(0, 1fr) 180px minmax(0, 1.05fr);
+    gap: 28px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb {
+    width: 164px;
+    height: 164px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__body {
+    min-height: 300px;
+    font-size: 10px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article {
+    padding-inline: 14px;
+  }
+}
+
+@media (max-width: 1060px) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell {
+    width: min(100% - 56px, 1000px);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    order: 3;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-top: 1px solid var(--p-line-soft);
+    padding-top: 4px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link {
+    padding: 8px 11px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__orb-wrap {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__foot {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights {
+    border-left: 0;
+    border-top: 1px solid var(--p-line);
+    padding-top: 18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article:first-child {
+    padding-left: 0;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-projects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:last-child {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__focus {
+    grid-column: 1 / -1;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__meta {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .dev-dock {
+    top: auto;
+    right: 12px;
+    bottom: 44px;
+    width: min(358px, calc(100vw - 24px));
+  }
+
+  :root[data-skin="dev"] .dev-dock__panel {
+    max-height: min(60vh, 520px);
+  }
+}
+
+@media (max-width: 820px) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell {
+    width: calc(100% - 36px);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-header {
+    gap: 10px;
+    padding: 12px 18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee {
+    margin-inline: -18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__copy small {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools {
+    gap: 5px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger {
+    min-height: 36px;
+    padding: 0 8px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .accent-picker__trigger span {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work {
+    min-height: 36px;
+    padding: 0 9px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools .skin-switch {
+    padding: 3px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-tools .skin-switch button {
+    min-height: 29px;
+    padding: 0 6px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-home {
+    padding-inline: 18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__kicker {
+    margin-top: 34px;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin-top: 40px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal {
+    max-width: 560px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__foot {
+    margin-top: 44px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 0;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article:nth-child(2n) {
+    border-right: 0;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article:nth-child(-n + 2) {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--p-line-soft);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__head {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__desc {
+    max-width: 52ch;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__row {
+    grid-template-columns: 38px minmax(0, 1fr) 32px;
+    gap: 12px;
+    padding-block: 20px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__desc {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-index__title {
+    gap: 9px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-projects {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-project:last-child {
+    display: flex;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-honors__grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__grid {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-profile__focus {
+    grid-column: auto;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer {
+    padding-top: 44px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__meta {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__word {
+    margin-top: 34px;
+    font-size: 24vw;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero.card {
+    display: grid;
+    gap: 18px;
+    align-items: start;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .hero h1 {
+    font-size: clamp(2.6rem, 10vw, 4.4rem);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .showcase-list,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 24px 0;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-list--columns {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .resume-toolbar__meta {
+    justify-content: flex-start;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .study-layout {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-hero {
+    grid-template-columns: 1fr;
+  }
+
+  :root[data-skin="dev"] .dev-status {
+    gap: 12px;
+  }
+
+  :root[data-skin="dev"] .dev-status__item:nth-of-type(3),
+  :root[data-skin="dev"] .dev-status__item:nth-of-type(5) {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell {
+    width: calc(100% - 28px);
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-header {
+    padding: 10px 16px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__mark {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-brand__copy {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-work span {
+    display: inline;
+    font-size: 8px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__link {
+    padding: 7px 9px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-nav__label {
+    font-size: 0.76rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__title {
+    font-size: 20vw;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__sub {
+    gap: 8px;
+    font-size: 8px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__sub i:nth-of-type(2) {
+    display: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__statement h2 {
+    font-size: 1.7rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__body {
+    min-height: 280px;
+    padding: 12px;
+    font-size: 9.5px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__foot {
+    gap: 24px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-countdown__part strong {
+    font-size: 1.7rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-highlights article {
+    padding-inline: 10px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section {
+    padding-block: 64px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__head h2 {
+    font-size: 2rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-section__desc {
+    padding-left: 14px;
+    font-size: 0.84rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-projects {
+    gap: 14px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end > h2 {
+    font-size: 14vw;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-end__foot {
+    display: grid;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-footer__links {
+    grid-template-columns: 1fr;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-button {
+    min-height: 44px;
+    padding: 0 15px;
+    font-size: 9px;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .about-intro h1 {
+    font-size: 3.4rem;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-marquee__track,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-orb__rings i,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__status i,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-live,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__cursor,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .dev-dock__led,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell--redesign .page {
+    animation: none;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-hero__status i,
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-live {
+    opacity: 1;
+  }
+
+  :is(:root[data-skin="payathon"], :root[data-skin="dev"]) .px-terminal__cursor {
+    opacity: 1;
+  }
+
+  :root[data-skin="dev"] .dev-grid body::after {
+    display: none;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-skin="classic"] .topbar__right .skin-switch {
+    flex: 1 0 100%;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  html[data-skin="classic"] .skin-switch__track {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  html[data-skin="classic"] .skin-switch button {
+    padding-inline: 6px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-skin="classic"] .shell--landing .landing {
+    padding-top: 204px;
+  }
+}
+
+/* Project status accents: replace the warm palette that the PM sheet hard-codes. */
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status {
+  border-color: var(--p-line-strong);
+  color: var(--p-muted);
+  background: transparent;
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status.is-active {
+  border-color: color-mix(in srgb, var(--p-accent) 55%, transparent);
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 10%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status.is-done {
+  border-color: rgba(116, 224, 165, 0.5);
+  color: #74e0a5;
+  background: rgba(116, 224, 165, 0.08);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status.is-risk {
+  border-color: rgba(255, 138, 138, 0.5);
+  color: #ff9c9c;
+  background: rgba(255, 138, 138, 0.08);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-repo {
+  border-color: var(--p-line-strong);
+  color: var(--p-accent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-repo--empty {
+  color: var(--p-faint);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-log-index__list button:hover,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-log-index__list button.is-active,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .daily-log-page .pm-log-index__list button.is-active {
+  border-color: color-mix(in srgb, var(--p-accent) 50%, var(--p-line));
+  color: var(--p-ink);
+  background: color-mix(in srgb, var(--p-accent) 7%, transparent);
+}
+
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-status,
+:is(:root[data-skin="payathon"], :root[data-skin="dev"]) .shell .pm-repo {
+  border-radius: 0;
+}

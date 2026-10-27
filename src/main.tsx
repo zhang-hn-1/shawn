@@ -4,7 +4,12 @@ import { HashRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigate,
 import { DailyLogPage, TimelinePage, WorkspacePage } from "./project-management";
 import { aboutProfile, blogPosts, showcaseProjects, type BlogPost } from "./markdown-data";
 import { MemoryPage } from "./secret-memories";
+import { SkinProvider, SkinSwitch, useSkin } from "./redesign/skin";
+import { RedesignFooter, RedesignHeader, type NavItem } from "./redesign/chrome";
+import { RedesignHome } from "./redesign/home";
+import { DevDock, DevStatusBar } from "./redesign/devtools";
 import "./styles.css";
+import "./redesign/redesign.css";
 
 type CommentItem = {
   id: string;
@@ -398,12 +403,28 @@ function StudyPage() {
   );
 }
 
+const PUBLIC_NAV_ITEMS: NavItem[] = [
+  { to: "/", label: "首页", en: "HOME" },
+  { to: "/projects", label: "项目", en: "PROJECTS" },
+  { to: "/about", label: "关于", en: "ABOUT" },
+  { to: "/resume", label: "简历", en: "RESUME" },
+  ...(blogPosts.length > 0 ? [{ to: "/blog", label: "博客", en: "WRITING" }] : []),
+];
+
+const WORK_NAV_ITEMS: NavItem[] = [
+  { to: "/workspace", label: "工作台", en: "WORKSPACE" },
+  { to: "/daily", label: "每日记录", en: "DAILY" },
+  { to: "/timeline", label: "时间线", en: "TIMELINE" },
+  { to: "/study", label: "学习", en: "STUDY" },
+];
+
 function AppContent({ comments, setComments }: {
   comments: Record<string, CommentItem[]>;
   setComments: React.Dispatch<React.SetStateAction<Record<string, CommentItem[]>>>;
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { skin, isRedesign } = useSkin();
   const [workMode, setWorkMode] = usePersistentState(WORK_MODE_STORAGE_KEY, false);
   if (location.pathname === "/our-film") return <MemoryPage />;
 
@@ -415,31 +436,38 @@ function AppContent({ comments, setComments }: {
   }
 
   return (
-      <div className={`shell ${location.pathname === "/" ? "shell--landing" : ""}`}>
-        <header className="topbar">
-          <NavLink className="brand" to="/"><span>Shawn</span><small>{inWork ? "Work" : "个人主页"}</small></NavLink>
-          <nav className="nav">
-            {inWork ? (
-              <>
-                <NavLink className={navClass} to="/workspace">工作台</NavLink>
-                <NavLink className={navClass} to="/daily">每日记录</NavLink>
-                <NavLink className={navClass} to="/timeline">时间线</NavLink>
-                <NavLink className={navClass} to="/study">学习</NavLink>
-              </>
-            ) : (
-              <>
-                <NavLink className={navClass} to="/" end>首页</NavLink>
-                <NavLink className={navClass} to="/projects">项目</NavLink>
-                <NavLink className={navClass} to="/about">关于</NavLink>
-                <NavLink className={navClass} to="/resume">简历</NavLink>
-                {blogPosts.length > 0 ? <NavLink className={navClass} to="/blog">博客</NavLink> : null}
-              </>
-            )}
-            <button className={`nav-link nav-mode ${inWork ? "active" : ""}`} type="button" onClick={toggleWork}>{inWork ? "退出 Work" : "Work"}</button>
-          </nav>
-        </header>
+      <div className={`shell ${location.pathname === "/" ? "shell--landing" : ""}${isRedesign ? " shell--redesign" : ""}${skin === "dev" ? " shell--dev" : ""}`}>
+        {isRedesign ? (
+          <RedesignHeader items={inWork ? WORK_NAV_ITEMS : PUBLIC_NAV_ITEMS} inWork={inWork} onToggleWork={toggleWork} />
+        ) : (
+          <header className="topbar">
+            <NavLink className="brand" to="/"><span>Shawn</span><small>{inWork ? "Work" : "个人主页"}</small></NavLink>
+            <div className="topbar__right">
+              <nav className="nav">
+                {inWork ? (
+                  <>
+                    <NavLink className={navClass} to="/workspace">工作台</NavLink>
+                    <NavLink className={navClass} to="/daily">每日记录</NavLink>
+                    <NavLink className={navClass} to="/timeline">时间线</NavLink>
+                    <NavLink className={navClass} to="/study">学习</NavLink>
+                  </>
+                ) : (
+                  <>
+                    <NavLink className={navClass} to="/" end>首页</NavLink>
+                    <NavLink className={navClass} to="/projects">项目</NavLink>
+                    <NavLink className={navClass} to="/about">关于</NavLink>
+                    <NavLink className={navClass} to="/resume">简历</NavLink>
+                    {blogPosts.length > 0 ? <NavLink className={navClass} to="/blog">博客</NavLink> : null}
+                  </>
+                )}
+                <button className={`nav-link nav-mode ${inWork ? "active" : ""}`} type="button" onClick={toggleWork}>{inWork ? "退出 Work" : "Work"}</button>
+              </nav>
+              <SkinSwitch compact />
+            </div>
+          </header>
+        )}
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={isRedesign ? <RedesignHome /> : <HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/resume" element={<ResumePage />} />
           <Route path="/blog" element={<BlogPage />} />
@@ -452,14 +480,20 @@ function AppContent({ comments, setComments }: {
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <footer className="footer"><span>© {new Date().getFullYear()} {aboutProfile.name}</span><span>{aboutProfile.school} · {aboutProfile.college}</span></footer>
+        {isRedesign ? (
+          <RedesignFooter />
+        ) : (
+          <footer className="footer"><span>© {new Date().getFullYear()} {aboutProfile.name}</span><span>{aboutProfile.school} · {aboutProfile.college}</span></footer>
+        )}
+        {skin === "dev" ? <DevDock /> : null}
+        {skin === "dev" ? <DevStatusBar /> : null}
       </div>
   );
 }
 
 function App() {
   const [comments, setComments] = usePersistentState<Record<string, CommentItem[]>>(COMMENT_STORAGE_KEY, {});
-  return <HashRouter><AppContent comments={comments} setComments={setComments} /></HashRouter>;
+  return <SkinProvider><HashRouter><AppContent comments={comments} setComments={setComments} /></HashRouter></SkinProvider>;
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode><App /></React.StrictMode>);

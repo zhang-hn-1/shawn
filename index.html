@@ -6,8 +6,29 @@
     <meta name="description" content="张航宁个人主页与一部只属于两个人的私人回忆电影" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <meta name="referrer" content="no-referrer" />
-    <meta name="theme-color" content="#0d0c0b" />
+    <meta name="theme-color" content="#08090a" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308090a'/%3E%3Crect x='1' y='1' width='62' height='62' fill='none' stroke='%2386eaff'/%3E%3Ctext x='32' y='45' font-family='monospace' font-size='36' font-weight='bold' fill='%2386eaff' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
     <title>Shawn · Our Story</title>
+    <script>
+      (function bootSkin() {
+        var accents = ["#86eaff", "#60b5ff", "#8ef0c2", "#ffe29b", "#ffb06f", "#ff9c83", "#ff97c6", "#bd9bff", "#9baaff", "#f8d581", "#ffd18b", "#efd0a0"];
+        var root = document.documentElement;
+        var skin = "payathon";
+        var accent = accents[Math.floor(Math.random() * accents.length)];
+        try {
+          var querySkin = new URLSearchParams(location.search).get("skin");
+          var savedSkin = localStorage.getItem("shawn-skin-v2");
+          var savedAccent = localStorage.getItem("shawn-accent-v1");
+          if (querySkin === "classic" || querySkin === "payathon" || querySkin === "dev") skin = querySkin;
+          else if (savedSkin === "classic" || savedSkin === "payathon" || savedSkin === "dev") skin = savedSkin;
+          if (savedAccent && accents.indexOf(savedAccent) !== -1) accent = savedAccent;
+        } catch (error) {
+          /* storage may be unavailable */
+        }
+        root.dataset.skin = skin;
+        root.style.setProperty("--p-accent", accent);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
