@@ -288,6 +288,74 @@
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 }
 
+/* Share view */
+
+:root[data-skin="payathon"] .px-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--p-accent) 45%, transparent);
+  color: var(--p-accent);
+  background: color-mix(in srgb, var(--p-accent) 6%, transparent);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--p-accent) 12%, transparent);
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+:root[data-skin="payathon"] .px-share i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--p-neon);
+  box-shadow: 0 0 8px var(--p-neon);
+  animation: px-blink-fast 2.6s steps(1) infinite;
+}
+
+:root[data-skin="payathon"] .px-share-exit {
+  border: 0;
+  padding: 0 2px;
+  color: var(--p-faint);
+  background: transparent;
+  cursor: pointer;
+  font: 9px/1 var(--p-mono);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+:root[data-skin="payathon"] .px-share-exit:hover {
+  color: var(--p-accent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--p-accent) 45%, transparent);
+}
+
+:root[data-skin="payathon"] .px-footer__exit {
+  justify-self: start;
+  margin-top: 6px;
+  padding: 0 0 4px;
+  border: 0;
+  border-bottom: 1px solid var(--p-line-strong);
+  color: var(--p-accent);
+  background: transparent;
+  cursor: pointer;
+  font: 8px/1.4 var(--p-mono);
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+
+:root[data-skin="payathon"] .px-footer__exit:hover {
+  border-color: var(--p-accent);
+  color: var(--p-ink);
+}
+
+@media (max-width: 820px) {
+  :root[data-skin="payathon"] .px-share-exit {
+    display: none;
+  }
+}
+
 /* -------------------------------------------------------------------------
    Hero
    ------------------------------------------------------------------------- */

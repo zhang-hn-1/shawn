@@ -3,27 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="张航宁个人主页与一部只属于两个人的私人回忆电影" />
+    <meta name="description" content="张航宁 · 杭州电子科技大学自动化。控制、强化学习、机器人、雷达信号处理与工程实践。2026 个人主页。" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <meta name="referrer" content="no-referrer" />
     <meta name="theme-color" content="#08090a" />
+    <meta property="og:site_name" content="Shawn Zhang" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Shawn Zhang · 张航宁 — 2026" />
+    <meta property="og:description" content="自动化 / 控制 / 强化学习 / 机器人 / 雷达信号处理。杭州电子科技大学 · 2026 个人主页。" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/zhang-hn-1/shawn/main/public/og-2026.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Shawn Zhang 2026 cyber portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Shawn Zhang · 张航宁 — 2026" />
+    <meta name="twitter:description" content="自动化 / 控制 / 强化学习 / 机器人 / 雷达信号处理。杭州电子科技大学 · 2026 个人主页。" />
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/zhang-hn-1/shawn/main/public/og-2026.png" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308090a'/%3E%3Crect x='1' y='1' width='62' height='62' fill='none' stroke='%2386eaff'/%3E%3Ctext x='32' y='45' font-family='monospace' font-size='36' font-weight='bold' fill='%2386eaff' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
-    <title>Shawn · Our Story</title>
+    <title>Shawn Zhang · 张航宁 · 2026</title>
     <script>
       (function bootSkin() {
         var accents = ["#86eaff", "#60b5ff", "#8ef0c2", "#ffe29b", "#ffb06f", "#ff9c83", "#ff97c6", "#bd9bff", "#9baaff", "#f8d581", "#ffd18b", "#efd0a0"];
         var root = document.documentElement;
         var skin = "payathon";
         var accent = accents[Math.floor(Math.random() * accents.length)];
+        var shareByHash = /^#\/2026(?:\/|$|\?)/.test(location.hash);
+        var shareBySession = false;
         try {
           var querySkin = new URLSearchParams(location.search).get("skin");
           var savedSkin = localStorage.getItem("shawn-skin-v2");
           var savedAccent = localStorage.getItem("shawn-accent-v1");
+          shareBySession = sessionStorage.getItem("shawn-share-2026") === "1";
           if (querySkin === "classic" || querySkin === "payathon" || querySkin === "dev") skin = querySkin;
           else if (savedSkin === "classic" || savedSkin === "payathon" || savedSkin === "dev") skin = savedSkin;
           if (savedAccent && accents.indexOf(savedAccent) !== -1) accent = savedAccent;
         } catch (error) {
           /* storage may be unavailable */
+        }
+        if (shareByHash || shareBySession) {
+          skin = "payathon";
+          if (!savedAccent) accent = accents[0];
+          try {
+            sessionStorage.setItem("shawn-share-2026", "1");
+          } catch (error) {
+            /* storage may be unavailable */
+          }
         }
         root.dataset.skin = skin;
         root.style.setProperty("--p-accent", accent);

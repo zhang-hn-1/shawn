@@ -16,17 +16,17 @@ type HeaderProps = {
 };
 
 export function RedesignHeader({ items, inWork, onToggleWork }: HeaderProps) {
-  const { skin } = useSkin();
+  const { skin, shareMode, exitShare } = useSkin();
 
   return (
     <header className={`px-header${skin === "dev" ? " px-header--dev" : ""}`}>
-      <Link className="px-brand" to="/" aria-label="返回首页">
+      <Link className="px-brand" to={shareMode ? "/2026" : "/"} aria-label="返回首页">
         <span className="px-brand__mark" aria-hidden="true">
           S<i>.</i>
         </span>
         <span className="px-brand__copy">
           <strong>SHAWN ZHANG</strong>
-          <small>PORTFOLIO / 2026</small>
+          <small>{shareMode ? "SHARED VIEW / 2026" : "PORTFOLIO / 2026"}</small>
         </span>
       </Link>
 
@@ -35,7 +35,7 @@ export function RedesignHeader({ items, inWork, onToggleWork }: HeaderProps) {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === "/"}
+            end={item.to === "/" || item.to === "/2026"}
             className={({ isActive }) => `px-nav__link${isActive ? " is-active" : ""}`}
           >
             <span className="px-nav__index" aria-hidden="true">
@@ -49,7 +49,18 @@ export function RedesignHeader({ items, inWork, onToggleWork }: HeaderProps) {
 
       <div className="px-tools">
         <AccentPicker />
-        <SkinSwitch />
+        {shareMode ? (
+          <>
+            <span className="px-share" title="2026 分享视图">
+              <i aria-hidden="true" /> SHARE / 2026
+            </span>
+            <button type="button" className="px-share-exit" onClick={exitShare} title="打开完整站点">
+              FULL SITE ↗
+            </button>
+          </>
+        ) : (
+          <SkinSwitch />
+        )}
         <button
           type="button"
           className={`px-work${inWork ? " is-active" : ""}`}
@@ -115,7 +126,10 @@ const FOOTER_LINKS = [
 ];
 
 export function RedesignFooter() {
-  const { skin } = useSkin();
+  const { skin, shareMode, exitShare } = useSkin();
+  const homePath = shareMode ? "/2026" : "/";
+  const footerLinks = FOOTER_LINKS.map((item) => (item.to === "/" ? { ...item, to: homePath } : item));
+
   return (
     <footer className={`px-footer${skin === "dev" ? " px-footer--dev" : ""}`}>
       <div className="px-footer__grid">
@@ -128,7 +142,7 @@ export function RedesignFooter() {
         </div>
 
         <nav className="px-footer__links" aria-label="页脚导航">
-          {FOOTER_LINKS.map((item, index) => (
+          {footerLinks.map((item, index) => (
             <Link key={item.to} to={item.to}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               {item.label}
@@ -139,11 +153,16 @@ export function RedesignFooter() {
 
         <div className="px-footer__meta">
           <span>
-            <i aria-hidden="true" /> {skin === "dev" ? "DEVELOPER MODE" : "2026 EDITION"}
+            <i aria-hidden="true" /> {shareMode ? "SHARED 2026 VIEW" : skin === "dev" ? "DEVELOPER MODE" : "2026 EDITION"}
           </span>
           <span>HANGZHOU · CN</span>
           <span>© {new Date().getFullYear()} SHAWN ZHANG</span>
           <span>NO TRACKING · LOCAL FIRST</span>
+          {shareMode ? (
+            <button type="button" className="px-footer__exit" onClick={exitShare}>
+              FULL SITE / 完整站点 ↗
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="px-footer__word" aria-hidden="true">

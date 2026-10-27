@@ -425,21 +425,24 @@ function AppContent({ comments, setComments }: {
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { skin, isRedesign } = useSkin();
+  const { skin, isRedesign, shareMode } = useSkin();
   const [workMode, setWorkMode] = usePersistentState(WORK_MODE_STORAGE_KEY, false);
   if (location.pathname === "/our-film") return <MemoryPage />;
 
   const inWork = workMode || WORK_PATHS.includes(location.pathname);
+  const isLanding = location.pathname === "/" || location.pathname === "/2026";
+  const homePath = shareMode ? "/2026" : "/";
+  const publicNavItems = PUBLIC_NAV_ITEMS.map((item) => (item.to === "/" ? { ...item, to: homePath } : item));
   const navClass = ({ isActive }: { isActive: boolean }) => isActive ? "nav-link active" : "nav-link";
   function toggleWork() {
     setWorkMode(!inWork);
-    navigate(inWork ? "/" : "/workspace");
+    navigate(inWork ? homePath : "/workspace");
   }
 
   return (
-      <div className={`shell ${location.pathname === "/" ? "shell--landing" : ""}${isRedesign ? " shell--redesign" : ""}${skin === "dev" ? " shell--dev" : ""}`}>
+      <div className={`shell ${isLanding ? "shell--landing" : ""}${isRedesign ? " shell--redesign" : ""}${skin === "dev" ? " shell--dev" : ""}${shareMode ? " shell--share" : ""}`}>
         {isRedesign ? (
-          <RedesignHeader items={inWork ? WORK_NAV_ITEMS : PUBLIC_NAV_ITEMS} inWork={inWork} onToggleWork={toggleWork} />
+          <RedesignHeader items={inWork ? WORK_NAV_ITEMS : publicNavItems} inWork={inWork} onToggleWork={toggleWork} />
         ) : (
           <header className="topbar">
             <NavLink className="brand" to="/"><span>Shawn</span><small>{inWork ? "Work" : "个人主页"}</small></NavLink>
@@ -469,6 +472,7 @@ function AppContent({ comments, setComments }: {
         )}
         <Routes>
           <Route path="/" element={isRedesign ? <RedesignHome /> : <HomePage />} />
+          <Route path="/2026" element={<RedesignHome />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/resume" element={<ResumePage />} />
           <Route path="/blog" element={<BlogPage />} />

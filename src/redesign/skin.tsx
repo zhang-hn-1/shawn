@@ -4,6 +4,8 @@ export type Skin = "classic" | "payathon" | "dev";
 
 export const SKIN_STORAGE_KEY = "shawn-skin-v2";
 export const ACCENT_STORAGE_KEY = "shawn-accent-v1";
+export const SHARE_STORAGE_KEY = "shawn-share-2026";
+export const SHARE_PATH = "/2026";
 
 export const SKINS: { id: Skin; label: string; en: string; short: string }[] = [
   { id: "classic", label: "经典", en: "CLASSIC", short: "C" },
@@ -32,6 +34,8 @@ type SkinContextValue = {
   accent: string;
   setAccent: (accent: string) => void;
   isRedesign: boolean;
+  shareMode: boolean;
+  exitShare: () => void;
 };
 
 const SkinContext = createContext<SkinContextValue | null>(null);
@@ -68,26 +72,71 @@ function readInitialAccent(): string {
   return ACCENTS[0].value;
 }
 
+function isShareHash() {
+  if (typeof window === "undefined") return false;
+  return /^#\/2026(?:\/|$|\?)/.test(window.location.hash);
+}
+
+function readShareMode() {
+  if (typeof window === "undefined") return false;
+  if (isShareHash()) return true;
+  try {
+    return window.sessionStorage.getItem(SHARE_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function readStoredSkin(): Skin | null {
+  try {
+    const stored = window.localStorage.getItem(SKIN_STORAGE_KEY);
+    return isSkin(stored) ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
 export function SkinProvider({ children }: { children: React.ReactNode }) {
-  const [skin, setSkin] = useState<Skin>(readInitialSkin);
+  const [shareMode, setShareMode] = useState(readShareMode);
+  const [skin, setSkin] = useState<Skin>(() => (readShareMode() ? "payathon" : readInitialSkin()));
   const [accent, setAccent] = useState<string>(readInitialAccent);
 
   useEffect(() => {
+    function syncShareFromHash() {
+      if (!isShareHash()) return;
+      setShareMode(true);
+      setSkin("payathon");
+      try {
+        window.sessionStorage.setItem(SHARE_STORAGE_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+    }
+
+    syncShareFromHash();
+    window.addEventListener("hashchange", syncShareFromHash);
+    return () => window.removeEventListener("hashchange", syncShareFromHash);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.dataset.skin = skin;
-    document.title =
-      skin === "classic"
+    document.title = shareMode
+      ? "Shawn Zhang · 张航宁 · 2026"
+      : skin === "classic"
         ? "Shawn · Our Story"
         : skin === "dev"
           ? "dev://shawn — Developer Mode"
           : "Shawn Zhang · 张航宁 · Portfolio 2026";
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) themeColor.setAttribute("content", skin === "classic" ? "#0d0c0b" : "#08090a");
-    try {
-      window.localStorage.setItem(SKIN_STORAGE_KEY, skin);
-    } catch {
-      /* ignore */
+    if (!shareMode) {
+      try {
+        window.localStorage.setItem(SKIN_STORAGE_KEY, skin);
+      } catch {
+        /* ignore */
+      }
     }
-  }, [skin]);
+  }, [skin, shareMode]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--p-accent", accent);
@@ -100,6 +149,7 @@ export function SkinProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      if (shareMode) return;
       const target = event.target as HTMLElement | null;
       if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
       if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "d") {
@@ -109,10 +159,23 @@ export function SkinProvider({ children }: { children: React.ReactNode }) {
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [skin]);
+  }, [skin, shareMode]);
+
+  function exitShare() {
+    try {
+      window.sessionStorage.removeItem(SHARE_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+    setShareMode(false);
+    setSkin(readStoredSkin() ?? "payathon");
+    const currentPath = window.location.hash.replace(/^#/, "").split("?")[0] || "/";
+    const nextPath = /^\/2026\/?$/.test(currentPath) ? "/" : currentPath;
+    window.location.hash = `#${nextPath}`;
+  }
 
   return (
-    <SkinContext.Provider value={{ skin, setSkin, accent, setAccent, isRedesign: skin !== "classic" }}>
+    <SkinContext.Provider value={{ skin, setSkin, accent, setAccent, isRedesign: skin !== "classic", shareMode, exitShare }}>
       {children}
     </SkinContext.Provider>
   );
