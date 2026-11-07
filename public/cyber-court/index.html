@@ -1,23 +1,1775 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="color-scheme" content="dark">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="description" content="赛博署名法庭：谁偷走了我的署名？35秒像素动画。">
-  <title>赛博署名法庭：谁偷走了我的署名？</title>
-  <style>
-    * {box-sizing:border-box}
-    html,body {margin:0;width:100%;height:100%;background:#05060d}
-    body {display:grid;place-items:center;min-height:100svh}
-    video {display:block;width:100%;height:100%;max-height:100svh;object-fit:contain;background:#05060d;outline-offset:-4px}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04050A">
+<meta name="description" content="赛博署名法庭：AI 参与多少，作品才算你的？——35秒像素动画与匿名陪审员问卷。">
+<title>赛博署名法庭 · 开场动画与陪审员问卷</title>
+<style>
+/* ============================================================
+   赛博署名法庭 · 问卷皮肤（CYBER SIGNATURE TRIBUNAL）
+   设计令牌见 docs/视觉规范_赛博版.md §一；只换皮，不动数据。
+   ============================================================ */
+:root{
+  --void:#04050A;
+  --deep:#070B14;
+  --panel:#0B1220;
+  --panel-2:#0D1626;
+  --line:rgba(0,229,255,.16);
+  --line-strong:rgba(0,229,255,.45);
+  --cyan:#00E5FF;
+  --magenta:#FF2D7E;
+  --lime:#9CFF3D;
+  --amber:#FFB300;
+  --ink:#E6F7FF;
+  --mute:#7C8AA0;
+  --mute-ink:#A9B9CB;
+  --grid:rgba(0,229,255,.07);
+  --font-display:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+  --font-mono:"Cascadia Mono","JetBrains Mono","Consolas","Courier New",monospace;
+  --cut:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--void)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;color:var(--ink);
+  font:15px/1.75 var(--font-display);
+  background:var(--void);
+  position:relative;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(1100px 520px at 50% -12%,rgba(0,229,255,.10),transparent 62%),
+    radial-gradient(720px 420px at 92% 108%,rgba(255,45,126,.07),transparent 60%),
+    linear-gradient(var(--grid) 1px,transparent 1px) 0 0/100% 44px,
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/44px 100%,
+    var(--void);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;
+  background:repeating-linear-gradient(0deg,rgba(0,229,255,.03) 0 1px,transparent 1px 3px);
+}
+[hidden]{display:none!important}
+h1,h2,h3,p,ul,ol,dl,dd,dt{margin:0}
+button{font-family:inherit}
+a{color:var(--cyan)}
+::selection{background:rgba(0,229,255,.28);color:#fff}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* 深色滚动条，避免亮色默认条破坏近黑界面 */
+html{scrollbar-color:rgba(0,229,255,.25) #04050A;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#04050A}
+::-webkit-scrollbar-thumb{background:rgba(0,229,255,.22);border:2px solid #04050A}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,229,255,.42)}
+
+.mono{font-family:var(--font-mono);letter-spacing:.18em;text-transform:uppercase}
+.mono-cn{font-family:var(--font-mono);letter-spacing:.08em}
+
+/* ============ 布局 ============ */
+.app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+
+/* ============ HUD 顶栏 ============ */
+.hud{
+  position:sticky;top:0;z-index:40;
+  background:rgba(4,5,10,.94);
+  border-bottom:1px solid var(--line);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 1px 0 rgba(0,229,255,.10);
+}
+.hud-inner{max-width:1180px;margin:0 auto;padding:11px 22px 9px;display:flex;align-items:center;gap:20px}
+.hud-brand{display:flex;align-items:center;gap:12px;min-width:0;flex:0 0 auto}
+.hud-glyph{
+  flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;
+  border:1px solid var(--cyan);color:var(--cyan);
+  font:800 15px/1 var(--font-display);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  box-shadow:inset 0 0 14px rgba(0,229,255,.22),0 0 10px rgba(0,229,255,.14);
+}
+.hud-brand-text{min-width:0}
+.hud-en{font:600 9.5px/1.4 var(--font-mono);letter-spacing:.2em;color:var(--cyan);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud-brand h1{font:800 18px/1.2 var(--font-display);letter-spacing:.06em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud-meter{flex:1;min-width:0}
+.track{position:relative;height:3px;background:rgba(0,229,255,.10);overflow:hidden}
+.track i{
+  display:block;height:100%;width:0;
+  background:linear-gradient(90deg,var(--cyan),#8BFAFF);
+  box-shadow:0 0 12px rgba(0,229,255,.75);
+  transition:width .28s cubic-bezier(.2,.8,.2,1);
+}
+.hud-meta{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-top:7px;
+  font:10.5px/1.4 var(--font-mono);letter-spacing:.14em;color:var(--mute-ink);white-space:nowrap;
+}
+#caseLabel{color:var(--cyan)}
+#answeredCount{color:var(--lime)}
+#clock{color:var(--mute-ink)}
+
+/* ============ 吸顶迷你案卷条（第二部分） ============ */
+.hud-casebar{border-top:1px solid var(--line);background:rgba(0,229,255,.05)}
+.hud-casebar-inner{
+  max-width:1180px;margin:0 auto;padding:5px 22px;
+  font:10px/1.4 var(--font-mono);letter-spacing:.12em;color:var(--mute-ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cb-idx{color:var(--cyan)}
+.cb-case{color:#FF7FB0}
+.cb-name{color:var(--ink)}
+.cb-sep{margin:0 10px;color:rgba(0,229,255,.5)}
+
+/* ============ 调试模式条 ============ */
+.devbanner{
+  background:rgba(255,45,126,.10);
+  border-bottom:1px solid rgba(255,45,126,.5);
+  color:#FFD7E6;font:12px/1.7 var(--font-mono);letter-spacing:.04em;
+  padding:8px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;text-align:center;
+}
+.devbanner strong{color:var(--magenta);letter-spacing:.08em}
+.devbanner .btn{flex:0 0 auto;min-height:34px;padding:0 14px;font-size:12px;border-color:rgba(255,45,126,.7);color:#FFD7E6;background:rgba(255,45,126,.12)}
+
+/* ============ 主体 ============ */
+.scroller{flex:1;width:100%;max-width:980px;margin:0 auto;padding:24px 22px 16px}
+.screen{display:none}
+.screen.active{display:block;animation:slideIn .28s cubic-bezier(.2,.8,.2,1) both}
+.screen:focus{outline:none}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* 切角面板 */
+.panel{
+  position:relative;padding:22px;
+  background:linear-gradient(180deg,rgba(13,22,38,.88),rgba(8,13,24,.9));
+  border:1px solid var(--line);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));
+  box-shadow:inset 0 0 0 1px rgba(0,229,255,.05),inset 0 0 42px rgba(0,229,255,.035);
+}
+.panel + .panel{margin-top:14px}
+.card{
+  position:relative;padding:22px;margin-top:14px;
+  background:linear-gradient(180deg,rgba(13,22,38,.88),rgba(8,13,24,.9));
+  border:1px solid var(--line);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));
+}
+.kicker{
+  font:600 10.5px/1.5 var(--font-mono);letter-spacing:.2em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:8px;
+}
+h2{
+  font:800 26px/1.15 var(--font-display);letter-spacing:.04em;color:var(--ink);
+  margin-bottom:14px;
+}
+h2:focus{outline:none}
+.lead{font-size:14.5px;line-height:1.8;color:var(--ink);margin-bottom:16px}
+.screen-hint{font-size:12.5px;line-height:1.7;color:var(--mute-ink);margin:-4px 0 12px}
+.screen-hint code{font-family:var(--font-mono);color:var(--cyan)}
+
+/* ============ 立案登记 / 终端块 ============ */
+.reg-panel{padding:24px}
+.terminal{
+  border:1px solid var(--line-strong);background:#05070D;margin:4px 0 18px;
+  box-shadow:inset 0 0 46px rgba(0,229,255,.055),0 0 24px rgba(0,229,255,.06);
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+}
+.term-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:8px 14px;border-bottom:1px solid var(--line);
+  background:rgba(0,229,255,.05);
+  font:10px/1.4 var(--font-mono);letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;
+}
+.term-status{color:var(--lime);letter-spacing:.12em}
+.term-body{padding:16px 18px 18px;font-family:var(--font-mono);font-size:12.5px;line-height:1.9;color:var(--mute-ink)}
+.term-cmd{color:var(--lime);letter-spacing:.06em;margin-bottom:12px}
+.term-cmd::after{content:"_";color:var(--cyan);animation:caret 1.1s steps(2) infinite}
+@keyframes caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.term-cmd .prompt{color:var(--cyan);margin-right:6px}
+.term-kv{display:grid;grid-template-columns:78px 1fr;gap:6px 14px;margin:0 0 14px;padding:0}
+.term-kv dt{font-size:10.5px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;padding-top:3px}
+.term-kv dd{font-family:var(--font-display);font-size:13.5px;line-height:1.65;color:var(--ink);margin:0}
+.term-p{font-family:var(--font-display);font-size:13.5px;line-height:1.85;color:var(--mute-ink);margin:0 0 12px}
+.term-p strong{color:var(--ink);font-weight:700}
+.term-p:last-child{margin-bottom:0}
+.consent-box{
+  border:1px solid rgba(0,229,255,.28);background:rgba(0,229,255,.04);
+  padding:14px 16px;margin-top:18px;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+}
+.consent-box.invalid{border-color:var(--magenta);box-shadow:0 0 0 1px rgba(255,45,126,.5),inset 0 0 26px rgba(255,45,126,.10)}
+.check-opt{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-size:13.5px;line-height:1.7;color:var(--ink)}
+.check-opt input{flex:0 0 19px;width:19px;height:19px;margin:2px 0 0;accent-color:var(--cyan);cursor:pointer}
+.check-opt input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* ============ 题组与题干 ============ */
+.q-card{padding:6px 18px 8px}
+.q-card.flat{padding:0}
+.q-card .q:first-child{padding-top:12px}
+.q{border:0;margin:0;padding:12px 0;min-width:0}
+.q + .q{border-top:1px solid var(--line)}
+.q .stem{
+  display:block;padding:0;margin:0 0 8px;
+  font:600 15px/1.55 var(--font-display);letter-spacing:.01em;color:var(--ink);
+}
+.q .stem::before{
+  content:counter(qnum,decimal-leading-zero)" ";counter-increment:qnum;
+  font:600 10.5px/1 var(--font-mono);letter-spacing:.14em;color:var(--cyan);
+  vertical-align:2px;margin-right:2px;
+}
+.q-card{counter-reset:qnum}
+.q-hint{font-size:11.5px;line-height:1.6;color:var(--mute-ink);margin:4px 0 0}
+.q.invalid{box-shadow:inset 2px 0 0 var(--magenta);padding-left:12px}
+.q.invalid .stem{color:#FFC2D8}
+.q.invalid .stem::before{color:var(--magenta)}
+.q.invalid .tick-bar{border-color:rgba(255,45,126,.6)}
+.q.invalid .list-opt,.q.invalid .check-opt.tile{border-color:rgba(255,45,126,.55)}
+
+/* ============ 霓虹五级刻度条 ============ */
+.scale{margin-top:0}
+.ticks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));column-gap:8px}
+.tick{position:relative;display:block;padding:0;cursor:pointer;-webkit-user-select:none;user-select:none;min-height:52px}
+.tick input{position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.tick-bar{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  height:52px;border:1px solid rgba(0,229,255,.5);background:rgba(0,229,255,.05);
+  transition:background .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+.tick-num{font:700 21px/1 var(--font-mono);letter-spacing:.02em;color:var(--ink)}
+.tick-cap{font:600 9.5px/1.15 var(--font-mono);letter-spacing:.04em;color:var(--mute-ink);text-align:center;padding:0 2px}
+.tick:hover .tick-bar{border-color:var(--cyan);background:rgba(0,229,255,.10);box-shadow:0 0 14px rgba(0,229,255,.18)}
+.tick:active .tick-bar{transform:translateY(1px)}
+.tick input:checked + .tick-bar{background:var(--cyan);border-color:#D9FDFF;box-shadow:0 0 18px rgba(0,229,255,.55)}
+.tick input:checked + .tick-bar .tick-num{color:#041018}
+.tick input:checked + .tick-bar .tick-cap{color:#08202E}
+.tick input:focus-visible + .tick-bar{outline:2px solid var(--cyan);outline-offset:2px}
+.q.invalid .tick-bar{border-color:rgba(255,45,126,.7)}
+.anchors{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  margin-top:6px;font:10.5px/1.45 var(--font-mono);letter-spacing:.03em;color:var(--mute-ink);
+}
+.anchors span{max-width:47%}
+.anchors .a-left{text-align:left;color:var(--mute-ink)}
+.anchors .a-right{text-align:right;color:var(--mute-ink)}
+.anchors .a-left::before{content:"[ " ;color:var(--cyan)}
+.anchors .a-right::after{content:" ]";color:var(--cyan)}
+
+/* ============ 列表单选 / 多选 ============ */
+.list{display:grid;gap:8px;margin-top:12px}
+.list-opt{
+  position:relative;display:flex;align-items:flex-start;gap:12px;
+  min-height:48px;padding:12px 14px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(0,229,255,.02);
+  font-size:14px;line-height:1.6;color:var(--ink);
+  transition:background .12s ease,border-color .12s ease;
+}
+.list-opt:hover{border-color:rgba(0,229,255,.45);background:rgba(0,229,255,.06)}
+.list-opt:has(input:checked){border-color:var(--cyan);background:rgba(0,229,255,.10);box-shadow:inset 0 0 0 1px rgba(0,229,255,.22)}
+.list-opt input{
+  flex:0 0 18px;width:18px;height:18px;margin:2px 0 0;accent-color:var(--cyan);cursor:pointer;
+}
+.list-opt input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.list-num{
+  flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;
+  border:1px solid var(--line);color:var(--mute-ink);
+  font:600 11px/1 var(--font-mono);letter-spacing:.1em;
+}
+.list-opt input:checked ~ .list-num{background:var(--cyan);border-color:var(--cyan);color:var(--void)}
+.list-text{flex:1;min-width:0}
+.checks{display:grid;gap:8px;margin-top:12px}
+.check-opt.tile{
+  display:flex;align-items:flex-start;gap:12px;min-height:48px;padding:11px 14px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(0,229,255,.02);
+  font-size:14px;line-height:1.6;color:var(--ink);
+  transition:background .12s ease,border-color .12s ease;
+}
+.check-opt.tile:hover{border-color:rgba(0,229,255,.45);background:rgba(0,229,255,.06)}
+.check-opt.tile:has(input:checked){border-color:var(--lime);background:rgba(156,255,61,.06);box-shadow:inset 0 0 0 1px rgba(156,255,61,.18)}
+.check-opt.tile input{flex:0 0 18px;width:18px;height:18px;margin:2px 0 0;accent-color:var(--lime);cursor:pointer}
+.multi-count{font:10.5px/1.5 var(--font-mono);letter-spacing:.1em;color:var(--mute-ink);margin:9px 0 0}
+
+/* ============ 开放题 ============ */
+textarea{
+  display:block;width:100%;min-height:128px;resize:vertical;margin-top:10px;
+  padding:14px;border:1px solid var(--line-strong);background:#05070D;color:var(--ink);
+  font:14px/1.8 var(--font-display);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+}
+textarea::placeholder{color:#8A9AB3}
+textarea:focus{outline:2px solid var(--cyan);outline-offset:1px}
+.char-count{font:10.5px/1.5 var(--font-mono);letter-spacing:.1em;color:var(--mute-ink);margin:8px 0 0}
+
+/* ============ 案卷卡 ============ */
+.dossier{padding:22px 22px 18px;border-left:2px solid var(--magenta)}
+.dossier-head{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.case-plate{
+  flex:0 0 62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  padding:8px 6px;border:1px solid var(--cyan);background:rgba(0,229,255,.06);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  box-shadow:0 0 18px rgba(0,229,255,.14),inset 0 0 14px rgba(0,229,255,.10);
+}
+.case-plate .mono{font-size:8.5px;color:var(--cyan);letter-spacing:.18em}
+.case-plate b{font:900 26px/1 var(--font-mono);color:var(--ink);text-shadow:0 0 14px rgba(0,229,255,.4)}
+.case-plate .seq{font-size:8px;color:var(--mute-ink)}
+.dossier-title{flex:1;min-width:0}
+.dossier-title .kicker{margin-bottom:2px}
+.dossier-title h2{margin:0;font-size:22px}
+.dossier-tag{
+  flex:0 0 auto;font:10px/1.4 var(--font-mono);letter-spacing:.16em;color:#FF7FB0;
+  border:1px solid rgba(255,45,126,.55);padding:4px 9px;text-transform:uppercase;
+}
+.common{
+  font-size:12.5px;line-height:1.9;color:var(--mute-ink);
+  border:1px solid var(--line);border-left:2px solid var(--cyan);
+  background:rgba(0,229,255,.03);padding:12px 14px;margin:0 0 16px;
+}
+.common-label{display:block;font:600 9.5px/1.4 var(--font-mono);letter-spacing:.18em;color:var(--cyan);margin-bottom:4px}
+.case-text{
+  font:400 15.5px/1.95 var(--font-display);color:var(--ink);text-indent:2em;margin:0 0 10px;
+}
+.case-foot{font:10.5px/1.6 var(--font-mono);letter-spacing:.06em;color:var(--mute-ink);margin-top:8px}
+
+/* ============ 提示 / 错误 ============ */
+.alert{
+  margin:0 0 14px;padding:11px 15px;font-size:13px;line-height:1.65;color:#FFD7E6;
+  border:1px solid rgba(255,45,126,.6);background:rgba(255,45,126,.12);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+}
+.alert::before{content:"[!] ";font-family:var(--font-mono);color:var(--magenta)}
+
+/* ============ 底部操作栏 ============ */
+.bottombar{
+  position:sticky;bottom:0;z-index:30;
+  background:linear-gradient(180deg,rgba(4,5,10,.72),rgba(4,5,10,.98));
+  border-top:1px solid var(--line);
+  padding:10px 22px calc(10px + env(safe-area-inset-bottom));
+}
+.bottombar-inner{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px}
+.step-hint{flex:1 0 100%;margin:0;font:10px/1.4 var(--font-mono);letter-spacing:.1em;color:var(--mute-ink)}
+.step-hint::before{content:"> ";color:var(--amber)}
+.btn{
+  flex:1;min-height:48px;padding:0 18px;cursor:pointer;
+  border:1px solid rgba(124,138,160,.5);background:transparent;color:var(--mute-ink);
+  font:700 14px/1.2 var(--font-display);letter-spacing:.12em;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:background .12s ease,border-color .12s ease,box-shadow .12s ease,color .12s ease;
+}
+.btn:hover{border-color:var(--mute-ink);color:var(--ink);background:rgba(255,255,255,.025)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{
+  flex:2;border:1px solid var(--cyan);color:var(--cyan);
+  background:rgba(0,229,255,.10);
+  box-shadow:0 0 14px rgba(0,229,255,.14),inset 0 0 18px rgba(0,229,255,.06);
+}
+.btn.primary:hover{background:var(--cyan);border-color:var(--cyan);color:#041018;box-shadow:0 0 26px rgba(0,229,255,.45)}
+.btn.primary:disabled{
+  background:rgba(0,229,255,.04);border-color:rgba(0,229,255,.22);color:rgba(230,247,255,.32);
+  opacity:1;cursor:not-allowed;box-shadow:none;
+}
+/* 未答完：主按钮呈"锁定"视觉（仍可点击以标出缺失项，不改变校验行为） */
+.btn.primary.is-locked{
+  background:rgba(0,229,255,.03);border-color:rgba(0,229,255,.22);
+  color:rgba(230,247,255,.34);box-shadow:none;cursor:not-allowed;
+}
+.btn.primary.is-locked:hover{background:rgba(0,229,255,.03);color:rgba(230,247,255,.34);box-shadow:none}
+
+/* ============ 退庭页 ============ */
+.thanks-panel{text-align:center;padding:34px 24px 30px}
+.verdict-stamp{
+  display:inline-block;margin:0 auto 18px;padding:10px 26px;
+  border:2px solid var(--magenta);color:#FF4D8F;
+  font:900 30px/1.1 var(--font-display);letter-spacing:.22em;
+  transform:rotate(-6deg);
+  box-shadow:0 0 26px rgba(255,45,126,.4),inset 0 0 22px rgba(255,45,126,.18);
+  text-shadow:0 0 16px rgba(255,45,126,.5);
+  background:rgba(255,45,126,.06);
+}
+.thanks-panel h2{font-size:34px;letter-spacing:.3em;margin:4px 0 12px}
+.thanks-panel .lead{max-width:560px;margin:0 auto 20px;color:var(--mute-ink)}
+.meta{display:grid;gap:8px;max-width:430px;margin:0 auto 18px;text-align:left}
+.meta > div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-bottom:8px;border-bottom:1px dashed rgba(0,229,255,.22)}
+.meta dt{font:10px/1.5 var(--font-mono);letter-spacing:.16em;color:var(--mute-ink);text-transform:uppercase}
+.meta dd{font:12.5px/1.5 var(--font-mono);letter-spacing:.06em;color:var(--ink);word-break:break-all;text-align:right}
+.meta dd.file-name{color:var(--lime);font-size:10.5px;letter-spacing:0;line-height:1.55}
+.thanks-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px}
+.thanks-actions .btn{flex:0 0 auto;min-width:200px}
+
+/* ============ 调查员工具（SYS） ============ */
+.admin-float{position:fixed;right:14px;bottom:92px;z-index:50;display:none}
+body.admin-visible .admin-float{display:block}
+.admin-float > summary{
+  list-style:none;width:46px;height:38px;display:grid;place-items:center;cursor:pointer;
+  border:1px solid var(--line-strong);background:rgba(5,7,13,.96);color:var(--cyan);
+  font:600 10px/1 var(--font-mono);letter-spacing:.14em;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.admin-float > summary::-webkit-details-marker{display:none}
+.admin-float[open] > summary{border-color:var(--magenta);color:var(--magenta)}
+.admin-panel{
+  position:absolute;right:0;bottom:46px;width:272px;padding:14px;
+  background:#05070D;border:1px solid var(--line-strong);
+  box-shadow:0 18px 48px rgba(0,0,0,.7),0 0 24px rgba(0,229,255,.10);
+}
+.admin-panel h3{font:600 11px/1.5 var(--font-mono);letter-spacing:.16em;color:var(--cyan);margin-bottom:6px;text-transform:uppercase}
+.admin-panel p{font-size:11px;line-height:1.6;color:var(--mute-ink);margin-bottom:10px}
+.admin-panel .btn{display:block;width:100%;min-height:40px;font-size:12.5px;margin-bottom:8px;flex:none}
+.admin-panel .btn.danger{border-color:rgba(255,45,126,.6);color:#FFC2D8}
+.admin-count{display:block;font:10px/1.5 var(--font-mono);letter-spacing:.1em;color:var(--mute-ink);text-align:center;margin-top:2px}
+.admin-count b{color:var(--lime)}
+
+/* ============ Toast ============ */
+#toast{
+  position:fixed;left:50%;bottom:100px;z-index:70;max-width:88vw;padding:10px 16px;
+  background:#05070D;border:1px solid var(--line-strong);color:var(--ink);
+  font:12px/1.6 var(--font-mono);letter-spacing:.04em;text-align:center;
+  opacity:0;pointer-events:none;transform:translate(-50%,10px);
+  transition:opacity .2s ease,transform .2s ease;
+  box-shadow:0 0 22px rgba(0,229,255,.14);
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+.noscript{margin:0;padding:16px;background:rgba(255,45,126,.12);color:#FFD7E6;font:12px/1.7 var(--font-mono);text-align:center;border-bottom:1px solid rgba(255,45,126,.5)}
+
+/* ============ 移动端 ============ */
+@media (max-width:720px){
+  .hud-inner{padding:9px 12px 8px;gap:10px}
+  .hud-glyph{flex-basis:30px;width:30px;height:30px;font-size:13px}
+  .hud-en{display:none}
+  .hud-brand h1{font-size:16px;letter-spacing:.04em}
+  .hud-meta{font-size:9px;letter-spacing:.1em;gap:8px;margin-top:6px}
+  .hud-casebar-inner{padding:4px 12px;font-size:9px;letter-spacing:.05em}
+  .cb-sep{margin:0 6px}
+  #clock{display:none}
+  .scroller{padding:14px 12px 12px}
+  .panel{padding:17px 14px;--cut:11px}
+  .card{padding:17px 14px;--cut:11px}
+  .reg-panel{padding:18px 14px}
+  .reg-head h2{font-size:26px;padding-left:12px}
+  .reg-code{font-size:8.5px;padding:3px 7px;letter-spacing:.12em}
+  h2{font-size:21px;letter-spacing:.03em;margin-bottom:12px}
+  .lead{font-size:13.5px}
+  .term-body{padding:13px 13px 15px;font-size:11.5px}
+  .term-kv{grid-template-columns:66px 1fr;gap:5px 10px}
+  .term-kv dd{font-size:12.5px}
+  .term-p{font-size:12.5px}
+  .q-card{padding:4px 14px 6px}
+  .q{padding:8px 0}
+  .q .stem{font-size:14.5px;line-height:1.52;margin-bottom:7px}
+  .ticks{column-gap:6px}
+  .tick{min-height:48px}
+  .tick-bar{height:48px}
+  .tick-num{font-size:19px}
+  .tick-cap{font-size:9px;line-height:1.1}
+  .anchors{font-size:10px;gap:10px;margin-top:6px}
+  .dossier{padding:17px 14px 15px}
+  .case-plate{flex-basis:52px;padding:6px 4px}
+  .case-plate b{font-size:22px}
+  .dossier-title h2{font-size:19px}
+  .dossier-head{gap:12px;margin-bottom:13px;padding-bottom:12px}
+  .dossier-tag{font-size:9px;padding:3px 7px}
+  .common{font-size:11.5px;padding:11px 12px;line-height:1.85}
+  .case-text{font-size:14.5px;line-height:1.95}
+  .bottombar{padding:9px 12px calc(9px + env(safe-area-inset-bottom))}
+  .bottombar-inner{gap:9px}
+  .btn{min-height:48px;font-size:13px;padding:0 12px;letter-spacing:.08em}
+  .thanks-panel{padding:26px 14px 24px}
+  .verdict-stamp{font-size:24px;padding:8px 18px;letter-spacing:.16em}
+  .thanks-panel h2{font-size:27px;letter-spacing:.22em}
+  .meta{max-width:none}
+  .thanks-actions .btn{min-width:0;flex:1 1 100%}
+  .admin-float{right:10px;bottom:86px}
+  .admin-panel{width:min(272px,calc(100vw - 28px))}
+  textarea{font-size:13.5px}
+}
+@media (max-width:420px){
+  .hud-meta{font-size:8.5px;gap:6px;letter-spacing:.06em}
+  .hud-brand h1{font-size:15px}
+  .ticks,.scale-track{column-gap:5px}
+  .tick{border:0}
+  .tick-label{font-size:9.5px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* ============ 赛博外框 / 侧轨 / 立案登记标题 ============ */
+.frame{position:fixed;inset:10px;z-index:2;pointer-events:none;border:1px solid rgba(0,229,255,.10)}
+.frame::before,.frame::after{content:"";position:absolute;width:24px;height:24px;border:2px solid rgba(0,229,255,.55)}
+.frame::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
+.frame::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.rail{
+  position:fixed;top:50%;z-index:2;pointer-events:none;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font:9.5px/1 var(--font-mono);letter-spacing:.4em;text-transform:uppercase;
+  color:rgba(0,229,255,.30);
+}
+.rail-l{left:20px;transform:translateY(-50%) rotate(180deg)}
+.rail-r{right:20px;transform:translateY(-50%)}
+@media (max-width:1180px){.rail{display:none}}
+.reg-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.reg-head h2{margin:0;position:relative;padding-left:16px;font-size:38px;letter-spacing:.05em}
+.reg-head h2::before{content:"";position:absolute;left:0;top:12%;bottom:12%;width:3px;background:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.8)}
+.reg-code{font:10px/1.4 var(--font-mono);letter-spacing:.18em;color:var(--cyan);border:1px solid var(--line);padding:4px 9px;text-transform:uppercase}
+.hud-case{flex:0 0 auto;font:10px/1.4 var(--font-mono);letter-spacing:.18em;color:#FF7FB0;border-left:1px solid var(--line);padding-left:16px;text-transform:uppercase}
+@media (max-width:980px){.hud-case{display:none}}
+.dev-mode .hud-glyph{border-color:var(--magenta);color:var(--magenta);box-shadow:inset 0 0 14px rgba(255,45,126,.25)}
+
+.film-panel{margin-bottom:18px;padding:0;overflow:hidden;border:1px solid var(--line-strong);background:#05060d}
+.film-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.film-heading h2{font-size:18px;margin:0}
+.film-heading span{font:11px/1.5 var(--font-mono);color:var(--cyan);white-space:nowrap}
+.film-panel video{display:block;width:100%;aspect-ratio:16/9;background:#05060d;object-fit:contain}
+.film-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;color:var(--mute-ink);font-size:12px}
+.film-caption a{white-space:nowrap;text-underline-offset:4px}
+@media(max-width:480px){.film-heading{padding:12px}.film-heading h2{font-size:15px}.film-caption{padding:10px 12px;font-size:11px}}
+</style>
 </head>
 <body>
-  <video controls playsinline preload="metadata" poster="./poster.jpg" aria-label="赛博署名法庭：谁偷走了我的署名？35秒动画">
-    <source src="./film.mp4" type="video/mp4">
-    你的浏览器暂不支持视频播放。<a href="./film.mp4">下载视频</a>
-  </video>
+<div class="frame" aria-hidden="true"></div>
+<div class="rail rail-l" aria-hidden="true">CYBER SIGNATURE TRIBUNAL · ST-2026-11</div>
+<div class="rail rail-r" aria-hidden="true">ANONYMOUS RESPONSE · DO NOT IDENTIFY</div>
+<noscript><p class="noscript">本问卷需要启用 JavaScript 才能随机呈现案卷并保存答卷，请在浏览器中启用 JavaScript 后刷新页面。</p></noscript>
+
+<div class="app" id="app">
+  <!-- HUD -->
+  <header class="hud">
+    <div class="hud-inner">
+      <div class="hud-brand">
+        <div class="hud-glyph" aria-hidden="true">法</div>
+        <div class="hud-brand-text">
+          <p class="hud-en">CYBER SIGNATURE TRIBUNAL</p>
+          <h1>赛博署名法庭</h1>
+        </div>
+      </div>
+      <span class="hud-case" aria-hidden="true">ST-2026-11</span>
+      <div class="hud-meter">
+        <div class="track" id="progressBar" role="progressbar" aria-label="作答进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progressFill"></i></div>
+        <div class="hud-meta">
+          <span id="stepLabel">REG 01/11</span>
+          <span id="caseLabel" hidden>00/04 号案卷</span>
+          <span id="answeredCount">已答 0/30</span>
+          <span id="clock">--:--:--</span>
+        </div>
+      </div>
+    </div>
+    <div class="hud-casebar" id="caseBar" hidden>
+      <div class="hud-casebar-inner"><span id="caseBarText"></span></div>
+    </div>
+  </header>
+
+  <!-- 调试模式提示 -->
+  <div id="devBanner" class="devbanner" hidden>
+    <span><strong>调试模式，不产生有效数据</strong> — 本页作答仅用于界面与流程测试，导出的 CSV 会标注 extra_mode=DEV。</span>
+    <button type="button" class="btn" id="btnRandomFill">一键随机填答</button>
+  </div>
+
+  <!-- 主体 -->
+  <main class="scroller" id="scroller">
+    <p class="alert" id="alert" role="alert" hidden></p>
+
+    <!-- 0 立案登记 / 知情同意 -->
+    <section class="screen" id="s-consent" data-screen="consent" aria-label="知情同意">
+      <section class="film-panel" aria-labelledby="film-title">
+        <div class="film-heading"><h2 id="film-title" tabindex="-1">谁偷走了我的署名？</h2><span>INTRO / 00:35</span></div>
+        <video id="intro-film" controls playsinline preload="metadata" poster="./poster.jpg" aria-label="赛博署名法庭35秒开场动画">
+          <source src="./film.mp4" type="video/mp4">
+          你的浏览器暂不支持视频播放。<a href="./film.mp4">下载视频</a>
+        </video>
+        <div class="film-caption"><span>看完开场，接下来由你担任陪审员。</span><a href="#consentTitle">进入问卷 ↓</a></div>
+      </section>
+      <div class="panel reg-panel">
+        <p class="kicker">CASE FILE REGISTRY</p>
+        <div class="reg-head">
+          <h2 id="consentTitle" tabindex="-1">立案登记</h2>
+          <span class="reg-code">ST-2026-11 · 04 CASES · ANON</span>
+        </div>
+        <p class="lead">欢迎参加「赛博署名法庭」。在这里，你将以<strong>陪审员</strong>的身份，审阅四份关于 AI 辅助写作的案卷，并作出你自己的判断。</p>
+
+        <div class="terminal">
+          <div class="term-bar"><span>REGISTRY://CONSENT</span><span class="term-status">SECURE · ANONYMOUS</span></div>
+          <div class="term-body">
+            <p class="term-cmd"><span class="prompt">$</span> load research_meta --verbose</p>
+            <dl class="term-kv">
+              <dt>项目名称</dt><dd>赛博署名法庭：AI 参与多少，作品才算你？</dd>
+              <dt>研究题目</dt><dd>生成式人工智能辅助创作中的大学生劳动主体性与成果归属认知调查研究</dd>
+              <dt>主办</dt><dd>杭州电子科技大学《马克思主义基本原理》课程实践小组</dd>
+              <dt>内容</dt><dd>阅读 4 份案卷并作 1—5 级判断，回答 AI 使用情况与态度问题</dd>
+              <dt>时长</dt><dd>约 6—8 分钟</dd>
+            </dl>
+            <p class="term-p"><strong>匿名与保密。</strong>本问卷不收集你的姓名、学号、手机号。你的答卷以随机编号（如 R20261104-0007）保存，原始数据仅保存在本机浏览器并由项目组统一回收；报告与附录中不出现任何可识别个人的信息。平台可能自动记录提交时间等必要信息，仅用于合并文件与识别重复提交，不对外公开。</p>
+            <p class="term-p"><strong>自愿与退出。</strong>参加完全自愿。你可以在任何时候关闭页面退出，不会影响课程成绩；已填写的内容仅暂存在你自己的浏览器中。</p>
+            <p class="term-p"><strong>数据用途。</strong>数据仅用于本学期课程实践项目的研究与报告撰写，不作他用、不作商业用途。</p>
+            <p class="term-p"><strong>作答提示。</strong>所有题目都是观点判断，没有标准答案，也不涉及你的个人信息，请按真实想法作答。四份案卷的呈现顺序是随机的，案卷编号（A—D）仅用于标识，不代表优劣。</p>
+          </div>
+        </div>
+
+        <div class="consent-box" data-q="CONSENT">
+          <label class="check-opt">
+            <input type="checkbox" id="consentBox">
+            <span>我已阅读并理解以上说明，自愿参加本次调查，并同意按上述方式使用我的匿名答卷数据。</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 使用现状 S4—S7 -->
+    <section class="screen" id="s-usage" data-screen="usage" aria-label="第一部分 我的 AI 使用情况">
+      <div class="panel">
+        <p class="kicker">PART 01 // AI USAGE</p>
+        <h2 tabindex="-1">我的 AI 使用情况</h2>
+        <p class="screen-hint">先了解你平时的 AI 使用经验，作为后续判断的背景。以下四题均为必答。</p>
+        <div id="usageQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 2—5 四起案件（JS 渲染，顺序随机） -->
+    <section class="screen" id="s-case" data-screen="case" aria-label="第二部分 案卷审理"></section>
+
+    <!-- 6 强制选择 -->
+    <section class="screen" id="s-forced" data-screen="forced" aria-label="第三部分 强制选择">
+      <div class="panel">
+        <p class="kicker">PART 03 // FORCED SELECTION</p>
+        <h2 tabindex="-1">强制选择</h2>
+        <p class="screen-hint">四份案卷已审理完毕。请回忆刚才读到的四份案卷，它们以案卷 A／B／C／D 标识。</p>
+        <div id="forcedQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 7 态度 ATT1—ATT4 -->
+    <section class="screen" id="s-att" data-screen="att" aria-label="第四部分 判断依据与态度">
+      <div class="panel">
+        <p class="kicker">PART 04 // ATTITUDE</p>
+        <h2 tabindex="-1">你的判断依据与态度</h2>
+        <p class="screen-hint">以下问题不针对某一份案卷，而与你的整体判断方式有关。四题均为必答。</p>
+        <div id="attQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 8 质量检查 -->
+    <section class="screen" id="s-qc" data-screen="qc" aria-label="质量检查题">
+      <div class="panel">
+        <p class="kicker">QC // INTEGRITY CHECK</p>
+        <h2 tabindex="-1">质量检查题</h2>
+        <div id="qcQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 9 开放题 -->
+    <section class="screen" id="s-open" data-screen="open" aria-label="开放题">
+      <div class="panel">
+        <p class="kicker">OPEN // FIELD NOTE</p>
+        <h2 tabindex="-1">开放题</h2>
+        <div id="openQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 10 人口学 S1—S3 -->
+    <section class="screen" id="s-demo" data-screen="demo" aria-label="基本信息">
+      <div class="panel">
+        <p class="kicker">REGISTRY // DEMOGRAPHICS</p>
+        <h2 tabindex="-1">基本信息</h2>
+        <p class="screen-hint">以下信息仅用于描述样本构成（例如年级与专业分布），不会用于识别个人。三题均为必答。</p>
+        <div id="demoQ" class="q-card flat"></div>
+      </div>
+    </section>
+
+    <!-- 提交后：退庭 -->
+    <section class="screen" id="s-thanks" data-screen="thanks" aria-label="退庭感谢页">
+      <div class="panel thanks-panel">
+        <div class="verdict-stamp" aria-hidden="true">判决生效</div>
+        <p class="kicker">VERDICT // 审理完毕</p>
+        <h2 id="thanksTitle" tabindex="-1">退庭</h2>
+        <p class="lead">感谢你以陪审员身份完成本次匿名调查。你的判断将被汇总进本课程实践项目的报告。</p>
+        <dl class="meta">
+          <div><dt>答卷编号</dt><dd id="thanksId">—</dd></div>
+          <div><dt>作答用时</dt><dd id="thanksDur">—</dd></div>
+          <div><dt>提交时间</dt><dd id="thanksTime">—</dd></div>
+          <div><dt>CSV FILE</dt><dd id="thanksFile" class="file-name">—</dd></div>
+        </dl>
+        <p class="screen-hint" id="thanksHint">答卷已保存在本机浏览器，并已自动下载一份 CSV（如未下载，可点下方按钮再次下载）。</p>
+        <div class="thanks-actions">
+          <button type="button" class="btn primary" id="btnRedownload">重新下载本份 CSV</button>
+          <button type="button" class="btn" id="btnNextResp">填写下一份</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部操作栏 -->
+  <footer class="bottombar" id="bottombar">
+    <div class="bottombar-inner">
+      <p class="step-hint" id="stepHint" hidden aria-live="polite"></p>
+      <button type="button" class="btn" id="btnPrev">返回</button>
+      <button type="button" class="btn primary" id="btnNext">进入法庭</button>
+    </div>
+  </footer>
+</div>
+
+<!-- 调查员工具（受访者请忽略） -->
+<details class="admin-float" id="adminTools">
+  <summary aria-label="调查员工具" title="调查员工具"><span class="mono">SYS</span></summary>
+  <div class="admin-panel">
+    <h3>SYS // ADMIN</h3>
+    <p>本机答卷保存在浏览器 localStorage 中，与自动下载的 CSV 内容一致。清空前请先导出。</p>
+    <button type="button" class="btn" id="btnExportAll">导出全部本机答卷</button>
+    <button type="button" class="btn danger" id="btnClear">清空本机数据</button>
+    <span class="admin-count">本机已保存：<b id="localCount">0</b> 份</span>
+  </div>
+</details>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   0. 基础常量与工具
+   ============================================================ */
+var PARAMS = new URLSearchParams(window.location.search);
+var DEV = PARAMS.get('dev') === '1';
+var AUTOTEST = PARAMS.get('autotest') === '1';
+var PREVIEW = DEV ? PARAMS.get('preview') : null;
+var REDUCE = false;
+try{ REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+var LS_STATE = 'ai_labor_survey_v1_state';
+var LS_RECORDS = 'ai_labor_survey_v1_records';
+var LS_SEQ = 'ai_labor_survey_v1_seq';
+var LS_SEQ_DEV = 'ai_labor_survey_v1_seq_dev';
+
+/* CSV 契约字段（顺序 = 项目规范 §2 顺序，逐字一致） */
+var CORE_FIELDS = [
+  'resp_id','submit_time','duration_sec','CASE_ORDER',
+  'S1_grade','S2_major','S3_gender','S4_ai_freq','S5_scenes','S6_disclose','S7_time_change','QC','FORCED',
+  'A_AI','A_LC','A_LS','A_AT','B_AI','B_LC','B_LS','B_AT','C_AI','C_LC','C_LS','C_AT','D_AI','D_LC','D_LS','D_AT',
+  'ATT1_reasons','ATT2_resp','ATT3_disclose','ATT4_evaluate','OPEN','valid_flag','exclude_reason'
+];
+var EXTRA_FIELDS = ['extra_mode'];
+var ALL_FIELDS = CORE_FIELDS.concat(EXTRA_FIELDS);
+
+function q(sel, root){ return (root || document).querySelector(sel); }
+function qa(sel, root){ return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function ymd(d){ return '' + d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()); }
+function fmtDateTime(d){
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' ' +
+    pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
+}
+function fmtDuration(sec){
+  sec = Math.max(0, Math.round(sec || 0));
+  if(sec < 60){ return sec + ' 秒'; }
+  var m = Math.floor(sec / 60), s = sec % 60;
+  return m + ' 分 ' + s + ' 秒';
+}
+function shuffled(arr){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function isPermutationOfABCD(arr){
+  if(!Array.isArray(arr) || arr.length !== 4){ return false; }
+  var sorted = arr.slice().sort().join('');
+  return sorted === 'ABCD';
+}
+var toastTimer = null;
+function toast(msg){
+  var el = q('#toast');
+  if(!el){ return; }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+
+/* ============================================================
+   1. 契约文本（逐字照抄《研究设计定稿》5.2／5.3，不得改写）
+   ============================================================ */
+var COMMON_STEM = '【共同背景】某高校一门课程要求提交一篇 3000 字的实践调研报告，题目为《生成式人工智能对大学生学习方式的影响》。评分标准统一为四项：观点明确、论证充分、材料可靠、结构完整。以下四份报告分别由四位互不认识的同年级同学独立完成并提交。题干没有提供这四份报告的实际质量信息，请不要假设它们质量相同或不同，仅依据以下描述作答。';
+
+var CASES = {
+  A: '该同学没有使用任何 AI 工具。她先自行检索文献、整理访谈材料，独立拟定提纲，再逐段撰写全文；初稿完成后逐条核对引文与数据，前后修改三稿后定稿。全文的构思、写作、核查与修改均由她本人完成。',
+  B: '该同学请 AI 生成了 3 份提纲备选和若干写作建议，随后自行比较、合并成最终提纲；正文由她逐段独立撰写，AI 没有生成任何成段文字。她自行核查材料、修改两稿后定稿。',
+  C: '该同学向 AI 说明选题与要求后，由 AI 生成了约 3000 字的完整初稿。她通读全文后，发现其中 3 处数据与所引文献不符、2 处论证存在跳跃；于是重新查找资料，重写了两节内容，并调整了全篇论证顺序；前后修改四稿后定稿。',
+  D: '该同学向 AI 说明选题与要求后，由 AI 生成了约 3000 字的完整初稿。她通读一遍后，调整了标题与小标题、统一了段落格式、替换了几处措辞；没有改动论证结构与引用材料，约一小时后提交。'
+};
+
+/* 案卷短标签：仅用于吸顶迷你案卷条，不改题干 */
+var CASE_LABELS = { A:'独立创作', B:'AI 辅助构思', C:'AI 初稿＋实质修改', D:'AI 初稿＋表面修改' };
+
+/* 每案四题：AI 操纵检查 → LC 劳动贡献 → LS 劳动主体性 → AT 成果归属 */
+var CASE_ITEMS = [
+  { key:'AI', short:'AI 参与程度', stem:'你认为 AI 在这份报告形成过程中的参与程度有多高？', left:'几乎未参与', right:'深度参与' },
+  { key:'LC', short:'劳动贡献',   stem:'你认为该同学在形成这份最终报告的过程中发挥了多大实际作用？', left:'几乎没有作用', right:'起决定性作用' },
+  { key:'LS', short:'劳动主体性', stem:'你认为该同学对这份报告的内容和创作过程具有多大的实质性控制？', left:'完全没有控制', right:'完全控制' },
+  { key:'AT', short:'成果归属',   stem:'你在多大程度上认可这份报告属于该同学本人的学习成果？', left:'完全不认可', right:'完全认可' }
+];
+
+var S4 = {
+  stem:'你使用生成式 AI 完成学习任务（写作、编程、翻译、检索等）的频率：',
+  options:[['1','从不'],['2','很少（每月≤1 次）'],['3','有时（每周 1—2 次）'],['4','经常（每周 3—5 次）'],['5','几乎每天']]
+};
+var S5 = {
+  stem:'你主要在哪些环节使用（多选，≤3）：',
+  options:[['1','写作成文'],['2','润色改写'],['3','提纲构思'],['4','资料检索与总结'],['5','编程'],['6','翻译'],['7','习题解答'],['8','生成图片或 PPT'],['9','其他']]
+};
+var S6 = {
+  stem:'上一次用 AI 完成课程作业时，你是否向老师披露：',
+  options:[['1','未披露'],['2','部分披露'],['3','如实披露'],['4','没有用过']]
+};
+var S7 = { stem:'与不用 AI 相比，完成同类任务所用时间：' };
+var S7_LABELS = ['明显更长','略长','差不多','略短','明显更短'];
+var ATT1 = {
+  stem:'你判断"这算不算学生本人的成果"时，最主要依据什么（多选，≤3）：',
+  options:[['1','AI 生成的字数比例'],['2','该同学投入的时间与精力'],['3','该同学是否理解并能解释内容'],['4','是否经过实质性修改'],['5','是否如实披露 AI 使用'],['6','作品本身的质量'],['7','说不清']]
+};
+var ATT2 = {
+  stem:'若该报告出现事实性错误，主要责任在于：',
+  options:[['1','学生本人'],['2','AI 工具提供方'],['3','双方都有责任'],['4','学校缺乏规范']]
+};
+var DEMO = {
+  S1_grade:{ stem:'年级', options:[['1','大一'],['2','大二'],['3','大三'],['4','大四'],['5','研究生']] },
+  S2_major:{ stem:'专业大类', options:[['1','理工'],['2','经管'],['3','文法'],['4','艺术'],['5','其他']] },
+  S3_gender:{ stem:'性别', options:[['1','男'],['2','女'],['3','不愿透露']] }
+};
+var FORCED = {
+  stem:'如果只能把其中一份认定为"该同学本人的学习成果"，你会选择：',
+  options:[['A','案卷 A'],['B','案卷 B'],['C','案卷 C'],['D','案卷 D']]
+};
+
+var NEXT_LABELS = {
+  0:'进入法庭',
+  1:'进入案卷审理',
+  6:'进入判断与态度',
+  9:'进入基本信息',
+  10:'提交档案'
+};
+var NEXT_CASE_LABELS = { 2:'下一号案卷', 3:'下一号案卷', 4:'下一号案卷', 5:'审理完毕，进入下一步' };
+
+/* ============================================================
+   2. 状态与本地存储
+   ============================================================ */
+function defaultState(){
+  return { step:0, order:shuffled(['A','B','C','D']), startedAt:null, consent:false, answers:{} };
+}
+var state = defaultState();
+var records = [];
+var lastRow = null;
+var lastCsv = '';
+var storageBroken = false;
+
+function loadState(){
+  try{
+    var raw = localStorage.getItem(LS_STATE);
+    if(raw){
+      var st = JSON.parse(raw);
+      if(st && st.answers && typeof st.answers === 'object'){
+        state.step = (typeof st.step === 'number') ? st.step : 0;
+        state.order = isPermutationOfABCD(st.order) ? st.order : shuffled(['A','B','C','D']);
+        state.startedAt = (typeof st.startedAt === 'number') ? st.startedAt : null;
+        state.consent = !!st.consent;
+        state.answers = st.answers;
+        return true;
+      }
+    }
+    var raw2 = localStorage.getItem(LS_RECORDS);
+    if(raw2){
+      var arr = JSON.parse(raw2);
+      if(Array.isArray(arr)){ records = arr; }
+    }
+  }catch(e){ storageBroken = true; }
+  return false;
+}
+function loadRecords(){
+  try{
+    var raw = localStorage.getItem(LS_RECORDS);
+    if(raw){ var arr = JSON.parse(raw); if(Array.isArray(arr)){ records = arr; } }
+  }catch(e){ storageBroken = true; }
+}
+function saveState(){
+  try{
+    localStorage.setItem(LS_STATE, JSON.stringify(state));
+  }catch(e){
+    storageBroken = true;
+    if(!saveState.warned){ saveState.warned = true; toast('本机存储不可用：刷新后可能丢失作答，请勿刷新'); }
+  }
+}
+var saveTimer = null;
+function saveStateDebounced(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 350);
+}
+function saveRecords(){
+  try{ localStorage.setItem(LS_RECORDS, JSON.stringify(records)); }
+  catch(e){ storageBroken = true; toast('本机存储不可用：请立即用“导出全部本机答卷”保存数据'); }
+}
+function clearSurveyState(){
+  try{ localStorage.removeItem(LS_STATE); }catch(e){}
+  state = { step:0, order:state.order.slice(), startedAt:null, consent:false, answers:{} };
+}
+
+/* ============================================================
+   3. 界面构建
+   ============================================================ */
+function isChecked(field, code){
+  return state.answers[field] !== undefined && state.answers[field] !== null &&
+    String(state.answers[field]) === String(code);
+}
+function radioBtn(field, code, labelHtml){
+  var id = 'r-' + field + '-' + code;
+  return '<label class="tick">' +
+    '<input type="radio" id="' + id + '" name="' + field + '" value="' + code + '"' +
+    ' data-field="' + field + '" data-code="' + code + '"' + (isChecked(field, code) ? ' checked' : '') + '>' +
+    '<span class="tick-bar" aria-hidden="true"><span class="tick-num">' + code + '</span>' +
+    (labelHtml ? '<span class="tick-cap">' + labelHtml + '</span>' : '') +
+    '</span></label>';
+}
+function listRadio(field, code, label){
+  var id = 'l-' + field + '-' + code;
+  return '<label class="list-opt"><input type="radio" id="' + id + '" name="' + field + '" value="' + code + '"' +
+    ' data-field="' + field + '" data-code="' + code + '"' + (isChecked(field, code) ? ' checked' : '') + '>' +
+    '<span class="list-num">' + code + '</span><span class="list-text">' + label + '</span></label>';
+}
+function checkOption(field, code, label){
+  var id = 'c-' + field + '-' + code;
+  var arr = state.answers[field] || [];
+  var on = arr.indexOf(Number(code)) >= 0;
+  return '<label class="check-opt tile"><input type="checkbox" id="' + id + '" value="' + code + '"' +
+    ' data-field="' + field + '" data-code="' + code + '"' + (on ? ' checked' : '') + '>' +
+    '<span class="list-text">' + label + '</span></label>';
+}
+function qWrap(field, stem, inner, hint){
+  return '<fieldset class="q" data-q="' + field + '">' +
+    '<legend class="stem">' + stem + '</legend>' +
+    (hint ? '<p class="q-hint">' + hint + '</p>' : '') + inner + '</fieldset>';
+}
+function scaleTicks(field, labels){
+  var inner = '<div class="scale" data-field="' + field + '"><div class="ticks">';
+  for(var i = 1; i <= 5; i++){
+    inner += radioBtn(field, i, labels ? labels[i - 1] : '');
+  }
+  inner += '</div></div>';
+  return inner;
+}
+function scaleEnds(field, stem, left, right){
+  var inner = scaleTicks(field, null) +
+    '<div class="anchors"><span class="a-left">' + left + '</span><span class="a-right">' + right + '</span></div>';
+  return qWrap(field, stem, inner);
+}
+function scaleLabels(field, stem, labels){
+  return qWrap(field, stem, scaleTicks(field, labels));
+}
+function scaleNums(field, stem){
+  return qWrap(field, stem, scaleTicks(field, null));
+}
+function listScale(field, stem, options){
+  var inner = '<div class="list">';
+  for(var i = 0; i < options.length; i++){
+    inner += listRadio(field, options[i][0], esc(options[i][1]));
+  }
+  inner += '</div>';
+  return qWrap(field, stem, inner);
+}
+function multiScale(field, stem, options){
+  var inner = '<div class="checks">';
+  for(var i = 0; i < options.length; i++){
+    inner += checkOption(field, options[i][0], esc(options[i][1]));
+  }
+  inner += '</div><p class="multi-count" data-for="' + field + '">已选 0 项（最多 3 项）</p>';
+  return qWrap(field, stem, inner);
+}
+
+function renderFixedScreens(){
+  q('#usageQ').innerHTML =
+    listScale('S4_ai_freq', S4.stem, S4.options) +
+    multiScale('S5_scenes', S5.stem, S5.options) +
+    listScale('S6_disclose', S6.stem, S6.options) +
+    scaleLabels('S7_time_change', S7.stem, S7_LABELS);
+
+  q('#forcedQ').innerHTML = listScale('FORCED', FORCED.stem, FORCED.options);
+
+  q('#attQ').innerHTML =
+    multiScale('ATT1_reasons', ATT1.stem, ATT1.options) +
+    listScale('ATT2_resp', ATT2.stem, ATT2.options) +
+    scaleEnds('ATT3_disclose', 'AI 参与创作时，是否应主动向教师披露：', '1 完全不必', '5 完全必要') +
+    scaleEnds('ATT4_evaluate', 'AI 参与程度是否应纳入课程评价：', '1 完全不应', '5 完全应该');
+
+  q('#qcQ').innerHTML = scaleNums('QC', '为确保数据质量，本题请选择 2');
+
+  q('#openQ').innerHTML =
+    '<div class="q" data-q="OPEN">' +
+    '<label class="stem" for="OPEN">你觉得"AI 参与多少，作品才算你的？"为什么？</label>' +
+    '<p class="q-hint">（选填，≥20 字为佳）</p>' +
+    '<textarea id="OPEN" data-field="OPEN" maxlength="2000" placeholder="请写下你的想法……"></textarea>' +
+    '<p class="char-count">已输入 <span id="openCount">0</span> 字</p>' +
+    '</div>';
+
+  q('#demoQ').innerHTML =
+    listScale('S1_grade', DEMO.S1_grade.stem, DEMO.S1_grade.options) +
+    listScale('S2_major', DEMO.S2_major.stem, DEMO.S2_major.options) +
+    listScale('S3_gender', DEMO.S3_gender.stem, DEMO.S3_gender.options);
+}
+
+/* 案卷屏（每次进入重新渲染，顺序来自 state.order） */
+var visitedOrders = [];
+function renderCase(letter){
+  var idx = state.order.indexOf(letter) + 1;
+  var html = '<div class="panel dossier">' +
+    '<div class="dossier-head">' +
+      '<div class="case-plate" aria-hidden="true"><span class="mono">CASE</span><b>' + letter + '</b><span class="mono seq">' + pad2n(idx) + '/04</span></div>' +
+      '<div class="dossier-title"><p class="kicker">第 ' + idx + ' / 4 号案卷</p>' +
+      '<h2 tabindex="-1">案卷 ' + letter + '</h2></div>' +
+      '<span class="dossier-tag">FILE ' + letter + '</span>' +
+    '</div>' +
+    '<p class="common">' + esc(COMMON_STEM) + '</p>' +
+    '<p class="case-text">' + esc(CASES[letter]) + '</p>' +
+    '<p class="case-foot">// 以上为第 ' + idx + ' 份案卷。以下四题均针对这份案卷作答。</p>' +
+  '</div>' +
+  '<div class="panel q-card">' +
+    CASE_ITEMS.map(function(it){
+      return scaleEnds(letter + '_' + it.key, it.stem, '1＝' + it.left, '5＝' + it.right);
+    }).join('') +
+  '</div>';
+  q('#s-case').innerHTML = html;
+  updateScaleVisual();
+  if(AUTOTEST && visitedOrders[visitedOrders.length - 1] !== letter){ visitedOrders.push(letter); }
+}
+
+/* ============================================================
+   4. 恢复界面状态 / 计数
+   ============================================================ */
+function restoreUI(){
+  qa('input[type=radio][data-field]').forEach(function(inp){
+    var f = inp.getAttribute('data-field');
+    inp.checked = String(state.answers[f]) === inp.value;
+  });
+  qa('input[type=checkbox][data-field]').forEach(function(inp){
+    var f = inp.getAttribute('data-field');
+    var arr = state.answers[f] || [];
+    inp.checked = arr.indexOf(Number(inp.value)) >= 0;
+  });
+  var ta = document.getElementById('OPEN');
+  if(ta){ ta.value = state.answers.OPEN || ''; }
+  var cb = document.getElementById('consentBox');
+  if(cb){ cb.checked = !!state.consent; }
+  updateMultiCounts();
+  updateOpenCount();
+  updateScaleVisual();
+  updateAnsweredHud();
+}
+function updateMultiCounts(){
+  qa('[data-for]').forEach(function(el){
+    var f = el.getAttribute('data-for');
+    var n = (state.answers[f] || []).length;
+    el.textContent = '已选 ' + n + ' 项（最多 3 项）';
+  });
+}
+function updateOpenCount(){
+  var ta = document.getElementById('OPEN');
+  var el = document.getElementById('openCount');
+  if(ta && el){ el.textContent = String((ta.value || '').length); }
+}
+function updateLocalCount(){
+  var el = document.getElementById('localCount');
+  if(el){ el.textContent = String(records.length); }
+}
+
+/* ============================================================
+   4b. HUD：已答计数 / 霓虹刻度读数 / 时钟
+   ============================================================ */
+var TOTAL_REQUIRED = 30;
+function requiredFieldList(){
+  var list = ['S4_ai_freq','S5_scenes','S6_disclose','S7_time_change','FORCED',
+    'ATT1_reasons','ATT2_resp','ATT3_disclose','ATT4_evaluate','QC',
+    'S1_grade','S2_major','S3_gender'];
+  ['A','B','C','D'].forEach(function(l){
+    CASE_ITEMS.forEach(function(it){ list.push(l + '_' + it.key); });
+  });
+  return list;
+}
+function countAnsweredRequired(){
+  var n = state.consent ? 1 : 0;
+  requiredFieldList().forEach(function(f){ if(answered(f)){ n++; } });
+  return n;
+}
+function updateAnsweredHud(){
+  var el = document.getElementById('answeredCount');
+  if(el){ el.textContent = '已答 ' + countAnsweredRequired() + '/' + TOTAL_REQUIRED; }
+  updateStepGate();
+}
+/* 当前页必答未完成时，主按钮呈锁定视觉并提示缺失数（点击仍会标红缺失项） */
+function updateStepGate(){
+  var btn = document.getElementById('btnNext');
+  if(!btn){ return; }
+  var miss = missingForStep(state.step).length;
+  btn.classList.toggle('is-locked', miss > 0);
+  btn.title = miss > 0 ? ('本页还有 ' + miss + ' 项必答未完成，点击可定位') : '';
+  var hint = document.getElementById('stepHint');
+  if(hint){
+    hint.hidden = (miss === 0);
+    hint.textContent = miss > 0 ? ('本页还有 ' + miss + ' 项必答未完成') : '';
+  }
+}
+function updateScaleVisual(){
+  qa('.scale[data-field]').forEach(function(sc){
+    var v = state.answers[sc.getAttribute('data-field')];
+    var valid = (v !== undefined && v !== null && v !== '' && !Array.isArray(v));
+    sc.classList.toggle('has-value', valid);
+  });
+}
+function pad2n(n){ return (n < 10 ? '0' : '') + n; }
+function updateClock(){
+  var el = document.getElementById('clock');
+  if(!el){ return; }
+  var d = new Date();
+  el.textContent = pad2n(d.getHours()) + ':' + pad2n(d.getMinutes()) + ':' + pad2n(d.getSeconds());
+}
+function startClock(){
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
+/* ============================================================
+   5. 校验
+   ============================================================ */
+function answered(field){
+  if(field === 'CONSENT'){ return !!state.consent; }
+  var v = state.answers[field];
+  if(Array.isArray(v)){ return v.length > 0; }
+  return v !== undefined && v !== null && v !== '';
+}
+function missingForStep(n){
+  var miss = [];
+  if(n === 0){ return state.consent ? [] : ['CONSENT']; }
+  if(n === 1){
+    ['S4_ai_freq','S5_scenes','S6_disclose','S7_time_change'].forEach(function(f){ if(!answered(f)){ miss.push(f); } });
+    return miss;
+  }
+  if(n >= 2 && n <= 5){
+    var letter = state.order[n - 2];
+    CASE_ITEMS.forEach(function(it){
+      var f = letter + '_' + it.key;
+      if(!answered(f)){ miss.push(f); }
+    });
+    return miss;
+  }
+  if(n === 6){ return answered('FORCED') ? [] : ['FORCED']; }
+  if(n === 7){
+    ['ATT1_reasons','ATT2_resp','ATT3_disclose','ATT4_evaluate'].forEach(function(f){ if(!answered(f)){ miss.push(f); } });
+    return miss;
+  }
+  if(n === 8){ return answered('QC') ? [] : ['QC']; }
+  if(n === 9){ return []; }
+  if(n === 10){
+    ['S1_grade','S2_major','S3_gender'].forEach(function(f){ if(!answered(f)){ miss.push(f); } });
+    return miss;
+  }
+  return miss;
+}
+function fieldLabel(f){
+  if(f === 'CONSENT'){ return '知情同意勾选'; }
+  if(/^[ABCD]_(AI|LC|LS|AT)$/.test(f)){
+    var p = f.split('_');
+    var name = '本题';
+    CASE_ITEMS.forEach(function(it){ if(it.key === p[1]){ name = it.short; } });
+    return '案卷 ' + p[0] + '「' + name + '」';
+  }
+  var labels = {
+    S1_grade:'年级', S2_major:'专业大类', S3_gender:'性别',
+    S4_ai_freq:'使用频率', S5_scenes:'使用环节', S6_disclose:'披露情况', S7_time_change:'时间变化',
+    FORCED:'强制选择', QC:'质量检查题',
+    ATT1_reasons:'判断依据', ATT2_resp:'责任归属', ATT3_disclose:'披露必要性', ATT4_evaluate:'纳入评价'
+  };
+  return labels[f] || f;
+}
+function clearInvalidAll(){
+  qa('.invalid').forEach(function(el){ el.classList.remove('invalid'); });
+}
+function clearInvalid(field){
+  var el = document.querySelector('[data-q="' + field + '"]');
+  if(el){ el.classList.remove('invalid'); }
+}
+function clearAlert(){
+  var el = q('#alert');
+  if(el){ el.hidden = true; el.textContent = ''; }
+}
+function showError(missing){
+  var el = q('#alert');
+  var names = missing.map(fieldLabel);
+  el.textContent = '还有 ' + missing.length + ' 道必答题未作答：' + names.join('、') +
+    '。已在下方标红，请完成后再继续。';
+  el.hidden = false;
+  missing.forEach(function(f){
+    var box = document.querySelector('[data-q="' + f + '"]');
+    if(box){ box.classList.add('invalid'); }
+  });
+  var first = document.querySelector('[data-q="' + missing[0] + '"]');
+  if(first){
+    first.setAttribute('tabindex','-1');
+    try{ first.focus({ preventScroll:true }); }catch(e){}
+    try{ first.scrollIntoView({ block:'center', behavior:(REDUCE || AUTOTEST) ? 'auto' : 'smooth' }); }catch(e){}
+  }
+}
+
+/* ============================================================
+   6. 导航
+   ============================================================ */
+var FIXED_SCREENS = {
+  0:'#s-consent', 1:'#s-usage', 6:'#s-forced', 7:'#s-att', 8:'#s-qc', 9:'#s-open', 10:'#s-demo'
+};
+function nextLabel(n){
+  if(n >= 2 && n <= 5){ return NEXT_CASE_LABELS[n] || '下一步'; }
+  return NEXT_LABELS[n] || '下一步';
+}
+function showStep(n){
+  n = Math.max(0, Math.min(10, n | 0));
+  state.step = n;
+  if(n !== 0){ var introFilm = document.getElementById('intro-film'); if(introFilm){ introFilm.pause(); } }
+  qa('.screen').forEach(function(el){ el.classList.remove('active'); });
+  if(n >= 2 && n <= 5){
+    renderCase(state.order[n - 2]);
+    q('#s-case').classList.add('active');
+  }else{
+    q(FIXED_SCREENS[n]).classList.add('active');
+  }
+  clearAlert();
+  clearInvalidAll();
+  var pct = Math.round(n / 10 * 100);
+  q('#progressFill').style.width = pct + '%';
+  q('#progressBar').setAttribute('aria-valuenow', String(pct));
+  var inCase = (n >= 2 && n <= 5);
+  q('#stepLabel').textContent = 'REG ' + pad2n(n + 1) + '/11';
+  q('#stepLabel').hidden = inCase;
+  q('#caseLabel').hidden = !inCase;
+  q('#caseLabel').textContent = inCase ? (pad2n(n - 1) + '/04 号案卷') : '';
+  q('#caseBar').hidden = !inCase;
+  if(inCase){
+    var cl = state.order[n - 2];
+    q('#caseBarText').innerHTML = '<span class="cb-idx">' + pad2n(n - 1) + '/04 号案卷</span>' +
+      '<span class="cb-sep">·</span><span class="cb-case">CASE ' + cl + '</span>' +
+      '<span class="cb-sep">·</span><span class="cb-name">' + CASE_LABELS[cl] + '</span>';
+  }
+  updateAnsweredHud();
+  q('#btnPrev').disabled = (n === 0);
+  q('#btnNext').textContent = nextLabel(n);
+  q('#bottombar').hidden = false;
+  try{ window.scrollTo({ top:0, behavior:(REDUCE || AUTOTEST) ? 'auto' : 'smooth' }); }catch(e){ window.scrollTo(0,0); }
+  var active = q('.screen.active');
+  if(active){
+    var h = active.querySelector('h2');
+    if(h){ try{ h.focus({ preventScroll:true }); }catch(e){} }
+  }
+  // 调查员工具仅在知情同意页显示；答题过程中隐藏
+  document.body.classList.toggle('admin-visible', n === 0);
+  saveState();
+}
+function onNext(){
+  if(q('#s-thanks').classList.contains('active')){ return; }
+  var missing = missingForStep(state.step);
+  if(missing.length){ showError(missing); return; }
+  if(state.step === 10){ submit(); return; }
+  showStep(state.step + 1);
+}
+function onPrev(){
+  if(state.step > 0){ showStep(state.step - 1); }
+}
+
+/* ============================================================
+   7. CSV 与提交
+   ============================================================ */
+function csvCell(v){
+  var s = (v === null || v === undefined) ? '' : String(v);
+  if(/[",\r\n]/.test(s)){ return '"' + s.replace(/"/g,'""') + '"'; }
+  return s;
+}
+function buildCsv(rows, fields){
+  fields = fields || ALL_FIELDS;
+  var lines = [fields.join(',')];
+  for(var i = 0; i < rows.length; i++){
+    var row = rows[i], cells = [];
+    for(var j = 0; j < fields.length; j++){ cells.push(csvCell(row[fields[j]])); }
+    lines.push(cells.join(','));
+  }
+  return '\ufeff' + lines.join('\r\n') + '\r\n';
+}
+function makeRespId(){
+  var day = ymd(new Date());
+  var key = DEV ? LS_SEQ_DEV : LS_SEQ;
+  var n = 1;
+  try{
+    var o = JSON.parse(localStorage.getItem(key) || 'null');
+    if(o && o.date === day && typeof o.n === 'number'){ n = o.n + 1; }
+    localStorage.setItem(key, JSON.stringify({ date:day, n:n }));
+  }catch(e){
+    n = (Date.now() % 9000) + 1;
+  }
+  return (DEV ? 'DEV-' : 'R') + day + '-' + String(n).padStart(4,'0');
+}
+function numOrBlank(v){
+  return (v === null || v === undefined || v === '') ? '' : Number(v);
+}
+function buildRow(ts){
+  var a = state.answers;
+  var row = {
+    resp_id: makeRespId(),
+    submit_time: fmtDateTime(new Date(ts)),
+    // 全程时长：从勾选知情同意起算到提交（与问卷星“所用时间”口径一致）
+    duration_sec: state.startedAt ? Math.max(0, Math.round((ts - state.startedAt) / 1000)) : 0,
+    CASE_ORDER: state.order.join(','),
+    S1_grade: numOrBlank(a.S1_grade),
+    S2_major: numOrBlank(a.S2_major),
+    S3_gender: numOrBlank(a.S3_gender),
+    S4_ai_freq: numOrBlank(a.S4_ai_freq),
+    S5_scenes: (a.S5_scenes || []).join(';'),
+    S6_disclose: numOrBlank(a.S6_disclose),
+    S7_time_change: numOrBlank(a.S7_time_change),
+    QC: numOrBlank(a.QC),
+    FORCED: a.FORCED || '',
+    ATT1_reasons: (a.ATT1_reasons || []).join(';'),
+    ATT2_resp: numOrBlank(a.ATT2_resp),
+    ATT3_disclose: numOrBlank(a.ATT3_disclose),
+    ATT4_evaluate: numOrBlank(a.ATT4_evaluate),
+    OPEN: a.OPEN || '',
+    valid_flag: '',
+    exclude_reason: '',
+    extra_mode: DEV ? 'DEV' : ''
+  };
+  ['A','B','C','D'].forEach(function(l){
+    CASE_ITEMS.forEach(function(it){
+      row[l + '_' + it.key] = numOrBlank(a[l + '_' + it.key]);
+    });
+  });
+  return row;
+}
+function downloadCsv(text, filename){
+  try{
+    var blob = new Blob([text], { type:'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ try{ document.body.removeChild(a); }catch(e){} URL.revokeObjectURL(url); }, 3000);
+    return true;
+  }catch(e){
+    toast('自动下载失败，请用右下角“导出全部本机答卷”保存');
+    return false;
+  }
+}
+function submit(){
+  for(var n = 0; n <= 10; n++){
+    var missing = missingForStep(n);
+    if(missing.length){ showStep(n); showError(missing); return; }
+  }
+  var ts = Date.now();
+  var row = buildRow(ts);
+  lastRow = row;
+  lastCsv = buildCsv([row]);
+  records.push(row);
+  saveRecords();
+  updateLocalCount();
+  if(!AUTOTEST){ downloadCsv(lastCsv, '赛博署名法庭_答卷_' + row.resp_id + '.csv'); }
+  clearSurveyState();
+  showThanks(row);
+}
+function showThanks(row){
+  qa('.screen').forEach(function(el){ el.classList.remove('active'); });
+  var t = q('#s-thanks');
+  t.classList.add('active');
+  clearAlert();
+  clearInvalidAll();
+  q('#thanksId').textContent = row.resp_id;
+  q('#thanksDur').textContent = fmtDuration(row.duration_sec);
+  q('#thanksTime').textContent = row.submit_time;
+  var fname = '赛博署名法庭_答卷_' + row.resp_id + '.csv';
+  q('#thanksFile').textContent = fname;
+  q('#bottombar').hidden = true;
+  q('#progressFill').style.width = '100%';
+  q('#progressBar').setAttribute('aria-valuenow','100');
+  q('#stepLabel').textContent = 'ARCHIVED';
+  q('#caseBar').hidden = true;
+  q('#answeredCount').textContent = '已答 ' + TOTAL_REQUIRED + '/' + TOTAL_REQUIRED;
+  q('#caseLabel').hidden = true;
+  document.body.classList.add('admin-visible');
+  try{ window.scrollTo({ top:0, behavior:'auto' }); }catch(e){}
+  try{ q('#thanksTitle').focus({ preventScroll:true }); }catch(e){}
+}
+function resetForNextRespondent(){
+  state = defaultState();
+  restoreUI();
+  showStep(0);
+  toast('已开始新的一份问卷（案卷顺序将重新随机）');
+}
+
+/* ============================================================
+   8. 调查员工具
+   ============================================================ */
+function exportAllLocal(){
+  if(!records.length){ toast('本机暂无已保存的答卷'); return; }
+  var today = new Date();
+  var csv = buildCsv(records);
+  var ok = downloadCsv(csv, '赛博署名法庭_本机答卷_' + ymd(today) + '.csv');
+  if(ok){ toast('已导出本机全部 ' + records.length + ' 份答卷'); }
+}
+function clearLocal(){
+  var ok = window.confirm('确定清空本机保存的全部答卷与暂存作答吗？此操作不可恢复，建议先导出。');
+  if(!ok){ return; }
+  try{
+    localStorage.removeItem(LS_STATE);
+    localStorage.removeItem(LS_RECORDS);
+  }catch(e){}
+  records = [];
+  updateLocalCount();
+  lastRow = null;
+  lastCsv = '';
+  resetForNextRespondent();
+  toast('本机数据已清空（答卷序号计数器保留，避免编号冲突）');
+}
+
+/* ============================================================
+   9. 随机填答（仅调试）：便于 UI 测试
+   ============================================================ */
+function randomFill(){
+  var a = state.answers;
+  // 调试工具专用：补上知情同意与计时起点，便于一键走完提交导出流程
+  if(!state.consent){ state.consent = true; }
+  if(!state.startedAt){ state.startedAt = Date.now(); }
+  function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+  a.S4_ai_freq = pick([1,2,3,4,5]);
+  a.S5_scenes = shuffled([1,2,3,4,5,6,7,8,9]).slice(0, 1 + Math.floor(Math.random() * 3)).sort(function(x,y){ return x - y; });
+  a.S6_disclose = pick([1,2,3,4]);
+  a.S7_time_change = pick([1,2,3,4,5]);
+  state.order.forEach(function(letter){
+    CASE_ITEMS.forEach(function(it){ a[letter + '_' + it.key] = pick([1,2,3,4,5]); });
+  });
+  a.FORCED = pick(['A','B','C','D']);
+  a.ATT1_reasons = shuffled([1,2,3,4,5,6,7]).slice(0, 1 + Math.floor(Math.random() * 3)).sort(function(x,y){ return x - y; });
+  a.ATT2_resp = pick([1,2,3,4]);
+  a.ATT3_disclose = pick([1,2,3,4,5]);
+  a.ATT4_evaluate = pick([1,2,3,4,5]);
+  a.QC = 2;
+  a.OPEN = '（调试数据）AI 参与多少要看学生是否真正控制内容，而不只是看改了多少字。';
+  a.S1_grade = pick([1,2,3,4,5]);
+  a.S2_major = pick([1,2,3,4,5]);
+  a.S3_gender = pick([1,2,3]);
+  restoreUI();
+  saveState();
+  toast('已随机填答全部题目（调试数据，不产生有效数据）');
+}
+
+/* ============================================================
+   10. 自检（?dev=1&autotest=1 时自动执行，供离线验证用）
+   ============================================================ */
+function checkOrderRandom(){
+  if(typeof shuffled !== 'function'){ return false; }
+  var seen = {};
+  for(var i = 0; i < 6000; i++){ seen[shuffled(['A','B','C','D']).join('')] = 1; }
+  return Object.keys(seen).length === 24;
+}
+function setAutoResult(res){
+  var pre = document.getElementById('autotest-result');
+  if(!pre){
+    pre = document.createElement('pre');
+    pre.id = 'autotest-result';
+    pre.style.cssText = 'position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden';
+    document.body.appendChild(pre);
+  }
+  pre.textContent = JSON.stringify(res);
+  document.title = res.ok ? 'AUTOTEST:PASS' : 'AUTOTEST:FAIL';
+}
+function runAutotest(){
+  var res = { mode: DEV ? 'DEV' : 'NORMAL', ok:true, checks:[], stems:[], anchors:[], scaleCounts:[], screens:[], visitedOrder:[], layout:{} };
+  function pass(m){ res.checks.push('OK ' + m); }
+  function fail(m){ res.ok = false; res.checks.push('FAIL ' + m); }
+  function tick(){ return new Promise(function(r){ setTimeout(r, 15); }); }
+  function click(id){ var el = document.getElementById(id); if(el){ el.click(); } else { fail('找不到按钮 ' + id); } }
+  function snap(name){
+    res.screens.push(name);
+    var active = document.querySelector('.screen.active');
+    if(!active){ fail('无 active 屏幕 @' + name); return; }
+    var stems = qa('.q .stem', active).map(function(el){ return el.textContent.replace(/\s+/g,' ').trim(); });
+    if(stems.length){ res.stems.push({ screen:name, stems:stems }); }
+    var anchorGroups = qa('.anchors', active).filter(function(el){ return el.offsetParent !== null; });
+    if(anchorGroups.length){
+      var texts = anchorGroups.map(function(el){
+        var spans = qa('span', el);
+        var arr = spans.map(function(s){ return s.textContent.replace(/\s+/g,' ').trim(); });
+        if(arr.length !== 2 || !arr[0] || !arr[1]){ fail('锚点缺失 @' + name); }
+        if(el.offsetParent === null){ fail('锚点不可见 @' + name); }
+        return arr.join('|');
+      });
+      res.anchors.push({ screen:name, anchors:texts });
+    }
+    var scales = qa('.scale', active);
+    if(scales.length){
+      var counts = scales.map(function(s){ return qa('.tick', s).length; });
+      res.scaleCounts.push({ screen:name, counts:counts });
+      counts.forEach(function(c, i){ if(c !== 5){ fail('第 ' + (i + 1) + ' 个量表按钮数 ' + c + ' ≠ 5 @' + name); } });
+    }
+  }
+  (async function(){
+    try{
+      try{ localStorage.clear(); }catch(e){}
+      state = defaultState();
+      records = [];
+      lastRow = null;
+      lastCsv = '';
+      visitedOrders = [];
+      renderFixedScreens();
+      restoreUI();
+      showStep(0);
+      await tick();
+
+      res.orderRandomOk = checkOrderRandom();
+      if(res.orderRandomOk){ pass('Fisher-Yates 覆盖全部 24 种案卷顺序'); } else { fail('案卷顺序随机未覆盖 24 种排列'); }
+
+      click('btnNext'); await tick();
+      if(state.step !== 0){ fail('未勾选同意即可进入下一步'); } else { pass('未同意时提交被拦截'); }
+      if(!document.querySelector('#s-consent .invalid')){ fail('未高亮知情同意项'); } else { pass('知情同意项被高亮'); }
+
+      var cb = document.getElementById('consentBox');
+      cb.checked = true;
+      cb.dispatchEvent(new Event('change', { bubbles:true }));
+      click('btnNext'); await tick();
+      if(state.step !== 1){ fail('同意后未进入第一部分'); } else { pass('进入第一部分（S4—S7）'); }
+
+      // 计时口径自检：同意后停留 1.1 秒，最终 duration_sec 必须包含这段时间
+      res.consentAt = Date.now();
+      await new Promise(function(resolve){ setTimeout(resolve, 1100); });
+      res.consentWaitMs = Date.now() - res.consentAt;
+
+      click('btnNext'); await tick();
+      if(state.step !== 1){ fail('第一部分未作答即可通过'); } else { pass('第一部分必答题拦截'); }
+      if(!document.querySelector('#s-usage .invalid')){ fail('第一部分未作答未高亮'); } else { pass('第一部分未答题高亮'); }
+
+      randomFill(); await tick();
+      try{
+        var st = JSON.parse(localStorage.getItem(LS_STATE));
+        res.persistOk = !!(st && st.answers && st.answers.S4_ai_freq !== undefined && st.order && st.order.length === 4);
+      }catch(e){ res.persistOk = false; }
+      if(res.persistOk){ pass('刷新暂存（localStorage state）可用'); } else { fail('localStorage 暂存失败'); }
+
+      for(var n = 1; n <= 10; n++){
+        if(n >= 2 && n <= 5){
+          var letter = state.order[n - 2];
+          res.visitedOrder.push(letter);
+          snap('case_' + letter);
+          if(n === 2){
+            var field = letter + '_AI';
+            var saved = state.answers[field];
+            state.answers[field] = null;
+            restoreUI(); await tick();
+            click('btnNext'); await tick();
+            if(state.step !== 2){ fail('案卷内必答题未答即可通过'); } else { pass('案卷内必答题拦截'); }
+            state.answers[field] = saved;
+            restoreUI(); await tick();
+          }
+        }else{
+          snap(['consent','usage',null,null,null,null,'forced','att','qc','open','demo'][n] || ('step' + n));
+          if(n === 6){
+            var fr = document.querySelector('[data-q="FORCED"] input[type=radio]');
+            if(fr){ fr.click(); }
+            var fv = String(state.answers.FORCED);
+            if(fv.length === 1 && 'ABCD'.indexOf(fv) >= 0){ pass('FORCED 单选经点击后正确写入'); }
+            else{ fail('FORCED 单选未正确写入：' + state.answers.FORCED); }
+          }
+        }
+        var before = state.step;
+        click('btnNext'); await tick();
+        if(n < 10){
+          if(state.step !== before + 1){ fail('第 ' + (before + 1) + ' 步点击下一步后未前进'); }
+        }
+        if(n === 10){
+          var thanks = document.getElementById('s-thanks');
+          if(!thanks.classList.contains('active')){ fail('提交后未显示退庭感谢页'); } else { pass('提交后显示“退庭”感谢页'); }
+        }
+      }
+
+      if(!lastCsv){ fail('提交后未生成 CSV'); }
+      else{
+        var lines = lastCsv.split('\r\n').filter(function(x){ return x.length > 0; });
+        var header = lines[0].replace(/^\ufeff/, '').split(',');
+        res.header = header;
+        res.headerMatchesContract = JSON.stringify(header) === JSON.stringify(ALL_FIELDS);
+        if(res.headerMatchesContract){ pass('CSV 表头与契约逐字一致（36 核心字段 + extra_mode）'); }
+        else{ fail('CSV 表头与契约不一致'); }
+        res.lineCount = lines.length;
+        res.fieldCount = header.length;
+        if(lines.length !== 2){ fail('单份导出应恰好 1 行数据，实际 ' + lines.length + ' 行'); } else { pass('自动下载 CSV 为单行答卷'); }
+      }
+
+      var row = records[records.length - 1];
+      if(!row){ fail('提交后未写入本机 records'); }
+      else{
+        res.resp_id = row.resp_id;
+        res.duration_sec = row.duration_sec;
+        res.case_order = row.CASE_ORDER;
+        res.extra_mode = row.extra_mode;
+        if(DEV){
+          if(!/^DEV-\d{8}-\d{4}$/.test(row.resp_id)){ fail('调试模式 resp_id 未以 DEV- 开头：' + row.resp_id); } else { pass('调试模式 resp_id 前缀 DEV-'); }
+          if(row.extra_mode !== 'DEV'){ fail('调试模式 extra_mode 未落 DEV'); } else { pass('调试模式 extra_mode=DEV'); }
+        }else{
+          if(!/^R\d{8}-\d{4}$/.test(row.resp_id)){ fail('正常模式 resp_id 格式不符：' + row.resp_id); } else { pass('正常模式 resp_id = RYYYYMMDD-000N'); }
+          if(row.extra_mode !== ''){ fail('正常模式 extra_mode 应为空'); } else { pass('正常模式 extra_mode 为空'); }
+        }
+        if(row.CASE_ORDER !== res.visitedOrder.join(',')){ fail('CASE_ORDER 与实际呈现顺序不一致'); }
+        else{ pass('CASE_ORDER 与实际随机呈现顺序一致'); }
+        if(!(Number.isInteger(row.duration_sec) && row.duration_sec >= 0)){ fail('duration_sec 非非负整数'); }
+        else{ pass('duration_sec 为非负整数'); }
+      }
+
+      var banner = document.getElementById('devBanner');
+      if(DEV && banner.hidden){ fail('调试模式未显示“调试模式，不产生有效数据”标记'); }
+      else if(DEV){ pass('调试模式标记可见'); }
+      if(!DEV && !banner.hidden){ fail('正常模式误显示调试标记'); }
+      else if(!DEV){ pass('正常模式无调试标记'); }
+
+      var allCsv = buildCsv(records);
+      res.exportAllRows = allCsv.split('\r\n').filter(function(x){ return x.length > 0; }).length;
+      if(res.exportAllRows !== records.length + 1){ fail('“导出全部本机答卷”行数不符'); } else { pass('“导出全部本机答卷”可用'); }
+
+      // 全程计时口径：duration_sec 必须覆盖“同意后的等待时间”
+      if(row && row.duration_sec >= 1){ pass('duration_sec 从知情同意起算（全程口径）'); }
+      else{ fail('duration_sec 未覆盖同意后等待时间，疑似仍从第二部分起算：' + (row && row.duration_sec)); }
+
+      res.layout.innerWidth = window.innerWidth;
+      res.layout.clientWidth = document.documentElement.clientWidth;
+      res.layout.overflowX = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+      if(res.layout.overflowX > 1){ fail('页面存在横向溢出 ' + res.layout.overflowX + 'px'); }
+      else{ pass('页面无横向溢出（宽度 ' + window.innerWidth + 'px）'); }
+
+      res.ua = navigator.userAgent;
+      res.prefersReducedMotion = REDUCE;
+    }catch(err){
+      fail('自检运行异常：' + (err && err.message ? err.message : String(err)));
+    }
+    setAutoResult(res);
+    if(DEV && PREVIEW){ /* keep preview state, no auto result needed */ }
+  })();
+}
+
+/* ============================================================
+   11. 事件绑定与初始化
+   ============================================================ */
+function bindEvents(){
+  q('#btnNext').addEventListener('click', onNext);
+  q('#btnPrev').addEventListener('click', onPrev);
+  q('#btnExportAll').addEventListener('click', exportAllLocal);
+  q('#btnClear').addEventListener('click', clearLocal);
+  q('#btnRedownload').addEventListener('click', function(){
+    var row = lastRow || (records.length ? records[records.length - 1] : null);
+    if(!row){ toast('暂无可下载的答卷'); return; }
+    downloadCsv(buildCsv([row]), '赛博署名法庭_答卷_' + row.resp_id + '.csv');
+  });
+  q('#btnNextResp').addEventListener('click', function(){
+    q('#adminTools').open = false;
+    resetForNextRespondent();
+  });
+  if(DEV){
+    var rf = document.getElementById('btnRandomFill');
+    if(rf){
+      rf.addEventListener('click', function(){
+        randomFill();
+        showStep(10);
+      });
+    }
+  }
+
+  document.addEventListener('change', function(e){
+    var t = e.target;
+    if(!t || !t.getAttribute){ return; }
+    if(t.id === 'consentBox'){
+      state.consent = t.checked;
+      // 计时起点：勾选知情同意的时刻（全程时长，至提交为止）
+      if(t.checked && !state.startedAt){ state.startedAt = Date.now(); }
+      var box = document.querySelector('[data-q="CONSENT"]');
+      if(box && t.checked){ box.classList.remove('invalid'); }
+      updateAnsweredHud();
+      if(!missingForStep(state.step).length){ clearAlert(); }
+      saveState();
+      return;
+    }
+    var field = t.getAttribute('data-field');
+    if(!field){ return; }
+    if(t.type === 'radio'){
+      state.answers[field] = (field === 'FORCED') ? String(t.value) : Number(t.value);
+      clearInvalid(field);
+      updateScaleVisual();
+      updateAnsweredHud();
+      updateMultiCounts();
+      if(!missingForStep(state.step).length){ clearAlert(); }
+      saveState();
+      return;
+    }
+    if(t.type === 'checkbox'){
+      var code = Number(t.getAttribute('data-code'));
+      var arr = (state.answers[field] || []).slice();
+      var max = (field === 'S5_scenes' || field === 'ATT1_reasons') ? 3 : 99;
+      if(t.checked){
+        if(arr.length >= max){ t.checked = false; toast('最多选择 ' + max + ' 项'); return; }
+        if(arr.indexOf(code) < 0){ arr.push(code); }
+      }else{
+        arr = arr.filter(function(x){ return x !== code; });
+      }
+      arr.sort(function(a,b){ return a - b; });
+      state.answers[field] = arr;
+      clearInvalid(field);
+      updateMultiCounts();
+      updateAnsweredHud();
+      if(!missingForStep(state.step).length){ clearAlert(); }
+      saveState();
+      return;
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.id === 'OPEN'){
+      state.answers.OPEN = e.target.value;
+      updateOpenCount();
+      saveStateDebounced();
+    }
+  });
+}
+
+function init(){
+  if(DEV){
+    q('#devBanner').hidden = false;
+    document.body.classList.add('dev-mode');
+  }
+  var restored = loadState();
+  loadRecords();
+  if(!isPermutationOfABCD(state.order)){ state.order = shuffled(['A','B','C','D']); }
+  // 旧版本暂存或异常恢复：已同意但无计时起点时，以本次恢复时刻为起点
+  if(state.consent && !state.startedAt){ state.startedAt = Date.now(); }
+  renderFixedScreens();
+  restoreUI();
+  updateLocalCount();
+  showStep(Math.max(0, Math.min(10, state.step || 0)));
+  bindEvents();
+  startClock();
+  if(AUTOTEST){ runAutotest(); return; }
+  if(DEV && PREVIEW){
+    randomFill();
+    var map = { usage:1, case:2, case1:2, case2:3, case3:4, case4:5, forced:6, att:7, qc:8, open:9, demo:10 };
+    showStep(map[PREVIEW] || 0);
+  }else if(restored && state.step > 0){
+    toast('已恢复你上次未提交的作答');
+  }
+  if(DEV && PREVIEW === 'thanks'){
+    var demoRow = buildRow(Date.now());
+    lastRow = demoRow;
+    showThanks(demoRow);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
 </body>
 </html>
